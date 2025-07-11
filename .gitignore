@@ -1,1 +1,39 @@
-.idea
+# dependencies
+/node_modules
+
+# production
+/build
+/dist
+
+# misc
+.DS_Store
+.env*
+*.local
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# testing
+/coverage
+
+# editor & OS
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+*.swp
+*.tmp
+Thumbs.db
+
+# eslint / prettier
+.eslintcache
+
+# optional: if using parcel / snowpack / vite
+/.parcel-cache
+/.turbo
+/.cache
+*.tsbuildinfo
+/cypress/videos
+/cypress/screenshots
+/test-results
