@@ -1,8 +1,12 @@
 import { Component } from 'react';
 
-class ErrorButton extends Component {
+type Props = {
+  onClick?: () => void;
+};
+
+class ErrorButton extends Component<Props> {
   render() {
-    return <button>throw error</button>;
+    return <button onClick={this.props.onClick}>throw error</button>;
   }
 }
 

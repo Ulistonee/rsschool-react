@@ -10,8 +10,8 @@ class Card extends Component<Props> {
   render() {
     return (
       <div className={styles.cardContainer}>
-        <h3>{this.props.name}</h3>
-        <p>{this.props.description}</p>
+        <h3 className={styles.name}>{this.props.name}</h3>
+        <p className={styles.description}>{this.props.description}</p>
       </div>
     );
   }

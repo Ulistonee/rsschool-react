@@ -8,7 +8,7 @@ type Person = {
   hair_color: string;
   skin_color: string;
   eye_color: string;
-  birthYear: string;
+  birth_year: string;
   gender: string;
   homeworld: string;
   films: string[];
@@ -86,7 +86,7 @@ class Results extends Component<Props, State> {
           <Card
             key={index}
             name={item.name}
-            description={`Height: ${item.height} см, Year of birth: ${item.birthYear ? item.birthYear : 'unknown'}`}
+            description={`Height: ${item.height} см, Year of birth: ${item.birth_year}`}
           />
         ))}
       </div>

@@ -2,7 +2,8 @@ import './App.css';
 import { Component } from 'react';
 import Search from './components/search/search.tsx';
 import Results from './components/results/results.tsx';
-import ErrorButton from './components/error-button/error-button.tsx';
+import Thrower from './components/thrower/thrower.tsx';
+import ErrorBoundary from './components/error-boundary/error-boundary.tsx';
 
 class App extends Component {
   state = {
@@ -18,15 +19,18 @@ class App extends Component {
   };
 
   render() {
+    if (this.state.throwError) {
+      throw new Error('Manual error');
+    }
     return (
-      <>
+      <ErrorBoundary>
         <Search
           defaultValue={this.state.searchTerm}
           onSearch={this.handleSearch}
         />
         <Results query={this.state.query} />
-        <ErrorButton />
-      </>
+        <Thrower />
+      </ErrorBoundary>
     );
   }
 }
