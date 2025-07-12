@@ -1,4 +1,5 @@
 import { Component } from 'react';
+import styles from './card.module.css';
 
 type Props = {
   name: string;
@@ -8,7 +9,7 @@ type Props = {
 class Card extends Component<Props> {
   render() {
     return (
-      <div>
+      <div className={styles.cardContainer}>
         <h3>{this.props.name}</h3>
         <p>{this.props.description}</p>
       </div>

@@ -86,7 +86,7 @@ class Results extends Component<Props, State> {
           <Card
             key={index}
             name={item.name}
-            description={`Height: ${item.height} см, Year of birth: ${item.birthYear}`}
+            description={`Height: ${item.height} см, Year of birth: ${item.birthYear ? item.birthYear : 'unknown'}`}
           />
         ))}
       </div>
