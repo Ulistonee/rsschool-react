@@ -1,28 +1,53 @@
 import { Component } from 'react';
 import Card from '../card/card.tsx';
 
+type Person = {
+  name: string;
+  height: string;
+  mass: string;
+  hair_color: string;
+  skin_color: string;
+  eye_color: string;
+  birthYear: string;
+  gender: string;
+  homeworld: string;
+  films: string[];
+  species: string[];
+  vehicles: string[];
+  starships: string[];
+  created: string;
+  edited: string;
+  url: string;
+};
+
+type State = {
+  loading: boolean;
+  error: string | null;
+  data: Person[];
+};
+
 type Props = {
   query: string;
 };
 
-class Results extends Component<Props> {
-  state = {
+class Results extends Component<Props, State> {
+  state: State = {
     loading: false,
     error: null,
     data: [],
   };
 
   componentDidMount() {
-    this.fetchData(this.props.query);
+    void this.fetchData(this.props.query);
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps: Props) {
     if (prevProps.query !== this.props.query) {
-      this.fetchData(this.props.query);
+      void this.fetchData(this.props.query);
     }
   }
 
-  fetchData = async (query) => {
+  fetchData = async (query: string) => {
     this.setState({ loading: true, error: null });
 
     const url = query
@@ -32,7 +57,7 @@ class Results extends Component<Props> {
     try {
       const response = await fetch(url);
 
-      if (!response.ok) throw new Error(`Ошибка: ${response.status}`);
+      if (!response.ok) throw new Error(`Error: ${response.status}`);
 
       const json = await response.json();
 
@@ -41,14 +66,18 @@ class Results extends Component<Props> {
         loading: false,
       });
     } catch (e) {
-      this.setState({ error: e.message, loading: false });
+      if (e instanceof Error) {
+        this.setState({ error: e.message, loading: false });
+      } else {
+        this.setState({ error: 'Unknown error', loading: false });
+      }
     }
   };
 
   render() {
     const { loading, error, data } = this.state;
 
-    if (loading) return <div>Загрузка...</div>;
+    if (loading) return <div>Loading...</div>;
     if (error) return <div>{error}</div>;
 
     return (
@@ -57,7 +86,7 @@ class Results extends Component<Props> {
           <Card
             key={index}
             name={item.name}
-            description={`Рост: ${item.height} см, Год рождения: ${item.birth_year}`}
+            description={`Height: ${item.height} см, Year of birth: ${item.birthYear}`}
           />
         ))}
       </div>

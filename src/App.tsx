@@ -7,11 +7,11 @@ import ErrorButton from './components/error-button/error-button.tsx';
 class App extends Component {
   state = {
     searchTerm: localStorage.getItem('search') || '',
-    query: '',
+    query: localStorage.getItem('search') || '',
     throwError: false,
   };
 
-  handleSearch = (value) => {
+  handleSearch = (value: string) => {
     const trimmed = value.trim();
     localStorage.setItem('search', trimmed);
     this.setState({ query: trimmed });

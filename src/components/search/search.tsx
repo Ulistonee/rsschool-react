@@ -1,5 +1,6 @@
 import { Component } from 'react';
 import styles from './search.module.css';
+import * as React from 'react';
 
 type Props = {
   defaultValue?: string;
@@ -11,7 +12,7 @@ class Search extends Component<Props> {
     value: this.props.defaultValue || '',
   };
 
-  handleChange = (e) => {
+  handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ value: e.target.value });
   };
 
@@ -26,6 +27,7 @@ class Search extends Component<Props> {
           value={this.state.value}
           onChange={this.handleChange}
           placeholder="search..."
+          className={styles.searchInput}
         />
         <button onClick={this.handleClick}>search</button>
       </div>
