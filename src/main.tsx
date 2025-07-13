@@ -4,7 +4,13 @@ import './index.css';
 import App from './App.tsx';
 import ErrorBoundary from './components/error-boundary/error-boundary.tsx';
 
-createRoot(document.getElementById('root')!).render(
+const container = document.getElementById('root');
+
+if (!container) {
+  throw new Error('Root element not found');
+}
+
+createRoot(container).render(
   <StrictMode>
     <ErrorBoundary>
       <App />
