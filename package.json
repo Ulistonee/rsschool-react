@@ -11,6 +11,12 @@
     "prepare": "husky",
     "format:fix": "prettier --write ."
   },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx}": [
+      "eslint --fix",
+      "git add"
+    ]
+  },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.11",
     "react": "^19.1.0",
