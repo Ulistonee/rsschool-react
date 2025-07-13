@@ -3,7 +3,7 @@ import { Component } from 'react';
 type Props = {};
 type State = { throwError: boolean };
 
-class Thrower extends Component<Props, State> {
+class ErrorThrower extends Component<Props, State> {
   state: State = { throwError: false };
 
   render() {
@@ -19,4 +19,4 @@ class Thrower extends Component<Props, State> {
   }
 }
 
-export default Thrower;
+export default ErrorThrower;

@@ -31,6 +31,10 @@ body {
   justify-content: center;
 }
 
+ul {
+  list-style: none;
+}
+
 h1 {
   font-size: 3.2em;
   line-height: 1.1;

@@ -1,27 +1,9 @@
 import { Component } from 'react';
 import Card from '../card/card.tsx';
-
-type Person = {
-  name: string;
-  height: string;
-  mass: string;
-  hair_color: string;
-  skin_color: string;
-  eye_color: string;
-  birth_year: string;
-  gender: string;
-  homeworld: string;
-  films: string[];
-  species: string[];
-  vehicles: string[];
-  starships: string[];
-  created: string;
-  edited: string;
-  url: string;
-};
+import type { Person } from '../../types/person.ts';
 
 type State = {
-  loading: boolean;
+  isLoading: boolean;
   error: string | null;
   data: Person[];
 };
@@ -32,7 +14,7 @@ type Props = {
 
 class Results extends Component<Props, State> {
   state: State = {
-    loading: false,
+    isLoading: false,
     error: null,
     data: [],
   };
@@ -48,7 +30,7 @@ class Results extends Component<Props, State> {
   }
 
   fetchData = async (query: string) => {
-    this.setState({ loading: true, error: null });
+    this.setState({ isLoading: true, error: null });
 
     const url = query
       ? `https://swapi.py4e.com/api/people/?search=${query}`
@@ -63,33 +45,34 @@ class Results extends Component<Props, State> {
 
       this.setState({
         data: json.results || [],
-        loading: false,
+        isLoading: false,
       });
     } catch (e) {
       if (e instanceof Error) {
-        this.setState({ error: e.message, loading: false });
+        this.setState({ error: e.message, isLoading: false });
       } else {
-        this.setState({ error: 'Unknown error', loading: false });
+        this.setState({ error: 'Unknown error', isLoading: false });
       }
     }
   };
 
   render() {
-    const { loading, error, data } = this.state;
+    const { isLoading, error, data } = this.state;
 
-    if (loading) return <div>Loading...</div>;
+    if (isLoading) return <div>Loading...</div>;
     if (error) return <div>{error}</div>;
 
     return (
-      <div>
+      <ul>
         {data.map((item, index) => (
-          <Card
-            key={index}
-            name={item.name}
-            description={`Height: ${item.height} см, Year of birth: ${item.birth_year}`}
-          />
+          <li key={index}>
+            <Card
+              name={item.name}
+              description={`Height: ${item.height} см, Year of birth: ${item.birth_year}`}
+            />
+          </li>
         ))}
-      </div>
+      </ul>
     );
   }
 }
