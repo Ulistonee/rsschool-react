@@ -22,7 +22,7 @@ class Search extends Component<Props> {
 
   render() {
     return (
-      <div className={styles.searchContainer}>
+      <section className={styles.searchContainer}>
         <input
           value={this.state.value}
           onChange={this.handleChange}
@@ -30,7 +30,7 @@ class Search extends Component<Props> {
           className={styles.searchInput}
         />
         <button onClick={this.handleClick}>search</button>
-      </div>
+      </section>
     );
   }
 }

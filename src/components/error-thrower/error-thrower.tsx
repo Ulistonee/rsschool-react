@@ -1,6 +1,6 @@
 import { Component } from 'react';
 
-type Props = null;
+type Props = Record<string, never>;
 type State = { throwError: boolean };
 
 class ErrorThrower extends Component<Props, State> {

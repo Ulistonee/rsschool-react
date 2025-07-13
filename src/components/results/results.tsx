@@ -63,16 +63,18 @@ class Results extends Component<Props, State> {
     if (error) return <div>{error}</div>;
 
     return (
-      <ul>
-        {data.map((item, index) => (
-          <li key={index}>
-            <Card
-              name={item.name}
-              description={`Height: ${item.height} см, Year of birth: ${item.birth_year}`}
-            />
-          </li>
-        ))}
-      </ul>
+      <section>
+        <ul>
+          {data.map((item, index) => (
+            <li key={index}>
+              <Card
+                name={item.name}
+                description={`Height: ${item.height} см, Year of birth: ${item.birth_year}`}
+              />
+            </li>
+          ))}
+        </ul>
+      </section>
     );
   }
 }
