@@ -63,7 +63,7 @@ class Results extends Component<Props, State> {
     if (error) return <div>{error}</div>;
 
     return (
-      <section>
+      <section data-testid="results">
         <ul>
           {data.map((item, index) => (
             <li key={index}>

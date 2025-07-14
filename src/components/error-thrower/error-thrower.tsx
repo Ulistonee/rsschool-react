@@ -12,7 +12,10 @@ class ErrorThrower extends Component<Props, State> {
     }
 
     return (
-      <button onClick={() => this.setState({ throwError: true })}>
+      <button
+        onClick={() => this.setState({ throwError: true })}
+        data-testid="error-thrower"
+      >
         Throw Error
       </button>
     );
