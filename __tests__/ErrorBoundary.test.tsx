@@ -11,7 +11,7 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-describe('ErrorBoundary Component', () => {
+describe('ErrorBoundary', () => {
   it('Catches and handles JavaScript errors in child components', () => {
     render(
       <ErrorBoundary>

@@ -14,9 +14,6 @@ describe('Results component', () => {
 
   beforeEach(() => {
     vi.restoreAllMocks();
-  });
-
-  it('renders correct number of items when data is provided', async () => {
     vi.stubGlobal(
       'fetch',
       vi.fn(() =>
@@ -26,51 +23,31 @@ describe('Results component', () => {
         })
       ) as unknown as typeof fetch
     );
+  });
 
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it('renders correct number of items when data is provided', async () => {
     render(<Results query="skywalker" />);
-
     const items = await screen.findAllByRole('listitem');
     expect(items).toHaveLength(mockData.results.length);
   });
 
-  describe('loading state', () => {
-    beforeEach(() => {
-      vi.useFakeTimers();
-    });
+  it('shows loading state while fetching data', () => {
+    vi.useFakeTimers();
+    const fetchMock = vi.fn(() => new Promise(() => {}));
+    global.fetch = fetchMock;
 
-    afterEach(() => {
-      vi.useRealTimers();
-    });
-
-    it('Shows loading state while fetching data', () => {
-      const fetchMock = vi.fn(() => new Promise(() => {}));
-      global.fetch = fetchMock;
-
-      render(<Results query="Luke" />);
-      expect(screen.getByText(/loading.../i)).toBeInTheDocument();
-    });
+    render(<Results query="Luke" />);
+    expect(screen.getByText(/loading.../i)).toBeInTheDocument();
   });
 
-  beforeEach(() => {
-    vi.restoreAllMocks();
-    vi.stubGlobal(
-      'fetch',
-      vi.fn(() =>
-        Promise.resolve({
-          ok: true,
-          json: () => Promise.resolve(mockData),
-        })
-      ) as unknown as typeof fetch
-    );
-  });
-
-  it('Displays item names and descriptions correctly', async () => {
+  it('displays item names and descriptions correctly', async () => {
     render(<Results query="skywalker" />);
-
-    // Проверяем, что имена отображаются
     for (const person of mockData.results) {
       expect(await screen.findByText(person.name)).toBeInTheDocument();
-
       const description = `Height: ${person.height} см, Year of birth: ${person.birth_year}`;
       expect(screen.getByText(description)).toBeInTheDocument();
     }

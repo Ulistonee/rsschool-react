@@ -1,10 +1,10 @@
 import { render, screen } from '@testing-library/react';
 import Search from '../src/components/search/search.tsx';
-import { vi } from 'vitest';
+import { it, vi } from 'vitest';
 import userEvent from '@testing-library/user-event';
 
-describe('Search component', () => {
-  test('renders search input and button', () => {
+describe('Search', () => {
+  it('renders search input and button', () => {
     const mockOnSearch = vi.fn();
 
     render(<Search onSearch={mockOnSearch} />);
@@ -16,7 +16,7 @@ describe('Search component', () => {
     expect(button).toBeInTheDocument();
   });
 
-  test('updates input value when user types', async () => {
+  it('updates input value when user types', async () => {
     const user = userEvent.setup();
     render(<Search onSearch={() => {}} />);
 
@@ -29,7 +29,7 @@ describe('Search component', () => {
     expect(input.value).toBe('react');
   });
 
-  test('calls onSearch and localStorage.setItem when search button is clicked', async () => {
+  it('calls onSearch and localStorage.setItem when search button is clicked', async () => {
     const user = userEvent.setup();
     const setItemSpy = vi.spyOn(window.localStorage.__proto__, 'setItem');
     const handleSearch = (value: string) => {
@@ -46,7 +46,7 @@ describe('Search component', () => {
     expect(setItemSpy).toHaveBeenCalledWith('search', 'react');
   });
 
-  test('triggers search callback with correct parameters', async () => {
+  it('triggers search callback with correct parameters', async () => {
     const user = userEvent.setup();
     const onSearchMock = vi.fn();
 

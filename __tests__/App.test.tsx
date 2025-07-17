@@ -4,14 +4,15 @@ import { describe } from 'vitest';
 import userEvent from '@testing-library/user-event';
 
 describe('App', () => {
+  beforeEach(() => {
+    localStorage.clear();
+    vi.restoreAllMocks();
+  });
+
   it('renders App component and shows input and error-thrower', () => {
     render(<App />);
     expect(screen.getByRole('textbox')).toBeInTheDocument();
     expect(screen.getByTestId('error-thrower')).toBeInTheDocument();
-  });
-
-  beforeEach(() => {
-    localStorage.clear();
   });
 
   it('displays previously saved value from localStorage on load', () => {
@@ -23,19 +24,10 @@ describe('App', () => {
     expect(input).toHaveValue('luke');
   });
 
-  beforeEach(() => {
-    localStorage.clear();
-  });
-
   it('shows empty input when no saved term exists', () => {
     render(<App />);
     const input = screen.getByRole('textbox');
     expect(input).toHaveValue('');
-  });
-
-  beforeEach(() => {
-    localStorage.clear();
-    vi.restoreAllMocks();
   });
 
   it('trims whitespace from search input before saving', async () => {
@@ -51,10 +43,6 @@ describe('App', () => {
     await user.click(button);
 
     expect(setItemSpy).toHaveBeenCalledWith('search', 'spaced query');
-  });
-
-  beforeEach(() => {
-    localStorage.clear();
   });
 
   it('overwrites existing localStorage value when new search is performed', async () => {

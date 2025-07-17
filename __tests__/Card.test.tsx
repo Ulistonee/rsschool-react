@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import Card from '../src/components/card/card';
 
-describe('Card/Item Component Tests', () => {
+describe('Card', () => {
   it('Displays item name and description correctly', () => {
     const name = 'Luke Skywalker';
     const description = 'Height: 172 см, Year of birth: 19BBY';
