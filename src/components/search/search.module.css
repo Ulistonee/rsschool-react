@@ -1,0 +1,15 @@
+.searchContainer {
+  display: flex;
+  gap: 2rem;
+}
+
+.searchInput {
+  padding: 12px;
+  border: none;
+  background: none;
+  font-size: 18px;
+}
+
+.searchInput::placeholder {
+  font-size: 18px;
+}
