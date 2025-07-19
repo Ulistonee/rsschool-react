@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import Results from '../src/components/results/results.tsx';
 import type { Person } from '../src/types/person';
@@ -51,5 +51,18 @@ describe('Results component', () => {
       const description = `Height: ${person.height} см, Year of birth: ${person.birth_year}`;
       expect(screen.getByText(description)).toBeInTheDocument();
     }
+  });
+
+  it('Displays error message when API call fails', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(() => Promise.reject(new Error('Failed to fetch')))
+    );
+
+    render(<Results query="luke" />);
+
+    await waitFor(() => {
+      expect(screen.getByText(/failed to fetch/i)).toBeInTheDocument();
+    });
   });
 });
