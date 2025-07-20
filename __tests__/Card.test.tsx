@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import Card from '../src/components/card/card';
+import '@testing-library/jest-dom';
 
 describe('Card', () => {
   it('Displays item name and description correctly', () => {

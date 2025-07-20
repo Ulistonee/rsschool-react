@@ -1,7 +1,8 @@
 import { render, screen } from '@testing-library/react';
-import App from '../src/App.tsx';
-import { describe } from 'vitest';
+import App from '../src/App';
+import { describe, beforeEach, vi, expect, it } from 'vitest';
 import userEvent from '@testing-library/user-event';
+import '@testing-library/jest-dom';
 
 describe('App', () => {
   beforeEach(() => {
@@ -31,6 +32,10 @@ describe('App', () => {
   });
 
   it('trims whitespace from search input before saving', async () => {
+    const LS_KEY = 'search';
+    const searchTerm = '  spaced query  ';
+    const trimmedTerm = searchTerm.trim();
+
     const user = userEvent.setup();
     const setItemSpy = vi.spyOn(window.localStorage.__proto__, 'setItem');
 
@@ -39,10 +44,10 @@ describe('App', () => {
     const input = screen.getByPlaceholderText(/search/i);
     const button = screen.getByRole('button', { name: /search/i });
 
-    await user.type(input, '   spaced query   ');
+    await user.type(input, searchTerm);
     await user.click(button);
 
-    expect(setItemSpy).toHaveBeenCalledWith('search', 'spaced query');
+    expect(setItemSpy).toHaveBeenCalledWith(LS_KEY, trimmedTerm);
   });
 
   it('overwrites existing localStorage value when new search is performed', async () => {

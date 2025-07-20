@@ -2,6 +2,8 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import ErrorThrower from '../src/components/error-thrower/error-thrower';
 import { Component, ReactNode } from 'react';
+import '@testing-library/jest-dom';
+import { expect, describe, it } from 'vitest';
 
 class TestErrorBoundary extends Component<
   { children: ReactNode },
@@ -23,13 +25,15 @@ class TestErrorBoundary extends Component<
 }
 
 describe('ErrorThrower component', () => {
-  test('renders a button', () => {
+  it('renders a button', () => {
     render(<ErrorThrower />);
+
     const button = screen.getByTestId('error-thrower');
+
     expect(button).toBeInTheDocument();
   });
 
-  test('throws an error when clicked', async () => {
+  it('throws an error when clicked', async () => {
     render(
       <TestErrorBoundary>
         <ErrorThrower />

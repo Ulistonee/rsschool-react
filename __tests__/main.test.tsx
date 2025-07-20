@@ -1,12 +1,17 @@
-it('main.tsx loads and renders without crashing', async () => {
-  const root = document.createElement('div');
-  root.id = 'root';
-  document.body.appendChild(root);
+import '@testing-library/jest-dom';
+import { it, expect, describe } from 'vitest';
 
-  await import('../src/main.tsx');
-});
+describe('main', () => {
+  it('main.tsx loads and renders without crashing', async () => {
+    const root = document.createElement('div');
+    root.id = 'root';
+    document.body.appendChild(root);
 
-it('environment check', () => {
-  expect(typeof window).toBe('object');
-  expect(document).toBeDefined();
+    await import('../src/main');
+  });
+
+  it('environment check', () => {
+    expect(typeof window).toBe('object');
+    expect(document).toBeDefined();
+  });
 });

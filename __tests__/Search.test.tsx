@@ -1,7 +1,8 @@
 import { render, screen } from '@testing-library/react';
-import Search from '../src/components/search/search.tsx';
-import { it, vi } from 'vitest';
+import Search from '../src/components/search/search';
+import { it, vi, describe, expect } from 'vitest';
 import userEvent from '@testing-library/user-event';
+import '@testing-library/jest-dom';
 
 describe('Search', () => {
   it('renders search input and button', () => {
@@ -18,15 +19,15 @@ describe('Search', () => {
 
   it('updates input value when user types', async () => {
     const user = userEvent.setup();
-    render(<Search onSearch={() => {}} />);
+    render(<Search onSearch={vi.fn()} />);
 
-    const input = screen.getByPlaceholderText(/search/i) as HTMLInputElement;
+    const input = screen.getByPlaceholderText(/search/i);
 
-    expect(input.value).toBe('');
+    expect(input).toHaveValue('');
 
     await user.type(input, 'react');
 
-    expect(input.value).toBe('react');
+    expect(input).toHaveValue('react');
   });
 
   it('calls onSearch and localStorage.setItem when search button is clicked', async () => {
@@ -37,6 +38,7 @@ describe('Search', () => {
     };
 
     render(<Search onSearch={handleSearch} />);
+
     const input = screen.getByPlaceholderText(/search/i);
     const button = screen.getByRole('button', { name: /search/i });
 

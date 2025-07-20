@@ -1,10 +1,11 @@
 import { render, screen, waitFor } from '@testing-library/react';
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import Results from '../src/components/results/results.tsx';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import Results from '../src/components/results/results';
 import type { Person } from '../src/types/person';
+import '@testing-library/jest-dom';
 
-describe('Results component', () => {
-  const mockData: { results: Person[] } = {
+describe('Results', () => {
+  const mockData: { results: Partial<Person>[] } = {
     results: [
       { name: 'Luke Skywalker', height: '172', birth_year: '19BBY' },
       { name: 'Leia Organa', height: '150', birth_year: '19BBY' },
@@ -31,23 +32,27 @@ describe('Results component', () => {
 
   it('renders correct number of items when data is provided', async () => {
     render(<Results query="skywalker" />);
+
     const items = await screen.findAllByRole('listitem');
+
     expect(items).toHaveLength(mockData.results.length);
   });
 
   it('shows loading state while fetching data', () => {
     vi.useFakeTimers();
-    const fetchMock = vi.fn(() => new Promise(() => {}));
-    global.fetch = fetchMock;
 
     render(<Results query="Luke" />);
+
     expect(screen.getByText(/loading.../i)).toBeInTheDocument();
   });
 
   it('displays item names and descriptions correctly', async () => {
     render(<Results query="skywalker" />);
+
     for (const person of mockData.results) {
-      expect(await screen.findByText(person.name)).toBeInTheDocument();
+      if (person.name) {
+        expect(await screen.findByText(person.name)).toBeInTheDocument();
+      }
       const description = `Height: ${person.height} см, Year of birth: ${person.birth_year}`;
       expect(screen.getByText(description)).toBeInTheDocument();
     }
