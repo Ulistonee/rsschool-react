@@ -1,6 +1,7 @@
 import { Component } from 'react';
 import Card from '../card/card.tsx';
 import type { Person } from '../../types/person.ts';
+import { StarWarsService } from '../../services/api.ts';
 
 type State = {
   isLoading: boolean;
@@ -20,39 +21,26 @@ class Results extends Component<Props, State> {
   };
 
   componentDidMount() {
-    void this.fetchData(this.props.query);
+    void this.loadData(this.props.query);
   }
 
   componentDidUpdate(prevProps: Props) {
     if (prevProps.query !== this.props.query) {
-      void this.fetchData(this.props.query);
+      void this.loadData(this.props.query);
     }
   }
 
-  fetchData = async (query: string) => {
+  loadData = async (query: string) => {
     this.setState({ isLoading: true, error: null });
 
-    const url = query
-      ? `https://swapi.py4e.com/api/people/?search=${query}`
-      : `https://swapi.py4e.com/api/people/`;
-
     try {
-      const response = await fetch(url);
-
-      if (!response.ok) throw new Error(`Error: ${response.status}`);
-
-      const json = await response.json();
-
+      const data = await StarWarsService.fetchPeople(query);
+      this.setState({ data, isLoading: false });
+    } catch (e) {
       this.setState({
-        data: json.results || [],
+        error: e instanceof Error ? e.message : 'Unknown error',
         isLoading: false,
       });
-    } catch (e) {
-      if (e instanceof Error) {
-        this.setState({ error: e.message, isLoading: false });
-      } else {
-        this.setState({ error: 'Unknown error', isLoading: false });
-      }
     }
   };
 
