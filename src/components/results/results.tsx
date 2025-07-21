@@ -1,70 +1,64 @@
-import { Component } from 'react';
+import { useEffect, useState } from 'react';
 import Card from '../card/card.tsx';
 import type { Person } from '../../types/person.ts';
 import { StarWarsService } from '../../services/api.ts';
-
-type State = {
-  isLoading: boolean;
-  error: string | null;
-  data: Person[];
-};
 
 type Props = {
   query: string;
 };
 
-class Results extends Component<Props, State> {
-  state: State = {
-    isLoading: false,
-    error: null,
-    data: [],
-  };
+const Results = ({ query }: Props) => {
+  const [data, setData] = useState<Person[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  componentDidMount() {
-    void this.loadData(this.props.query);
-  }
+  useEffect(() => {
+    let isMounted = true;
 
-  componentDidUpdate(prevProps: Props) {
-    if (prevProps.query !== this.props.query) {
-      void this.loadData(this.props.query);
-    }
-  }
+    const loadData = async () => {
+      setIsLoading(true);
+      setError(null);
 
-  loadData = async (query: string) => {
-    this.setState({ isLoading: true, error: null });
+      try {
+        const result = await StarWarsService.fetchPeople(query);
+        if (isMounted) {
+          setData(result);
+        }
+      } catch (e) {
+        if (isMounted) {
+          setError(e instanceof Error ? e.message : 'Unknown error');
+        }
+      } finally {
+        if (isMounted) {
+          setIsLoading(false);
+        }
+      }
+    };
 
-    try {
-      const data = await StarWarsService.fetchPeople(query);
-      this.setState({ data, isLoading: false });
-    } catch (e) {
-      this.setState({
-        error: e instanceof Error ? e.message : 'Unknown error',
-        isLoading: false,
-      });
-    }
-  };
+    void loadData();
 
-  render() {
-    const { isLoading, error, data } = this.state;
+    return () => {
+      isMounted = false;
+    };
+  }, [query]);
 
-    if (isLoading) return <div>Loading...</div>;
-    if (error) return <div>{error}</div>;
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>{error}</div>;
 
-    return (
-      <section data-testid="results">
-        <ul>
-          {data.map((item, index) => (
-            <li key={index}>
-              <Card
-                name={item.name}
-                description={`Height: ${item.height} см, Year of birth: ${item.birth_year}`}
-              />
-            </li>
-          ))}
-        </ul>
-      </section>
-    );
-  }
-}
+  return (
+    <section data-testid="results">
+      <ul>
+        {data.map((item, index) => (
+          <li key={index}>
+            <Card
+              name={item.name}
+              description={`Height: ${item.height} см, Year of birth: ${item.birth_year}`}
+            />
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+};
 
 export default Results;
