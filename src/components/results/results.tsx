@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import Card from '../card/card.tsx';
 import type { Person } from '../../types/person.ts';
 import { StarWarsService } from '../../services/api.ts';
+import styles from './results.module.css';
 
 type Props = {
   query: string;
@@ -11,6 +12,9 @@ const Results = ({ query }: Props) => {
   const [data, setData] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [page, setPage] = useState(1);
+  const [hasNext, setHasNext] = useState(false);
+  const [hasPrev, setHasPrev] = useState(false);
 
   useEffect(() => {
     let isMounted = true;
@@ -20,18 +24,19 @@ const Results = ({ query }: Props) => {
       setError(null);
 
       try {
-        const result = await StarWarsService.fetchPeople(query);
+        const result = await StarWarsService.fetchPeople(query, page);
+
         if (isMounted) {
-          setData(result);
+          setData(result.results);
+          setHasNext(Boolean(result.next));
+          setHasPrev(Boolean(result.previous));
         }
       } catch (e) {
         if (isMounted) {
           setError(e instanceof Error ? e.message : 'Unknown error');
         }
       } finally {
-        if (isMounted) {
-          setIsLoading(false);
-        }
+        if (isMounted) setIsLoading(false);
       }
     };
 
@@ -40,13 +45,17 @@ const Results = ({ query }: Props) => {
     return () => {
       isMounted = false;
     };
+  }, [query, page]);
+
+  useEffect(() => {
+    setPage(1);
   }, [query]);
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
 
   return (
-    <section data-testid="results">
+    <section data-testid="results" className={styles.resultsContainer}>
       <ul>
         {data.map((item, index) => (
           <li key={index}>
@@ -57,6 +66,16 @@ const Results = ({ query }: Props) => {
           </li>
         ))}
       </ul>
+
+      <div className={styles.paginationContainer}>
+        <button onClick={() => setPage((p) => p - 1)} disabled={!hasPrev}>
+          ◀ Prev
+        </button>
+        <span>Page {page}</span>
+        <button onClick={() => setPage((p) => p + 1)} disabled={!hasNext}>
+          Next ▶
+        </button>
+      </div>
     </section>
   );
 };

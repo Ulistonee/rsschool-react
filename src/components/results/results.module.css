@@ -1,0 +1,13 @@
+.paginationContainer {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.resultsContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    justify-content: center;
+    align-items: center;
+}
