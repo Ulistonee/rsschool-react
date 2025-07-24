@@ -56,16 +56,20 @@ const Results = ({ query }: Props) => {
 
   return (
     <section data-testid="results" className={styles.resultsContainer}>
-      <ul>
-        {data.map((item, index) => (
-          <li key={index}>
-            <Card
-              name={item.name}
-              description={`Height: ${item.height} см, Year of birth: ${item.birth_year}`}
-            />
-          </li>
-        ))}
-      </ul>
+      {data.length === 0 ? (
+        <p>No results found</p>
+      ) : (
+        <ul>
+          {data.map((item, index) => (
+            <li key={index}>
+              <Card
+                name={item.name}
+                description={`Height: ${item.height} см, Year of birth: ${item.birth_year}`}
+              />
+            </li>
+          ))}
+        </ul>
+      )}
 
       <div className={styles.paginationContainer}>
         <button onClick={() => setPage((p) => p - 1)} disabled={!hasPrev}>
