@@ -3,6 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import Results from '../src/components/results/results';
 import type { Person } from '../src/types/person';
 import '@testing-library/jest-dom';
+import { MemoryRouter } from 'react-router-dom';
 
 describe('Results', () => {
   const mockData: { results: Partial<Person>[] } = {
@@ -31,7 +32,11 @@ describe('Results', () => {
   });
 
   it('renders correct number of items when data is provided', async () => {
-    render(<Results query="skywalker" />);
+    render(
+      <MemoryRouter>
+        <Results query="skywalker" />
+      </MemoryRouter>
+    );
 
     const items = await screen.findAllByRole('listitem');
 
@@ -41,13 +46,21 @@ describe('Results', () => {
   it('shows loading state while fetching data', () => {
     vi.useFakeTimers();
 
-    render(<Results query="Luke" />);
+    render(
+      <MemoryRouter>
+        <Results query="Luke" />
+      </MemoryRouter>
+    );
 
     expect(screen.getByText(/loading.../i)).toBeInTheDocument();
   });
 
   it('displays item names and descriptions correctly', async () => {
-    render(<Results query="skywalker" />);
+    render(
+      <MemoryRouter>
+        <Results query="skywalker" />
+      </MemoryRouter>
+    );
 
     for (const person of mockData.results) {
       if (person.name) {
@@ -64,7 +77,11 @@ describe('Results', () => {
       vi.fn(() => Promise.reject(new Error('Failed to fetch')))
     );
 
-    render(<Results query="luke" />);
+    render(
+      <MemoryRouter>
+        <Results query="luke" />
+      </MemoryRouter>
+    );
 
     await waitFor(() => {
       expect(screen.getByText(/failed to fetch/i)).toBeInTheDocument();

@@ -3,6 +3,7 @@ import App from '../src/App';
 import { describe, beforeEach, vi, expect, it } from 'vitest';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
+import { MemoryRouter } from 'react-router-dom';
 
 describe('App', () => {
   beforeEach(() => {
@@ -11,7 +12,11 @@ describe('App', () => {
   });
 
   it('renders App component and shows input and error-thrower', () => {
-    render(<App />);
+    render(
+      <MemoryRouter>
+        <App />
+      </MemoryRouter>
+    );
     expect(screen.getByRole('textbox')).toBeInTheDocument();
     expect(screen.getByTestId('error-thrower')).toBeInTheDocument();
   });
@@ -19,14 +24,22 @@ describe('App', () => {
   it('displays previously saved value from localStorage on load', () => {
     localStorage.setItem('search', 'luke');
 
-    render(<App />);
+    render(
+      <MemoryRouter>
+        <App />
+      </MemoryRouter>
+    );
 
     const input = screen.getByPlaceholderText(/search/i);
     expect(input).toHaveValue('luke');
   });
 
   it('shows empty input when no saved term exists', () => {
-    render(<App />);
+    render(
+      <MemoryRouter>
+        <App />
+      </MemoryRouter>
+    );
     const input = screen.getByRole('textbox');
     expect(input).toHaveValue('');
   });
@@ -39,7 +52,11 @@ describe('App', () => {
     const user = userEvent.setup();
     const setItemSpy = vi.spyOn(window.localStorage.__proto__, 'setItem');
 
-    render(<App />);
+    render(
+      <MemoryRouter>
+        <App />
+      </MemoryRouter>
+    );
 
     const input = screen.getByPlaceholderText(/search/i);
     const button = screen.getByRole('button', { name: /search/i });
@@ -54,7 +71,11 @@ describe('App', () => {
     const user = userEvent.setup();
     localStorage.setItem('search', 'old value');
 
-    render(<App />);
+    render(
+      <MemoryRouter>
+        <App />
+      </MemoryRouter>
+    );
 
     const input = screen.getByPlaceholderText(/search/i);
     const button = screen.getByRole('button', { name: /search/i });
