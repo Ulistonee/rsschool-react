@@ -3,6 +3,7 @@ import Card from '../card/card.tsx';
 import type { Person } from '../../types/person.ts';
 import { StarWarsService } from '../../services/api.ts';
 import styles from './results.module.css';
+import { useSearchParams } from 'react-router-dom';
 
 type Props = {
   query: string;
@@ -12,7 +13,9 @@ const Results = ({ query }: Props) => {
   const [data, setData] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [page, setPage] = useState(1);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const pageFromUrl = parseInt(searchParams.get('page') || '1', 10);
+  const [page, setPage] = useState(pageFromUrl);
   const [hasNext, setHasNext] = useState(false);
   const [hasPrev, setHasPrev] = useState(false);
 
@@ -51,6 +54,17 @@ const Results = ({ query }: Props) => {
     setPage(1);
   }, [query]);
 
+  useEffect(() => {
+    setSearchParams({ page: String(page) });
+  }, [page, setSearchParams]);
+
+  useEffect(() => {
+    const newPage = parseInt(searchParams.get('page') || '1', 10);
+    if (newPage !== page) {
+      setPage(newPage);
+    }
+  }, [searchParams]);
+
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
 
@@ -71,15 +85,17 @@ const Results = ({ query }: Props) => {
         </ul>
       )}
 
-      <div className={styles.paginationContainer}>
-        <button onClick={() => setPage((p) => p - 1)} disabled={!hasPrev}>
-          ◀ Prev
-        </button>
-        <span>Page {page}</span>
-        <button onClick={() => setPage((p) => p + 1)} disabled={!hasNext}>
-          Next ▶
-        </button>
-      </div>
+      {!isLoading && data.length > 0 && (
+        <div className={styles.paginationContainer}>
+          <button onClick={() => setPage((p) => p - 1)} disabled={!hasPrev}>
+            ◀ Prev
+          </button>
+          <span>Page {page}</span>
+          <button onClick={() => setPage((p) => p + 1)} disabled={!hasNext}>
+            Next ▶
+          </button>
+        </div>
+      )}
     </section>
   );
 };
