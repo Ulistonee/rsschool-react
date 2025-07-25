@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { StarWarsService } from '../../services/api';
 import type { Person } from '../../types/person';
@@ -6,6 +6,7 @@ import styles from './person-details.module.css';
 
 const PersonDetails = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [person, setPerson] = useState<Person | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false); // добавили состояние
@@ -29,6 +30,10 @@ const PersonDetails = () => {
     void load();
   }, [id]);
 
+  const handleClose = () => {
+    navigate('/');
+  };
+
   if (isLoading) {
     return (
       <div className={styles.loadingContainer}>
@@ -41,7 +46,10 @@ const PersonDetails = () => {
   if (!person) return null;
 
   return (
-    <div>
+    <div className={styles.detailsContainer}>
+      <button onClick={handleClose} className={styles.closeButton}>
+        &larr; Back
+      </button>
       <h2>{person.name}</h2>
       <p>Height: {person.height}</p>
       <p>Birth year: {person.birth_year}</p>

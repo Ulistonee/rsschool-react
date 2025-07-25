@@ -18,6 +18,22 @@
     margin-bottom: 10px;
 }
 
+.detailsContainer {
+    padding: 20px;
+    font-family: sans-serif;
+    position: relative;
+}
+
+.closeButton {
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-bottom: 20px;
+    transition: background 0.3s;
+}
+
 @keyframes spin {
     to {
         transform: rotate(360deg);
