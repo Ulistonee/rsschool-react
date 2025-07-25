@@ -3,7 +3,7 @@ import Card from '../card/card.tsx';
 import type { Person } from '../../types/person.ts';
 import { StarWarsService } from '../../services/api.ts';
 import styles from './results.module.css';
-import { useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 
 type Props = {
   query: string;
@@ -74,14 +74,19 @@ const Results = ({ query }: Props) => {
         <p>No results found</p>
       ) : (
         <ul>
-          {data.map((item, index) => (
-            <li key={index}>
-              <Card
-                name={item.name}
-                description={`Height: ${item.height} см, Year of birth: ${item.birth_year}`}
-              />
-            </li>
-          ))}
+          {data.map((person, index) => {
+            const id = person.url.split('/').filter(Boolean).pop();
+            return (
+              <li key={index}>
+                <Link to={`/person/${id}`} className={styles.resetLink}>
+                  <Card
+                    name={person.name}
+                    description={`Height: ${person.height}, Birth year: ${person.birth_year}`}
+                  />
+                </Link>
+              </li>
+            );
+          })}
         </ul>
       )}
 

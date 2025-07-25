@@ -1,32 +1,36 @@
-import './App.css';
-import { Component } from 'react';
+import './App.module.css';
+import { useState } from 'react';
 import Search from './components/search/search.tsx';
 import Results from './components/results/results.tsx';
 import ErrorThrower from './components/error-thrower/error-thrower.tsx';
+import { Outlet } from 'react-router-dom';
+import styles from './App.module.css';
 
-class App extends Component {
-  state = {
-    searchTerm: localStorage.getItem('search') || '',
-  };
+const App = () => {
+  const [searchTerm, setSearchTerm] = useState(() => {
+    return localStorage.getItem('search') || '';
+  });
 
-  handleSearch = (value: string) => {
+  const handleSearch = (value: string) => {
     const trimmed = value.trim();
     localStorage.setItem('search', trimmed);
-    this.setState({ searchTerm: trimmed });
+    setSearchTerm(trimmed);
   };
 
-  render() {
-    return (
-      <>
-        <Search
-          defaultValue={this.state.searchTerm}
-          onSearch={this.handleSearch}
-        />
-        <Results query={this.state.searchTerm} />
-        <ErrorThrower />
-      </>
-    );
-  }
-}
+  return (
+    <>
+      <Search defaultValue={searchTerm} onSearch={handleSearch} />
+      <div className={styles.mainLayout}>
+        <div className={styles.left}>
+          <Results query={searchTerm} />
+        </div>
+        <div className={styles.right}>
+          <Outlet />
+        </div>
+      </div>
+      <ErrorThrower />
+    </>
+  );
+};
 
 export default App;

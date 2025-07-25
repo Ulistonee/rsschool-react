@@ -18,4 +18,11 @@ export const StarWarsService = {
     if (!response.ok) throw new Error(`Error: ${response.status}`);
     return await response.json();
   },
+
+  async fetchPersonById(id: string): Promise<Person> {
+    const url = `${BASE_URL}/people/${id}/`;
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`Error: ${response.status}`);
+    return await response.json();
+  },
 };
