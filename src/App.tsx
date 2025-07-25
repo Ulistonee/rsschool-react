@@ -3,7 +3,7 @@ import { useState } from 'react';
 import Search from './components/search/search.tsx';
 import Results from './components/results/results.tsx';
 import ErrorThrower from './components/error-thrower/error-thrower.tsx';
-import { Outlet } from 'react-router-dom';
+import { Link, Outlet } from 'react-router-dom';
 import styles from './App.module.css';
 
 const App = () => {
@@ -19,6 +19,13 @@ const App = () => {
 
   return (
     <>
+      <header>
+        <nav>
+          <Link to="/about" className={styles.resetLink}>
+            About
+          </Link>
+        </nav>
+      </header>
       <Search defaultValue={searchTerm} onSearch={handleSearch} />
       <div className={styles.mainLayout}>
         <div className={styles.left}>

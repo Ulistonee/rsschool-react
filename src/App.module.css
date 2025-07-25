@@ -48,3 +48,15 @@
   padding-left: 20px;
 }
 
+.resetLink {
+  all: unset;
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+a {
+  all: unset;
+  cursor: pointer;
+  color: inherit;
+}
