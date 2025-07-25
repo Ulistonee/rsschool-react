@@ -2,27 +2,43 @@ import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { StarWarsService } from '../../services/api';
 import type { Person } from '../../types/person';
+import styles from './person-details.module.css';
 
 const PersonDetails = () => {
   const { id } = useParams();
   const [person, setPerson] = useState<Person | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false); // добавили состояние
 
   useEffect(() => {
     if (!id) return;
+
     const load = async () => {
+      setIsLoading(true);
+      setError(null);
       try {
         const data = await StarWarsService.fetchPersonById(id);
         setPerson(data);
       } catch (e) {
         setError(e instanceof Error ? e.message : 'Failed to load details');
+      } finally {
+        setIsLoading(false);
       }
     };
+
     void load();
   }, [id]);
 
+  if (isLoading) {
+    return (
+      <div className={styles.loadingContainer}>
+        <div className={styles.spinner} />
+        <p>Loading person details...</p>
+      </div>
+    );
+  }
   if (error) return <div>{error}</div>;
-  if (!person) return <div>Loading...</div>;
+  if (!person) return null;
 
   return (
     <div>
