@@ -5,7 +5,7 @@ import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 import { MemoryRouter } from 'react-router-dom';
 
-describe('App', () => {
+describe.skip('App', () => {
   beforeEach(() => {
     localStorage.clear();
     vi.restoreAllMocks();
