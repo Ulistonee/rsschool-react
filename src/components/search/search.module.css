@@ -1,7 +1,8 @@
 .searchContainer {
   display: flex;
   gap: 2rem;
-  justify-content: center;
+  justify-content: left;
+  padding: 2rem;
 }
 
 .searchInput {

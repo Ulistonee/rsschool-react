@@ -27,10 +27,10 @@ const App = () => {
       </header>
       <Search defaultValue={searchTerm} onSearch={handleSearch} />
       <div className={styles.mainLayout}>
-        <div className={styles.left}>
+        <div className={styles.resultsWrapper}>
           <Results query={searchTerm} />
         </div>
-        <div className={styles.right}>
+        <div className={styles.detailsWrapper}>
           <Outlet />
         </div>
       </div>

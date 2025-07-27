@@ -22,6 +22,7 @@
     padding: 20px;
     font-family: sans-serif;
     position: relative;
+    border-left: 1px solid #ccc;
 }
 
 .closeButton {
