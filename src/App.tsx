@@ -1,10 +1,10 @@
 import './App.module.css';
 import Search from './components/search/search.tsx';
 import Results from './components/results/results.tsx';
-import ErrorThrower from './components/error-thrower/error-thrower.tsx';
 import { Link, Outlet } from 'react-router-dom';
 import styles from './App.module.css';
 import useLocalStorage from './hooks/useLocalStorage.ts';
+import classNames from 'classnames';
 
 const App = () => {
   const [searchTerm, setSearchTerm] = useLocalStorage('search', '');
@@ -16,8 +16,11 @@ const App = () => {
   return (
     <>
       <header>
-        <nav>
-          <Link to="/about" className={styles.resetLink}>
+        <nav className={styles.navigation}>
+          <Link
+            to="/about"
+            className={classNames(styles.navLink, styles.resetLink)}
+          >
             About
           </Link>
         </nav>
@@ -31,7 +34,6 @@ const App = () => {
           <Outlet />
         </div>
       </div>
-      <ErrorThrower />
     </>
   );
 };
