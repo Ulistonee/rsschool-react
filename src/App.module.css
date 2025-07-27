@@ -43,10 +43,9 @@
 
 .mainLayout {
   display: flex;
-  padding: 2rem;
   gap: 20px;
   position: relative;
-  padding-right: 500px;
+  padding: 2rem 500px 2rem 2rem;
 }
 
 .resultsWrapper {

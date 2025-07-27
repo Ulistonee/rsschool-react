@@ -36,24 +36,24 @@ const PersonDetails = () => {
 
   if (isLoading) {
     return (
-      <div className={styles.loadingContainer}>
+      <section className={styles.loadingContainer}>
         <div className={styles.spinner} />
         <p>Loading person details...</p>
-      </div>
+      </section>
     );
   }
   if (error) return <div>{error}</div>;
   if (!person) return null;
 
   return (
-    <div className={styles.detailsContainer}>
+    <section className={styles.detailsContainer}>
       <button onClick={handleClose} className={styles.closeButton}>
         &larr; Back
       </button>
       <h2>{person.name}</h2>
       <p>Height: {person.height}</p>
       <p>Birth year: {person.birth_year}</p>
-    </div>
+    </section>
   );
 };
 
