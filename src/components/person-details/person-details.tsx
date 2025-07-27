@@ -13,7 +13,6 @@ const PersonDetails = () => {
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Загрузка данных
   useEffect(() => {
     if (!id) return;
 
@@ -33,7 +32,6 @@ const PersonDetails = () => {
     void load();
   }, [id]);
 
-  // Обработка клика вне компонента
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (

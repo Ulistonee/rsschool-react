@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom';
 import { it, expect, describe } from 'vitest';
 
-describe.skip('main', () => {
+describe('main', () => {
   it('main.tsx loads and renders without crashing', async () => {
     const root = document.createElement('div');
     root.id = 'root';

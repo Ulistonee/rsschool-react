@@ -5,31 +5,28 @@ import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 import { MemoryRouter } from 'react-router-dom';
 
-describe.skip('App', () => {
+describe('App', () => {
   beforeEach(() => {
     localStorage.clear();
     vi.restoreAllMocks();
   });
 
-  it('renders App component and shows input and error-thrower', () => {
+  it('renders App component and shows input', () => {
     render(
       <MemoryRouter>
         <App />
       </MemoryRouter>
     );
     expect(screen.getByRole('textbox')).toBeInTheDocument();
-    expect(screen.getByTestId('error-thrower')).toBeInTheDocument();
   });
 
   it('displays previously saved value from localStorage on load', () => {
-    localStorage.setItem('search', 'luke');
-
+    localStorage.setItem('search', JSON.stringify('luke'));
     render(
       <MemoryRouter>
         <App />
       </MemoryRouter>
     );
-
     const input = screen.getByPlaceholderText(/search/i);
     expect(input).toHaveValue('luke');
   });
@@ -64,12 +61,15 @@ describe.skip('App', () => {
     await user.type(input, searchTerm);
     await user.click(button);
 
-    expect(setItemSpy).toHaveBeenCalledWith(LS_KEY, trimmedTerm);
+    expect(setItemSpy).toHaveBeenCalledWith(
+      LS_KEY,
+      JSON.stringify(trimmedTerm)
+    );
   });
 
   it('overwrites existing localStorage value when new search is performed', async () => {
     const user = userEvent.setup();
-    localStorage.setItem('search', 'old value');
+    localStorage.setItem('search', JSON.stringify('old value'));
 
     render(
       <MemoryRouter>
@@ -86,6 +86,6 @@ describe.skip('App', () => {
     await user.type(input, 'new value');
     await user.click(button);
 
-    expect(localStorage.getItem('search')).toBe('new value');
+    expect(localStorage.getItem('search')).toBe(JSON.stringify('new value'));
   });
 });

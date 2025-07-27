@@ -4,27 +4,53 @@ import Results from '../src/components/results/results';
 import type { Person } from '../src/types/person';
 import '@testing-library/jest-dom';
 import { MemoryRouter } from 'react-router-dom';
+import * as api from '../src/services/api';
 
-describe.skip('Results', () => {
-  const mockData: { results: Partial<Person>[] } = {
+describe('Results', () => {
+  const getMockPerson = (overrides: Partial<Person>): Person => ({
+    name: 'default name',
+    height: '0',
+    mass: '',
+    hair_color: '',
+    skin_color: '',
+    eye_color: '',
+    birth_year: 'unknown',
+    gender: '',
+    films: [],
+    homeworld: '',
+    species: [],
+    vehicles: [],
+    starships: [],
+    created: '',
+    edited: '',
+    url: '',
+    ...overrides,
+  });
+
+  const mockData: { results: Person[] } = {
     results: [
-      { name: 'Luke Skywalker', height: '172', birth_year: '19BBY' },
-      { name: 'Leia Organa', height: '150', birth_year: '19BBY' },
-      { name: 'Han Solo', height: '180', birth_year: '29BBY' },
+      getMockPerson({
+        name: 'Luke Skywalker',
+        height: '172',
+        birth_year: '19BBY',
+      }),
+      getMockPerson({
+        name: 'Leia Organa',
+        height: '150',
+        birth_year: '19BBY',
+      }),
+      getMockPerson({ name: 'Han Solo', height: '180', birth_year: '29BBY' }),
     ],
   };
 
   beforeEach(() => {
     vi.restoreAllMocks();
-    vi.stubGlobal(
-      'fetch',
-      vi.fn(() =>
-        Promise.resolve({
-          ok: true,
-          json: () => Promise.resolve(mockData),
-        })
-      ) as unknown as typeof fetch
-    );
+
+    vi.spyOn(api.StarWarsService, 'fetchPeople').mockResolvedValue({
+      results: mockData.results,
+      next: null,
+      previous: null,
+    });
   });
 
   afterEach(() => {
@@ -66,15 +92,14 @@ describe.skip('Results', () => {
       if (person.name) {
         expect(await screen.findByText(person.name)).toBeInTheDocument();
       }
-      const description = `Height: ${person.height} см, Year of birth: ${person.birth_year}`;
+      const description = `Height: ${person.height}, Birth year: ${person.birth_year}`;
       expect(screen.getByText(description)).toBeInTheDocument();
     }
   });
 
   it('Displays error message when API call fails', async () => {
-    vi.stubGlobal(
-      'fetch',
-      vi.fn(() => Promise.reject(new Error('Failed to fetch')))
+    vi.spyOn(api.StarWarsService, 'fetchPeople').mockRejectedValue(
+      new Error('Failed to fetch')
     );
 
     render(
