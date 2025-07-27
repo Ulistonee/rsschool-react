@@ -4,6 +4,7 @@ import type { Person } from '../../types/person.ts';
 import { StarWarsService } from '../../services/api.ts';
 import styles from './results.module.css';
 import { Link, useSearchParams } from 'react-router-dom';
+import Pagination from '../pagination/pagination.tsx';
 
 type Props = {
   query: string;
@@ -91,15 +92,12 @@ const Results = ({ query }: Props) => {
       )}
 
       {!isLoading && data.length > 0 && (
-        <div className={styles.paginationContainer}>
-          <button onClick={() => setPage((p) => p - 1)} disabled={!hasPrev}>
-            ◀ Prev
-          </button>
-          <span>Page {page}</span>
-          <button onClick={() => setPage((p) => p + 1)} disabled={!hasNext}>
-            Next ▶
-          </button>
-        </div>
+        <Pagination
+          page={page}
+          hasNext={hasNext}
+          hasPrev={hasPrev}
+          setPage={setPage}
+        />
       )}
     </section>
   );

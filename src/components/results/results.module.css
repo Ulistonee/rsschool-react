@@ -1,9 +1,3 @@
-.paginationContainer {
-    display: flex;
-    gap: 1rem;
-    align-items: center;
-}
-
 .resultsContainer {
     display: flex;
     flex-direction: column;
