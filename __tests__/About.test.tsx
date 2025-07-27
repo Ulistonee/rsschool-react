@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { vi, expect, describe, it } from 'vitest';
 import { MemoryRouter, useNavigate } from 'react-router-dom';
 import About from '../src/pages/about/about';
+import '@testing-library/jest-dom';
 
 vi.mock('react-router-dom', async (importOriginal) => {
   const actual = await importOriginal();
