@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { StarWarsService } from '../../services/api';
 import type { Person } from '../../types/person';
 import styles from './person-details.module.css';
@@ -7,10 +7,13 @@ import styles from './person-details.module.css';
 const PersonDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const containerRef = useRef<HTMLDivElement>(null);
+
   const [person, setPerson] = useState<Person | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false); // добавили состояние
+  const [isLoading, setIsLoading] = useState(false);
 
+  // Загрузка данных
   useEffect(() => {
     if (!id) return;
 
@@ -30,6 +33,21 @@ const PersonDetails = () => {
     void load();
   }, [id]);
 
+  // Обработка клика вне компонента
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target as Node)
+      ) {
+        navigate('/');
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [navigate]);
+
   const handleClose = () => {
     navigate('/');
   };
@@ -46,13 +64,15 @@ const PersonDetails = () => {
   if (!person) return null;
 
   return (
-    <section className={styles.detailsContainer}>
-      <button onClick={handleClose} className={styles.closeButton}>
-        &larr; Back
-      </button>
-      <h2>{person.name}</h2>
-      <p>Height: {person.height}</p>
-      <p>Birth year: {person.birth_year}</p>
+    <section>
+      <div ref={containerRef} className={styles.detailsContainer}>
+        <button onClick={handleClose} className={styles.closeButton}>
+          &larr; Back
+        </button>
+        <h2>{person.name}</h2>
+        <p>Height: {person.height}</p>
+        <p>Birth year: {person.birth_year}</p>
+      </div>
     </section>
   );
 };
