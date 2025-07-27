@@ -1,5 +1,6 @@
 import '@testing-library/jest-dom';
 import { it, expect, describe } from 'vitest';
+import { act } from 'react-dom/test-utils';
 
 describe('main', () => {
   it('main.tsx loads and renders without crashing', async () => {
@@ -7,7 +8,9 @@ describe('main', () => {
     root.id = 'root';
     document.body.appendChild(root);
 
-    await import('../src/main');
+    await act(async () => {
+      await import('../src/main');
+    });
   });
 
   it('environment check', () => {
