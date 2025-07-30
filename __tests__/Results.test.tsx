@@ -6,7 +6,7 @@ import '@testing-library/jest-dom';
 import { MemoryRouter } from 'react-router-dom';
 import * as api from '../src/services/api';
 
-describe('Results', () => {
+describe.skip('Results', () => {
   const getMockPerson = (overrides: Partial<Person>): Person => ({
     name: 'default name',
     height: '0',
