@@ -13,3 +13,13 @@
     cursor: pointer;
 }
 
+.personItem {
+    margin-bottom: 1rem;
+}
+
+.personLabel {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+

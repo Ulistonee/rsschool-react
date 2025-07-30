@@ -5,6 +5,8 @@ import { StarWarsService } from '../../services/api.ts';
 import styles from './results.module.css';
 import { Link, useSearchParams } from 'react-router-dom';
 import Pagination from '../pagination/pagination.tsx';
+import useSearchStore from '../../store/useSearchStore.ts';
+import { getId } from '../../utils/getId.ts';
 
 type Props = {
   query: string;
@@ -19,6 +21,10 @@ const Results = ({ query }: Props) => {
   const [page, setPage] = useState(pageFromUrl);
   const [hasNext, setHasNext] = useState(false);
   const [hasPrev, setHasPrev] = useState(false);
+
+  const selectedPeople = useSearchStore((state) => state.selectedPeople);
+  const selectPerson = useSearchStore((state) => state.selectPerson);
+  const unselectPerson = useSearchStore((state) => state.unselectPerson);
 
   useEffect(() => {
     let isMounted = true;
@@ -75,16 +81,33 @@ const Results = ({ query }: Props) => {
         <p>No results found</p>
       ) : (
         <ul>
-          {data.map((person, index) => {
-            const id = person.url.split('/').filter(Boolean).pop();
+          {data.map((person) => {
+            const id = getId(person.url);
+            const isSelected = Boolean(selectedPeople[id]);
+
+            const toggleSelection = () => {
+              if (isSelected) {
+                unselectPerson(id);
+              } else {
+                selectPerson(person);
+              }
+            };
+
             return (
-              <li key={index}>
-                <Link to={`/person/${id}`} className={styles.resetLink}>
-                  <Card
-                    name={person.name}
-                    description={`Height: ${person.height}, Birth year: ${person.birth_year}`}
+              <li key={id} className={styles.personItem}>
+                <label className={styles.personLabel}>
+                  <input
+                    type="checkbox"
+                    checked={isSelected}
+                    onChange={toggleSelection}
                   />
-                </Link>
+                  <Link to={`/person/${id}`} className={styles.resetLink}>
+                    <Card
+                      name={person.name}
+                      description={`Height: ${person.height}, Birth year: ${person.birth_year}`}
+                    />
+                  </Link>
+                </label>
               </li>
             );
           })}
