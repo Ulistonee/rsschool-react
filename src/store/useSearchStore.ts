@@ -12,6 +12,7 @@ type SearchStore = {
   selectPerson: (person: Person) => void;
   unselectPerson: (id: string) => void;
   isSelected: (id: string) => boolean;
+  clearSelection: () => void;
 };
 
 const useSearchStore = create<SearchStore>((set, get) => ({
@@ -31,6 +32,7 @@ const useSearchStore = create<SearchStore>((set, get) => ({
       return { selectedPeople: rest };
     }),
   isSelected: (id) => !!get().selectedPeople[id],
+  clearSelection: () => set({ selectedPeople: {} }),
 }));
 
 export default useSearchStore;

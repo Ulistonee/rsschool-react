@@ -7,6 +7,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import Pagination from '../pagination/pagination.tsx';
 import useSearchStore from '../../store/useSearchStore.ts';
 import { getId } from '../../utils/getId.ts';
+import { saveAs } from 'file-saver';
 
 type Props = {
   query: string;
@@ -23,8 +24,27 @@ const Results = ({ query }: Props) => {
   const [hasPrev, setHasPrev] = useState(false);
 
   const selectedPeople = useSearchStore((state) => state.selectedPeople);
-  const selectPerson = useSearchStore((state) => state.selectPerson);
   const unselectPerson = useSearchStore((state) => state.unselectPerson);
+  const selectPerson = useSearchStore((state) => state.selectPerson);
+  const clearSelection = useSearchStore((state) => state.clearSelection);
+
+  const handleDownload = () => {
+    const people = Object.values(selectedPeople);
+    const csvRows = [
+      ['Name', 'Height', 'Birth Year', 'URL'],
+      ...people.map((person) => [
+        person.name,
+        person.height,
+        person.birth_year,
+        person.url,
+      ]),
+    ];
+
+    const csvContent = csvRows.map((row) => row.join(',')).join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const fileName = `${people.length}_person.csv`;
+    saveAs(blob, fileName);
+  };
 
   useEffect(() => {
     let isMounted = true;
@@ -121,6 +141,13 @@ const Results = ({ query }: Props) => {
           hasPrev={hasPrev}
           setPage={setPage}
         />
+      )}
+      {Object.keys(selectedPeople).length > 0 && (
+        <div className={styles.flyout}>
+          <p>{Object.keys(selectedPeople).length} person selected</p>
+          <button onClick={clearSelection}>Unselect all</button>
+          <button onClick={handleDownload}>Download</button>
+        </div>
       )}
     </section>
   );
