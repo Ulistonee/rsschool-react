@@ -1,7 +1,7 @@
 import styles from './pagination.module.css';
 
 type Props = {
-  page: number;
+  pageNumber: number;
   hasNext: boolean;
   hasPrev: boolean;
   onPrevPage: () => void;
@@ -9,7 +9,7 @@ type Props = {
 };
 
 const Pagination = ({
-  page,
+  pageNumber,
   hasNext,
   hasPrev,
   onPrevPage,
@@ -20,7 +20,7 @@ const Pagination = ({
       <button onClick={onPrevPage} disabled={!hasPrev}>
         ◀ Prev
       </button>
-      <span>Page {page}</span>
+      <span>Page {pageNumber}</span>
       <button onClick={onNextPage} disabled={!hasNext}>
         Next ▶
       </button>

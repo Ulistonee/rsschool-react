@@ -1,5 +1,5 @@
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { StarWarsService } from '../../services/api';
 import type { Person } from '../../types/person';
 import styles from './person-details.module.css';
@@ -9,7 +9,6 @@ const PersonDetails = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const from = (location.state as { from?: string })?.from || '/';
-  const containerRef = useRef<HTMLDivElement>(null);
 
   const [person, setPerson] = useState<Person | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -52,9 +51,9 @@ const PersonDetails = () => {
 
   return (
     <section>
-      <div ref={containerRef} className={styles.detailsContainer}>
+      <div className={styles.detailsContainer}>
         <button onClick={handleClose} className={styles.closeButton}>
-          &larr; Back
+          Close
         </button>
         <h2>{person.name}</h2>
         <p>Height: {person.height}</p>

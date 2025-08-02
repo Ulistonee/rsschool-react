@@ -14,14 +14,16 @@ type Props = {
 };
 
 const Results = ({ query }: Props) => {
-  const [data, setData] = useState<Person[]>([]);
+  const [persons, setPersons] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
   const [searchParams] = useSearchParams();
   const pageFromUrl = parseInt(searchParams.get('page') || '1', 10);
+  const navigate = useNavigate();
+
   const [hasNext, setHasNext] = useState(false);
   const [hasPrev, setHasPrev] = useState(false);
-  const navigate = useNavigate();
 
   const selectedPeople = useSearchStore((state) => state.selectedPeople);
   const unselectPerson = useSearchStore((state) => state.unselectPerson);
@@ -57,7 +59,7 @@ const Results = ({ query }: Props) => {
         const result = await StarWarsService.fetchPeople(query, pageFromUrl);
 
         if (isMounted) {
-          setData(result.results);
+          setPersons(result.results);
           setHasNext(Boolean(result.next));
           setHasPrev(Boolean(result.previous));
         }
@@ -89,11 +91,11 @@ const Results = ({ query }: Props) => {
 
   return (
     <section data-testid="results" className={styles.resultsContainer}>
-      {data.length === 0 ? (
+      {persons.length === 0 ? (
         <p>No results found</p>
       ) : (
         <ul>
-          {data.map((person) => {
+          {persons.map((person) => {
             const id = getId(person.url);
             const isSelected = Boolean(selectedPeople[id]);
 
@@ -131,16 +133,15 @@ const Results = ({ query }: Props) => {
         </ul>
       )}
 
-      {!isLoading && data.length > 0 && (
+      {!isLoading && persons.length > 0 && (
         <Pagination
-          page={pageFromUrl}
+          pageNumber={pageFromUrl}
           hasNext={hasNext}
           hasPrev={hasPrev}
           onPrevPage={() => {
             const params = new URLSearchParams(searchParams);
             params.set('page', String(pageFromUrl - 1));
             params.delete('person');
-            console.log(params);
             navigate({
               pathname: '/',
               search: params.toString(),
