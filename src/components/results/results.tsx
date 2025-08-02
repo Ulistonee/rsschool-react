@@ -8,6 +8,7 @@ import Pagination from '../pagination/pagination.tsx';
 import useSearchStore from '../../store/useSearchStore.ts';
 import { getId } from '../../utils/getId.ts';
 import { saveAs } from 'file-saver';
+import classNames from 'classnames';
 
 type Props = {
   query: string;
@@ -116,7 +117,7 @@ const Results = ({ query }: Props) => {
                     onChange={toggleSelection}
                   />
                   <button
-                    className={styles.resetLink}
+                    className={classNames(styles.resetLink, styles.person)}
                     onClick={() => {
                       openDetails(id);
                     }}

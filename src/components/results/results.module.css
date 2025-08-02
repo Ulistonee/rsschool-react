@@ -23,6 +23,10 @@
     gap: 0.5rem;
 }
 
+.personLabel .person {
+    background-color: transparent;
+}
+
 .flyout {
     position: fixed;
     bottom: 0;
