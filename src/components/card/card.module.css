@@ -1,0 +1,16 @@
+.cardContainer {
+  display: flex;
+  gap: 5rem;
+  align-items: center;
+  padding: 0;
+  background: transparent;
+}
+
+.name {
+  width: 200px;
+  margin: 0;
+}
+
+.description {
+  width: 300px;
+}
