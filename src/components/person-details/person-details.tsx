@@ -1,14 +1,13 @@
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { StarWarsService } from '../../services/api';
 import type { Person } from '../../types/person';
 import styles from './person-details.module.css';
 
 const PersonDetails = () => {
-  const { id } = useParams();
+  const [searchParams] = useSearchParams();
+  const id = searchParams.get('person');
   const navigate = useNavigate();
-  const location = useLocation();
-  const from = (location.state as { from?: string })?.from || '/';
 
   const [person, setPerson] = useState<Person | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -34,7 +33,12 @@ const PersonDetails = () => {
   }, [id]);
 
   const handleClose = () => {
-    navigate(from);
+    const params = new URLSearchParams(searchParams);
+    params.delete('person');
+    navigate({
+      pathname: '/',
+      search: params.toString(),
+    });
   };
 
   if (isLoading) {

@@ -19,7 +19,7 @@ const Results = ({ query }: Props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const pageFromUrl = parseInt(searchParams.get('page') || '1', 10);
   const navigate = useNavigate();
 
@@ -67,10 +67,9 @@ const Results = ({ query }: Props) => {
   }, [query, pageFromUrl]);
 
   const openDetails = (id: string) => {
-    const currentUrl = location.pathname + location.search;
-    navigate(`/person/${id}?${searchParams.toString()}`, {
-      state: { from: currentUrl },
-    });
+    const params = new URLSearchParams(searchParams);
+    params.set('person', id);
+    setSearchParams(params);
   };
 
   if (isLoading) return <div>Loading...</div>;
@@ -104,9 +103,7 @@ const Results = ({ query }: Props) => {
                   />
                   <button
                     className={classNames(styles.resetLink, styles.person)}
-                    onClick={() => {
-                      openDetails(id);
-                    }}
+                    onClick={() => openDetails(id)}
                   >
                     <Card
                       name={person.name}
