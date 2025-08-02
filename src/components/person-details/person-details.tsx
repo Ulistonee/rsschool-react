@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
 import { StarWarsService } from '../../services/api';
 import type { Person } from '../../types/person';
@@ -7,6 +7,8 @@ import styles from './person-details.module.css';
 const PersonDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
+  const from = (location.state as { from?: string })?.from || '/';
   const containerRef = useRef<HTMLDivElement>(null);
 
   const [person, setPerson] = useState<Person | null>(null);
@@ -47,7 +49,7 @@ const PersonDetails = () => {
   }, [navigate]);
 
   const handleClose = () => {
-    navigate('/');
+    navigate(from);
   };
 
   if (isLoading) {
@@ -60,6 +62,7 @@ const PersonDetails = () => {
   }
   if (error) return <div>{error}</div>;
   if (!person) return null;
+  if (!id) return null;
 
   return (
     <section>

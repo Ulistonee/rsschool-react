@@ -3,7 +3,7 @@ import Card from '../card/card.tsx';
 import type { Person } from '../../types/person.ts';
 import { StarWarsService } from '../../services/api.ts';
 import styles from './results.module.css';
-import { Link, useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import Pagination from '../pagination/pagination.tsx';
 import useSearchStore from '../../store/useSearchStore.ts';
 import { getId } from '../../utils/getId.ts';
@@ -19,9 +19,9 @@ const Results = ({ query }: Props) => {
   const [error, setError] = useState<string | null>(null);
   const [searchParams, setSearchParams] = useSearchParams();
   const pageFromUrl = parseInt(searchParams.get('page') || '1', 10);
-  const [page, setPage] = useState(pageFromUrl);
   const [hasNext, setHasNext] = useState(false);
   const [hasPrev, setHasPrev] = useState(false);
+  const navigate = useNavigate();
 
   const selectedPeople = useSearchStore((state) => state.selectedPeople);
   const unselectPerson = useSearchStore((state) => state.unselectPerson);
@@ -54,7 +54,7 @@ const Results = ({ query }: Props) => {
       setError(null);
 
       try {
-        const result = await StarWarsService.fetchPeople(query, page);
+        const result = await StarWarsService.fetchPeople(query, pageFromUrl);
 
         if (isMounted) {
           setData(result.results);
@@ -75,26 +75,20 @@ const Results = ({ query }: Props) => {
     return () => {
       isMounted = false;
     };
-  }, [query, page]);
+  }, [query, pageFromUrl]);
 
-  useEffect(() => {
-    setPage(1);
-  }, [query]);
-
-  useEffect(() => {
-    setSearchParams({ page: String(page) });
-  }, [page, setSearchParams]);
-
-  useEffect(() => {
-    const newPage = parseInt(searchParams.get('page') || '1', 10);
-    if (newPage !== page) {
-      setPage(newPage);
-    }
-  }, [searchParams]);
+  const openDetails = (id: string) => {
+    const currentUrl = location.pathname + location.search;
+    navigate(`/person/${id}?${searchParams.toString()}`, {
+      state: { from: currentUrl },
+    });
+  };
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
 
+  console.log(pageFromUrl, 'pageFromUrl before return');
+  console.log(searchParams.get('person'), 'person before return');
   return (
     <section data-testid="results" className={styles.resultsContainer}>
       {data.length === 0 ? (
@@ -121,12 +115,17 @@ const Results = ({ query }: Props) => {
                     checked={isSelected}
                     onChange={toggleSelection}
                   />
-                  <Link to={`/person/${id}`} className={styles.resetLink}>
+                  <button
+                    className={styles.resetLink}
+                    onClick={() => {
+                      openDetails(id);
+                    }}
+                  >
                     <Card
                       name={person.name}
                       description={`Height: ${person.height}, Birth year: ${person.birth_year}`}
                     />
-                  </Link>
+                  </button>
                 </label>
               </li>
             );
@@ -136,10 +135,23 @@ const Results = ({ query }: Props) => {
 
       {!isLoading && data.length > 0 && (
         <Pagination
-          page={page}
+          page={pageFromUrl}
           hasNext={hasNext}
           hasPrev={hasPrev}
-          setPage={setPage}
+          onPrevPage={() => {
+            console.log('page', searchParams.get('page'));
+            console.log('pageFromUrl', pageFromUrl);
+            setSearchParams({
+              page: String(pageFromUrl - 1),
+            });
+          }}
+          onNextPage={() => {
+            console.log('page', searchParams.get('page'));
+            console.log('pageFromUrl', pageFromUrl);
+            setSearchParams({
+              page: String(pageFromUrl + 1),
+            });
+          }}
         />
       )}
       {Object.keys(selectedPeople).length > 0 && (

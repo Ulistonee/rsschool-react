@@ -23,9 +23,9 @@ createRoot(container).render(
           <Routes>
             <Route path="/" element={<App />}>
               <Route path="person/:id" element={<PersonDetails />} />
+              <Route path="about" element={<About />} />
+              <Route path="*" element={<NotFound />} />
             </Route>
-            <Route path="/about" element={<About />} />
-            <Route path="*" element={<NotFound />} />
           </Routes>
         </ErrorBoundary>
       </ThemeProvider>
