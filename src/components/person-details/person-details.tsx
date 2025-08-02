@@ -34,20 +34,6 @@ const PersonDetails = () => {
     void load();
   }, [id]);
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        containerRef.current &&
-        !containerRef.current.contains(event.target as Node)
-      ) {
-        navigate('/');
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [navigate]);
-
   const handleClose = () => {
     navigate(from);
   };

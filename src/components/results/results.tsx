@@ -17,7 +17,7 @@ const Results = ({ query }: Props) => {
   const [data, setData] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const pageFromUrl = parseInt(searchParams.get('page') || '1', 10);
   const [hasNext, setHasNext] = useState(false);
   const [hasPrev, setHasPrev] = useState(false);
@@ -87,8 +87,6 @@ const Results = ({ query }: Props) => {
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
 
-  console.log(pageFromUrl, 'pageFromUrl before return');
-  console.log(searchParams.get('person'), 'person before return');
   return (
     <section data-testid="results" className={styles.resultsContainer}>
       {data.length === 0 ? (
@@ -139,17 +137,22 @@ const Results = ({ query }: Props) => {
           hasNext={hasNext}
           hasPrev={hasPrev}
           onPrevPage={() => {
-            console.log('page', searchParams.get('page'));
-            console.log('pageFromUrl', pageFromUrl);
-            setSearchParams({
-              page: String(pageFromUrl - 1),
+            const params = new URLSearchParams(searchParams);
+            params.set('page', String(pageFromUrl - 1));
+            params.delete('person');
+            console.log(params);
+            navigate({
+              pathname: '/',
+              search: params.toString(),
             });
           }}
           onNextPage={() => {
-            console.log('page', searchParams.get('page'));
-            console.log('pageFromUrl', pageFromUrl);
-            setSearchParams({
-              page: String(pageFromUrl + 1),
+            const params = new URLSearchParams(searchParams);
+            params.set('page', String(pageFromUrl + 1));
+            params.delete('person');
+            navigate({
+              pathname: '/',
+              search: params.toString(),
             });
           }}
         />
