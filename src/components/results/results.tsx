@@ -50,34 +50,20 @@ const Results = ({ query }: Props) => {
   };
 
   useEffect(() => {
-    let isMounted = true;
-
-    const loadData = async () => {
+    (async () => {
       setIsLoading(true);
       setError(null);
-
       try {
         const result = await StarWarsService.fetchPeople(query, pageFromUrl);
-
-        if (isMounted) {
-          setPersons(result.results);
-          setHasNext(Boolean(result.next));
-          setHasPrev(Boolean(result.previous));
-        }
+        setPersons(result.results);
+        setHasNext(Boolean(result.next));
+        setHasPrev(Boolean(result.previous));
       } catch (e) {
-        if (isMounted) {
-          setError(e instanceof Error ? e.message : 'Unknown error');
-        }
+        setError(e instanceof Error ? e.message : 'Unknown error');
       } finally {
-        if (isMounted) setIsLoading(false);
+        setIsLoading(false);
       }
-    };
-
-    void loadData();
-
-    return () => {
-      isMounted = false;
-    };
+    })();
   }, [query, pageFromUrl]);
 
   const openDetails = (id: string) => {
