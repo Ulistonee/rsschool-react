@@ -4,9 +4,10 @@ import styles from './search.module.css';
 type Props = {
   defaultValue?: string;
   onSearch: (value: string) => void;
+  theme: 'light' | 'dark';
 };
 
-const Search: React.FC<Props> = ({ defaultValue = '', onSearch }) => {
+const Search: React.FC<Props> = ({ defaultValue = '', onSearch, theme }) => {
   const [value, setValue] = useState(defaultValue);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -18,7 +19,7 @@ const Search: React.FC<Props> = ({ defaultValue = '', onSearch }) => {
   };
 
   return (
-    <section className={styles.searchContainer}>
+    <section className={`${styles.searchContainer} ${styles[theme]}`}>
       <input
         value={value}
         onChange={handleChange}

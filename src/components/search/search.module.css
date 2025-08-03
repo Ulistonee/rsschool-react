@@ -15,3 +15,20 @@
 .searchInput::placeholder {
   font-size: 18px;
 }
+
+.light .searchInput {
+  background-color: #ffffff;
+  color: #000000;
+}
+
+.light .searchInput::placeholder {
+  color: #555555;
+}
+
+.dark .searchInput {
+  color: #ffffff;
+}
+
+.dark .searchInput::placeholder {
+  color: #aaaaaa;
+}

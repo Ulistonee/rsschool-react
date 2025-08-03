@@ -35,7 +35,7 @@ const App = () => {
           {theme}
         </button>
       </header>
-      <Search defaultValue={searchTerm} onSearch={handleSearch} />
+      <Search defaultValue={searchTerm} onSearch={handleSearch} theme={theme} />
       <div className={styles.mainLayout}>
         <div className={styles.resultsWrapper}>
           <Results query={searchTerm} />
