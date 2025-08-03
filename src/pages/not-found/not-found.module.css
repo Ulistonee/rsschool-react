@@ -1,0 +1,32 @@
+.link {
+    color: #007bff;
+    text-decoration: underline;
+    font-weight: bold;
+}
+
+.link:hover {
+    color: #0056b3;
+}
+
+.light {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+.dark {
+    background-color: #121212;
+    color: #ffffff;
+}
+
+.dark button{
+    background-color: #6e6969;
+}
+
+.container {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1rem;
+    align-items: center;
+}

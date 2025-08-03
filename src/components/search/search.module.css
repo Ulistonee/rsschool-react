@@ -1,0 +1,34 @@
+.searchContainer {
+  display: flex;
+  gap: 2rem;
+  justify-content: left;
+  padding: 2rem;
+}
+
+.searchInput {
+  border: none;
+  background: none;
+  font-size: 18px;
+  padding: 12px 12px 12px 0;
+}
+
+.searchInput::placeholder {
+  font-size: 18px;
+}
+
+.light .searchInput {
+  background-color: #ffffff;
+  color: #000000;
+}
+
+.light .searchInput::placeholder {
+  color: #555555;
+}
+
+.dark .searchInput {
+  color: #ffffff;
+}
+
+.dark .searchInput::placeholder {
+  color: #aaaaaa;
+}
