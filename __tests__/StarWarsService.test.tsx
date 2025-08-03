@@ -49,7 +49,7 @@ describe('StarWarsService', () => {
       json: async () => mockPeopleResponse,
     });
 
-    const result = await StarWarsService.fetchPeople('luke', 1);
+    const result = await StarWarsService.defaultFetchPeople('luke', 1);
     expect(fetch).toHaveBeenCalledWith(
       'https://swapi.py4e.com/api/people/?search=luke&page=1'
     );
@@ -62,7 +62,7 @@ describe('StarWarsService', () => {
       json: async () => mockPeopleResponse,
     });
 
-    const result = await StarWarsService.fetchPeople('', 2);
+    const result = await StarWarsService.defaultFetchPeople('', 2);
     expect(fetch).toHaveBeenCalledWith(
       'https://swapi.py4e.com/api/people/?page=2'
     );
@@ -86,7 +86,7 @@ describe('StarWarsService', () => {
       status: 500,
     });
 
-    await expect(StarWarsService.fetchPeople('luke')).rejects.toThrow(
+    await expect(StarWarsService.defaultFetchPeople('luke')).rejects.toThrow(
       'Error: 500'
     );
   });

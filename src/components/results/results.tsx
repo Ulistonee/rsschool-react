@@ -3,12 +3,17 @@ import Card from '../card/card.tsx';
 import type { Person } from '../../types/person.ts';
 import { StarWarsService } from '../../services/api.ts';
 import styles from './results.module.css';
-import { useSearchParams, useNavigate } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import Pagination from '../pagination/pagination.tsx';
-import useSearchStore from '../../store/useSearchStore.ts';
+import {
+  useSelectedPeople,
+  useUnselectPerson,
+  useSelectPerson,
+  useClearSelection,
+} from '../../store/selectors/searchSelectors.ts';
 import { getId } from '../../utils/getId.ts';
-import { saveAs } from 'file-saver';
 import classNames from 'classnames';
+import { handleDownload } from '../../utils/handleDownload.ts';
 
 type Props = {
   query: string;
@@ -21,40 +26,23 @@ const Results = ({ query }: Props) => {
 
   const [searchParams, setSearchParams] = useSearchParams();
   const pageFromUrl = parseInt(searchParams.get('page') || '1', 10);
-  const navigate = useNavigate();
 
   const [hasNext, setHasNext] = useState(false);
   const [hasPrev, setHasPrev] = useState(false);
 
-  const selectedPeople = useSearchStore((state) => state.selectedPeople);
-  const unselectPerson = useSearchStore((state) => state.unselectPerson);
-  const selectPerson = useSearchStore((state) => state.selectPerson);
-  const clearSelection = useSearchStore((state) => state.clearSelection);
-
-  const handleDownload = () => {
-    const people = Object.values(selectedPeople);
-    const csvRows = [
-      ['Name', 'Height', 'Birth Year', 'URL'],
-      ...people.map((person) => [
-        person.name,
-        person.height,
-        person.birth_year,
-        person.url,
-      ]),
-    ];
-
-    const csvContent = csvRows.map((row) => row.join(',')).join('\n');
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const fileName = `${people.length}_person.csv`;
-    saveAs(blob, fileName);
-  };
+  const selectedPeople = useSelectedPeople();
+  const unselectPerson = useUnselectPerson();
+  const selectPerson = useSelectPerson();
+  const clearSelection = useClearSelection();
 
   useEffect(() => {
     (async () => {
       setIsLoading(true);
       setError(null);
       try {
-        const result = await StarWarsService.fetchPeople(query, pageFromUrl);
+        const result = query
+          ? await StarWarsService.fetchPeopleByQuery(query, pageFromUrl)
+          : await StarWarsService.defaultFetchPeople(pageFromUrl);
         setPersons(result.results);
         setHasNext(Boolean(result.next));
         setHasPrev(Boolean(result.previous));
@@ -69,6 +57,13 @@ const Results = ({ query }: Props) => {
   const openDetails = (id: string) => {
     const params = new URLSearchParams(searchParams);
     params.set('person', id);
+    setSearchParams(params);
+  };
+
+  const handlePaginationClick = (nextPage: number) => {
+    const params = new URLSearchParams(searchParams);
+    params.set('page', String(pageFromUrl + nextPage));
+    params.delete('person');
     setSearchParams(params);
   };
 
@@ -122,31 +117,17 @@ const Results = ({ query }: Props) => {
           pageNumber={pageFromUrl}
           hasNext={hasNext}
           hasPrev={hasPrev}
-          onPrevPage={() => {
-            const params = new URLSearchParams(searchParams);
-            params.set('page', String(pageFromUrl - 1));
-            params.delete('person');
-            navigate({
-              pathname: '/',
-              search: params.toString(),
-            });
-          }}
-          onNextPage={() => {
-            const params = new URLSearchParams(searchParams);
-            params.set('page', String(pageFromUrl + 1));
-            params.delete('person');
-            navigate({
-              pathname: '/',
-              search: params.toString(),
-            });
-          }}
+          onPrevPage={() => handlePaginationClick(-1)}
+          onNextPage={() => handlePaginationClick(1)}
         />
       )}
       {Object.keys(selectedPeople).length > 0 && (
         <div className={styles.flyout}>
           <p>{Object.keys(selectedPeople).length} person selected</p>
           <button onClick={clearSelection}>Unselect all</button>
-          <button onClick={handleDownload}>Download</button>
+          <button onClick={() => handleDownload(selectedPeople)}>
+            Download
+          </button>
         </div>
       )}
     </section>

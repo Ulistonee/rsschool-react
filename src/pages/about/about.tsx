@@ -31,7 +31,7 @@ const About = () => {
           Modules
         </p>
         <p>
-          <a href="https://rs.school/">RSSchool website</a>
+          <a href="https://rs.school/courses/reactjs">RSSchool website</a>
         </p>
       </section>
       <button onClick={handleClose} className={styles.closeButton}>

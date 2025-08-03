@@ -46,7 +46,7 @@ describe.skip('Results', () => {
   beforeEach(() => {
     vi.restoreAllMocks();
 
-    vi.spyOn(api.StarWarsService, 'fetchPeople').mockResolvedValue({
+    vi.spyOn(api.StarWarsService, 'fetchPeopleByQuery').mockResolvedValue({
       results: mockData.results,
       next: null,
       previous: null,
@@ -98,7 +98,7 @@ describe.skip('Results', () => {
   });
 
   it('Displays error message when API call fails', async () => {
-    vi.spyOn(api.StarWarsService, 'fetchPeople').mockRejectedValue(
+    vi.spyOn(api.StarWarsService, 'fetchPeopleByQuery').mockRejectedValue(
       new Error('Failed to fetch')
     );
 
