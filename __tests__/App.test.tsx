@@ -4,39 +4,37 @@ import { describe, beforeEach, vi, expect, it } from 'vitest';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 import { MemoryRouter } from 'react-router-dom';
+import { ThemeProvider } from '../src/context/theme-context';
 
-describe.skip('App', () => {
+const renderApp = () =>
+  render(
+    <MemoryRouter>
+      <ThemeProvider>
+        <App />
+      </ThemeProvider>
+    </MemoryRouter>
+  );
+
+describe('App', () => {
   beforeEach(() => {
     localStorage.clear();
     vi.restoreAllMocks();
   });
 
   it('renders App component and shows input', () => {
-    render(
-      <MemoryRouter>
-        <App />
-      </MemoryRouter>
-    );
+    renderApp();
     expect(screen.getByRole('textbox')).toBeInTheDocument();
   });
 
   it('displays previously saved value from localStorage on load', () => {
     localStorage.setItem('search', JSON.stringify('luke'));
-    render(
-      <MemoryRouter>
-        <App />
-      </MemoryRouter>
-    );
+    renderApp();
     const input = screen.getByPlaceholderText(/search/i);
     expect(input).toHaveValue('luke');
   });
 
   it('shows empty input when no saved term exists', () => {
-    render(
-      <MemoryRouter>
-        <App />
-      </MemoryRouter>
-    );
+    renderApp();
     const input = screen.getByRole('textbox');
     expect(input).toHaveValue('');
   });
@@ -49,11 +47,7 @@ describe.skip('App', () => {
     const user = userEvent.setup();
     const setItemSpy = vi.spyOn(window.localStorage.__proto__, 'setItem');
 
-    render(
-      <MemoryRouter>
-        <App />
-      </MemoryRouter>
-    );
+    renderApp();
 
     const input = screen.getByPlaceholderText(/search/i);
     const button = screen.getByRole('button', { name: /search/i });
@@ -71,11 +65,7 @@ describe.skip('App', () => {
     const user = userEvent.setup();
     localStorage.setItem('search', JSON.stringify('old value'));
 
-    render(
-      <MemoryRouter>
-        <App />
-      </MemoryRouter>
-    );
+    renderApp();
 
     const input = screen.getByPlaceholderText(/search/i);
     const button = screen.getByRole('button', { name: /search/i });

@@ -3,12 +3,15 @@ import { MemoryRouter } from 'react-router-dom';
 import NotFound from '../src/pages/not-found/not-found';
 import { describe, it, expect } from 'vitest';
 import '@testing-library/jest-dom';
+import { ThemeProvider } from '../src/context/theme-context';
 
-describe.skip('NotFound component', () => {
+describe('NotFound component', () => {
   it('renders the 404 message and Home link', () => {
     render(
       <MemoryRouter>
-        <NotFound />
+        <ThemeProvider>
+          <NotFound />
+        </ThemeProvider>
       </MemoryRouter>
     );
 

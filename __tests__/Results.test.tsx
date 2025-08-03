@@ -1,53 +1,72 @@
-import { render, screen, waitFor } from '@testing-library/react';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import Results from '../src/components/results/results';
-import type { Person } from '../src/types/person';
+import { vi, describe, beforeEach, afterEach, it, expect } from 'vitest';
 import '@testing-library/jest-dom';
+
+vi.mock('../src/store/selectors/searchSelectors', () => ({
+  useSelectedPeople: () => ({}),
+  useUnselectPerson: () => () => {},
+  useSelectPerson: () => () => {},
+  useClearSelection: () => () => {},
+}));
+
+vi.mock('../src/services/api', () => ({
+  StarWarsService: {
+    fetchPeopleByQuery: vi.fn(),
+    defaultFetchPeople: vi.fn(),
+  },
+}));
+
+import { render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
+import Results from '../src/components/results/results';
 import * as api from '../src/services/api';
+import type { Person } from '../src/types/person';
 
-describe.skip('Results', () => {
-  const getMockPerson = (overrides: Partial<Person>): Person => ({
-    name: 'default name',
-    height: '0',
-    mass: '',
-    hair_color: '',
-    skin_color: '',
-    eye_color: '',
-    birth_year: 'unknown',
-    gender: '',
-    films: [],
-    homeworld: '',
-    species: [],
-    vehicles: [],
-    starships: [],
-    created: '',
-    edited: '',
-    url: '',
-    ...overrides,
-  });
+const getMockPerson = (overrides: Partial<Person>): Person => ({
+  name: 'Default Name',
+  height: '0',
+  mass: '',
+  hair_color: '',
+  skin_color: '',
+  eye_color: '',
+  birth_year: 'unknown',
+  gender: '',
+  films: [],
+  homeworld: '',
+  species: [],
+  vehicles: [],
+  starships: [],
+  created: '',
+  edited: '',
+  url: 'https://swapi.dev/api/people/999/',
+  ...overrides,
+});
 
-  const mockData: { results: Person[] } = {
-    results: [
-      getMockPerson({
-        name: 'Luke Skywalker',
-        height: '172',
-        birth_year: '19BBY',
-      }),
-      getMockPerson({
-        name: 'Leia Organa',
-        height: '150',
-        birth_year: '19BBY',
-      }),
-      getMockPerson({ name: 'Han Solo', height: '180', birth_year: '29BBY' }),
-    ],
-  };
+const mockResults = [
+  getMockPerson({
+    name: 'Luke Skywalker',
+    height: '172',
+    birth_year: '19BBY',
+  }),
+  getMockPerson({
+    name: 'Leia Organa',
+    height: '150',
+    birth_year: '19BBY',
+  }),
+  getMockPerson({
+    name: 'Han Solo',
+    height: '180',
+    birth_year: '29BBY',
+  }),
+];
 
+describe('Results component', () => {
   beforeEach(() => {
     vi.restoreAllMocks();
 
-    vi.spyOn(api.StarWarsService, 'fetchPeopleByQuery').mockResolvedValue({
-      results: mockData.results,
+    (
+      api.StarWarsService.fetchPeopleByQuery as unknown as vi.Mock
+    ).mockResolvedValue({
+      results: mockResults,
       next: null,
       previous: null,
     });
@@ -64,17 +83,20 @@ describe.skip('Results', () => {
       </MemoryRouter>
     );
 
-    const items = await screen.findAllByRole('listitem');
-
-    expect(items).toHaveLength(mockData.results.length);
+    await waitFor(() => {
+      const items = screen.getAllByRole('listitem');
+      expect(items).toHaveLength(mockResults.length);
+    });
   });
 
   it('shows loading state while fetching data', () => {
-    vi.useFakeTimers();
+    (
+      api.StarWarsService.fetchPeopleByQuery as unknown as vi.Mock
+    ).mockImplementation(() => new Promise(() => {}));
 
     render(
       <MemoryRouter>
-        <Results query="Luke" />
+        <Results query="any" />
       </MemoryRouter>
     );
 
@@ -88,28 +110,31 @@ describe.skip('Results', () => {
       </MemoryRouter>
     );
 
-    for (const person of mockData.results) {
-      if (person.name) {
-        expect(await screen.findByText(person.name)).toBeInTheDocument();
-      }
-      const description = `Height: ${person.height}, Birth year: ${person.birth_year}`;
-      expect(screen.getByText(description)).toBeInTheDocument();
+    for (const person of mockResults) {
+      await waitFor(() => {
+        expect(
+          screen.getByText((txt) => txt.includes(person.name))
+        ).toBeInTheDocument();
+
+        const description = `Height: ${person.height}, Birth year: ${person.birth_year}`;
+        expect(
+          screen.getByText((txt) => txt.includes(description))
+        ).toBeInTheDocument();
+      });
     }
   });
 
-  it('Displays error message when API call fails', async () => {
-    vi.spyOn(api.StarWarsService, 'fetchPeopleByQuery').mockRejectedValue(
-      new Error('Failed to fetch')
-    );
+  it('displays error message when API call fails', async () => {
+    (
+      api.StarWarsService.fetchPeopleByQuery as unknown as vi.Mock
+    ).mockRejectedValue(new Error('Failed to fetch'));
 
     render(
       <MemoryRouter>
-        <Results query="luke" />
+        <Results query="error" />
       </MemoryRouter>
     );
 
-    await waitFor(() => {
-      expect(screen.getByText(/failed to fetch/i)).toBeInTheDocument();
-    });
+    expect(await screen.findByText(/failed to fetch/i)).toBeInTheDocument();
   });
 });

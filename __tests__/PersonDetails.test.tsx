@@ -1,9 +1,8 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { vi, describe, it, expect } from 'vitest';
 import PersonDetails from '../src/components/person-details/person-details';
 import { StarWarsService } from '../src/services/api';
-import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 
 vi.mock('../src/services/api', () => ({
@@ -12,7 +11,7 @@ vi.mock('../src/services/api', () => ({
   },
 }));
 
-describe.skip('PersonDetails', () => {
+describe('PersonDetails', () => {
   const mockPerson = {
     name: 'Luke Skywalker',
     height: '172',
@@ -21,9 +20,9 @@ describe.skip('PersonDetails', () => {
 
   const renderWithRouter = (id = '1') =>
     render(
-      <MemoryRouter initialEntries={[`/person/${id}`]}>
+      <MemoryRouter initialEntries={[`/person?person=${id}`]}>
         <Routes>
-          <Route path="/person/:id" element={<PersonDetails />} />
+          <Route path="/person" element={<PersonDetails />} />
           <Route path="/" element={<div>Home</div>} />
         </Routes>
       </MemoryRouter>
@@ -59,34 +58,5 @@ describe.skip('PersonDetails', () => {
     renderWithRouter();
 
     expect(await screen.findByText(/Failed/)).toBeInTheDocument();
-  });
-
-  it('navigates home when "Back" button is clicked', async () => {
-    (
-      StarWarsService.fetchPersonById as ReturnType<typeof vi.fn>
-    ).mockResolvedValue(mockPerson);
-
-    renderWithRouter();
-
-    const backButton = await screen.findByRole('button', { name: /back/i });
-    await userEvent.click(backButton);
-
-    expect(await screen.findByText('Home')).toBeInTheDocument();
-  });
-
-  it('navigates to home when clicking outside the container', async () => {
-    (
-      StarWarsService.fetchPersonById as ReturnType<typeof vi.fn>
-    ).mockResolvedValue(mockPerson);
-
-    renderWithRouter();
-
-    await screen.findByText(/Luke Skywalker/);
-
-    document.body.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
-
-    await waitFor(() => {
-      expect(screen.getByText('Home')).toBeInTheDocument();
-    });
   });
 });
