@@ -1,35 +1,24 @@
 import { useSearchParams } from 'react-router-dom';
-import { useEffect, useState } from 'react';
 import { StarWarsService } from '../../services/api';
-import type { Person } from '../../types/person';
 import styles from './person-details.module.css';
+import { useQuery } from '@tanstack/react-query';
 
 const PersonDetails = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const id = searchParams.get('person');
 
-  const [person, setPerson] = useState<Person | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-
-  useEffect(() => {
-    if (!id) return;
-
-    const load = async () => {
-      setIsLoading(true);
-      setError(null);
-      try {
-        const data = await StarWarsService.fetchPersonById(id);
-        setPerson(data);
-      } catch (e) {
-        setError(e instanceof Error ? e.message : 'Failed to load details');
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    void load();
-  }, [id]);
+  const {
+    data: person,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ['person', id],
+    queryFn: () => {
+      if (!id) throw new Error('No person ID');
+      return StarWarsService.fetchPersonById(id);
+    },
+    enabled: Boolean(id),
+  });
 
   const handleClose = () => {
     const params = new URLSearchParams(searchParams);
@@ -45,7 +34,7 @@ const PersonDetails = () => {
       </section>
     );
   }
-  if (error) return <div>{error}</div>;
+  if (error) return <div>{error.message}</div>;
   if (!person) return null;
   if (!id) return null;
 
