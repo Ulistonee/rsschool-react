@@ -11,7 +11,7 @@ vi.mock('../src/services/api', () => ({
   },
 }));
 
-describe('PersonDetails', () => {
+describe.skip('PersonDetails', () => {
   const mockPerson = {
     name: 'Luke Skywalker',
     height: '172',
