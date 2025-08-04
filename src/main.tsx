@@ -8,6 +8,9 @@ import PersonDetails from './components/person-details/person-details.tsx';
 import About from './pages/about/about.tsx';
 import NotFound from './pages/not-found/not-found.tsx';
 import { ThemeProvider } from './context/theme-context.tsx';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+const queryClient = new QueryClient();
 
 const container = document.getElementById('root');
 
@@ -17,18 +20,20 @@ if (!container) {
 
 createRoot(container).render(
   <StrictMode>
-    <BrowserRouter>
-      <ThemeProvider>
-        <ErrorBoundary>
-          <Routes>
-            <Route path="/" element={<App />}>
-              <Route index element={<PersonDetails />} />
-            </Route>
-            <Route path="about" element={<About />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </ErrorBoundary>
-      </ThemeProvider>
-    </BrowserRouter>
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <ThemeProvider>
+          <ErrorBoundary>
+            <Routes>
+              <Route path="/" element={<App />}>
+                <Route index element={<PersonDetails />} />
+              </Route>
+              <Route path="about" element={<About />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </ErrorBoundary>
+        </ThemeProvider>
+      </BrowserRouter>
+    </QueryClientProvider>
   </StrictMode>
 );

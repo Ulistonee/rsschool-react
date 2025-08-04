@@ -1,6 +1,4 @@
-import { useEffect, useState } from 'react';
 import Card from '../card/card.tsx';
-import type { Person } from '../../types/person.ts';
 import { StarWarsService } from '../../services/api.ts';
 import styles from './results.module.css';
 import { useSearchParams } from 'react-router-dom';
@@ -14,45 +12,43 @@ import {
 import { getId } from '../../utils/getId.ts';
 import classNames from 'classnames';
 import { handleDownload } from '../../utils/handleDownload.ts';
+import { useQuery } from '@tanstack/react-query';
+import type { PeopleResponse } from '../../services/api.ts';
 
 type Props = {
   query: string;
 };
 
-const Results = ({ query }: Props) => {
-  const [persons, setPersons] = useState<Person[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+const fetchPeople = async (
+  query: string,
+  page: number
+): Promise<PeopleResponse> => {
+  return query
+    ? await StarWarsService.fetchPeopleByQuery(query, page)
+    : await StarWarsService.defaultFetchPeople(page);
+};
 
+const Results = ({ query }: Props) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const pageFromUrl = parseInt(searchParams.get('page') || '1', 10);
-
-  const [hasNext, setHasNext] = useState(false);
-  const [hasPrev, setHasPrev] = useState(false);
 
   const selectedPeople = useSelectedPeople();
   const unselectPerson = useUnselectPerson();
   const selectPerson = useSelectPerson();
   const clearSelection = useClearSelection();
 
-  useEffect(() => {
-    (async () => {
-      setIsLoading(true);
-      setError(null);
-      try {
-        const result = query
-          ? await StarWarsService.fetchPeopleByQuery(query, pageFromUrl)
-          : await StarWarsService.defaultFetchPeople(pageFromUrl);
-        setPersons(result.results);
-        setHasNext(Boolean(result.next));
-        setHasPrev(Boolean(result.previous));
-      } catch (e) {
-        setError(e instanceof Error ? e.message : 'Unknown error');
-      } finally {
-        setIsLoading(false);
-      }
-    })();
-  }, [query, pageFromUrl]);
+  const {
+    data: result,
+    isLoading,
+    error,
+  } = useQuery<PeopleResponse>({
+    queryKey: ['people', query, pageFromUrl],
+    queryFn: () => fetchPeople(query, pageFromUrl),
+  });
+
+  const persons = result?.results ?? [];
+  const hasNext = Boolean(result?.next);
+  const hasPrev = Boolean(result?.previous);
 
   const openDetails = (id: string) => {
     const params = new URLSearchParams(searchParams);
@@ -68,7 +64,9 @@ const Results = ({ query }: Props) => {
   };
 
   if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>{error}</div>;
+  if (error) {
+    return <div>{error.message}</div>;
+  }
 
   return (
     <section data-testid="results" className={styles.resultsContainer}>
