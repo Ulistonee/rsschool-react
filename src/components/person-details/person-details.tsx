@@ -1,24 +1,12 @@
 import { useSearchParams } from 'react-router-dom';
-import { StarWarsService } from '../../services/api';
 import styles from './person-details.module.css';
-import { useQuery } from '@tanstack/react-query';
+import { usePersonById } from '../../hooks/usePersonById.ts';
 
 const PersonDetails = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const id = searchParams.get('person');
 
-  const {
-    data: person,
-    isLoading,
-    error,
-  } = useQuery({
-    queryKey: ['person', id],
-    queryFn: () => {
-      if (!id) throw new Error('No person ID');
-      return StarWarsService.fetchPersonById(id);
-    },
-    enabled: Boolean(id),
-  });
+  const { data: person, isLoading, error } = usePersonById(id);
 
   const handleClose = () => {
     const params = new URLSearchParams(searchParams);

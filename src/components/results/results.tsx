@@ -1,5 +1,4 @@
 import Card from '../card/card.tsx';
-import { StarWarsService } from '../../services/api.ts';
 import styles from './results.module.css';
 import { useSearchParams } from 'react-router-dom';
 import Pagination from '../pagination/pagination.tsx';
@@ -12,20 +11,10 @@ import {
 import { getId } from '../../utils/getId.ts';
 import classNames from 'classnames';
 import { handleDownload } from '../../utils/handleDownload.ts';
-import { useQuery } from '@tanstack/react-query';
-import type { PeopleResponse } from '../../services/api.ts';
+import { usePeopleQuery } from '../../hooks/usePeopleQuery';
 
 type Props = {
   query: string;
-};
-
-const fetchPeople = async (
-  query: string,
-  page: number
-): Promise<PeopleResponse> => {
-  return query
-    ? await StarWarsService.fetchPeopleByQuery(query, page)
-    : await StarWarsService.defaultFetchPeople(page);
 };
 
 const Results = ({ query }: Props) => {
@@ -41,11 +30,8 @@ const Results = ({ query }: Props) => {
     data: result,
     isLoading,
     error,
-  } = useQuery<PeopleResponse>({
-    queryKey: ['people', query, pageFromUrl],
-    queryFn: () => fetchPeople(query, pageFromUrl),
-    staleTime: 1000 * 60 * 5,
-  });
+    refetch,
+  } = usePeopleQuery(query, pageFromUrl);
 
   const persons = result?.results ?? [];
   const hasNext = Boolean(result?.next);
@@ -129,6 +115,7 @@ const Results = ({ query }: Props) => {
           </button>
         </div>
       )}
+      <button onClick={() => refetch()}>Refresh API call</button>
     </section>
   );
 };
