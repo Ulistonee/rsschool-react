@@ -9,6 +9,7 @@ import About from './pages/about/about.tsx';
 import NotFound from './pages/not-found/not-found.tsx';
 import { ThemeProvider } from './context/theme-context.tsx';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 const queryClient = new QueryClient();
 
@@ -32,6 +33,7 @@ createRoot(container).render(
               <Route path="*" element={<NotFound />} />
             </Routes>
           </ErrorBoundary>
+          <ReactQueryDevtools initialIsOpen={false} />
         </ThemeProvider>
       </BrowserRouter>
     </QueryClientProvider>

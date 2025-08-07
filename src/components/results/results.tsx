@@ -44,6 +44,7 @@ const Results = ({ query }: Props) => {
   } = useQuery<PeopleResponse>({
     queryKey: ['people', query, pageFromUrl],
     queryFn: () => fetchPeople(query, pageFromUrl),
+    staleTime: 1000 * 60 * 5,
   });
 
   const persons = result?.results ?? [];
