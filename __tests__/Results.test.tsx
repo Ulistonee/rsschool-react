@@ -148,4 +148,41 @@ describe('Results component', () => {
 
     expect(await screen.findByText(/failed to fetch/i)).toBeInTheDocument();
   });
+
+  it('uses cached data on second render with same query', async () => {
+    const spy = vi.spyOn(api.StarWarsService, 'fetchPeopleByQuery');
+
+    const testClient = new QueryClient({
+      defaultOptions: {
+        queries: {
+          retry: false,
+          staleTime: Infinity,
+        },
+      },
+    });
+
+    const wrapper = ({ children }: { children: React.ReactNode }) => (
+      <QueryClientProvider client={testClient}>
+        <MemoryRouter>{children}</MemoryRouter>
+      </QueryClientProvider>
+    );
+
+    const { unmount } = render(<Results query="skywalker" />, { wrapper });
+
+    await waitFor(() => {
+      const items = screen.getAllByRole('listitem');
+      expect(items).toHaveLength(mockResults.length);
+    });
+
+    unmount();
+
+    render(<Results query="skywalker" />, { wrapper });
+
+    await waitFor(() => {
+      const items = screen.getAllByRole('listitem');
+      expect(items).toHaveLength(mockResults.length);
+    });
+
+    expect(spy).toHaveBeenCalledTimes(1);
+  });
 });
