@@ -5,7 +5,7 @@ import type { PeopleResponse } from '../services/api';
 export const usePeopleQuery = (query: string, page: number) => {
   const fetchPeople = async (): Promise<PeopleResponse> => {
     return query
-      ? await StarWarsService.fetchPeopleByQuery(query, page)
+      ? await StarWarsService.fetchPeopleByQuery(query)
       : await StarWarsService.defaultFetchPeople(page);
   };
 
