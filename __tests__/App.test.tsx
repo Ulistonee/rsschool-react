@@ -5,17 +5,22 @@ import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 import { MemoryRouter } from 'react-router-dom';
 import { ThemeProvider } from '../src/context/theme-context';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+const queryClient = new QueryClient();
 
 const renderApp = () =>
   render(
-    <MemoryRouter>
-      <ThemeProvider>
-        <App />
-      </ThemeProvider>
-    </MemoryRouter>
+    <QueryClientProvider client={queryClient}>
+      <MemoryRouter>
+        <ThemeProvider>
+          <App />
+        </ThemeProvider>
+      </MemoryRouter>
+    </QueryClientProvider>
   );
 
-describe.skip('App', () => {
+describe('App', () => {
   beforeEach(() => {
     localStorage.clear();
     vi.restoreAllMocks();

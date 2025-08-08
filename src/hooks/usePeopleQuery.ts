@@ -13,5 +13,6 @@ export const usePeopleQuery = (query: string, page: number) => {
     queryKey: ['people', query, page],
     queryFn: fetchPeople,
     staleTime: 1000 * 60 * 5,
+    retry: false,
   });
 };

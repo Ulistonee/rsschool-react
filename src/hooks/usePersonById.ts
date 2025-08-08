@@ -10,5 +10,6 @@ export const usePersonById = (id: string | null) => {
     },
     enabled: Boolean(id),
     staleTime: 1000 * 60 * 5,
+    retry: false,
   });
 };

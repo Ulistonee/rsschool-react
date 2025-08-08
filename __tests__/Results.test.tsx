@@ -1,5 +1,8 @@
 import { vi, describe, beforeEach, afterEach, it, expect } from 'vitest';
 import '@testing-library/jest-dom';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+const queryClient = new QueryClient();
 
 vi.mock('../src/store/selectors/searchSelectors', () => ({
   useSelectedPeople: () => ({}),
@@ -59,7 +62,7 @@ const mockResults = [
   }),
 ];
 
-describe.skip('Results component', () => {
+describe('Results component', () => {
   beforeEach(() => {
     vi.restoreAllMocks();
 
@@ -78,9 +81,11 @@ describe.skip('Results component', () => {
 
   it('renders correct number of items when data is provided', async () => {
     render(
-      <MemoryRouter>
-        <Results query="skywalker" />
-      </MemoryRouter>
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter>
+          <Results query="skywalker" />
+        </MemoryRouter>
+      </QueryClientProvider>
     );
 
     await waitFor(() => {
@@ -95,9 +100,11 @@ describe.skip('Results component', () => {
     ).mockImplementation(() => new Promise(() => {}));
 
     render(
-      <MemoryRouter>
-        <Results query="any" />
-      </MemoryRouter>
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter>
+          <Results query="any" />
+        </MemoryRouter>
+      </QueryClientProvider>
     );
 
     expect(screen.getByText(/loading.../i)).toBeInTheDocument();
@@ -105,9 +112,11 @@ describe.skip('Results component', () => {
 
   it('displays item names and descriptions correctly', async () => {
     render(
-      <MemoryRouter>
-        <Results query="skywalker" />
-      </MemoryRouter>
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter>
+          <Results query="skywalker" />
+        </MemoryRouter>
+      </QueryClientProvider>
     );
 
     for (const person of mockResults) {
@@ -130,9 +139,11 @@ describe.skip('Results component', () => {
     ).mockRejectedValue(new Error('Failed to fetch'));
 
     render(
-      <MemoryRouter>
-        <Results query="error" />
-      </MemoryRouter>
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter>
+          <Results query="error" />
+        </MemoryRouter>
+      </QueryClientProvider>
     );
 
     expect(await screen.findByText(/failed to fetch/i)).toBeInTheDocument();
