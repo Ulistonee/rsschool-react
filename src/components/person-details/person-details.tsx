@@ -6,7 +6,7 @@ const PersonDetails = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const id = searchParams.get('person');
 
-  const { data: person, isLoading, error } = usePersonById(id);
+  const { data: person, isFetching, error } = usePersonById(id);
 
   const handleClose = () => {
     const params = new URLSearchParams(searchParams);
@@ -14,7 +14,7 @@ const PersonDetails = () => {
     setSearchParams(params);
   };
 
-  if (isLoading) {
+  if (isFetching) {
     return (
       <section className={styles.loadingContainer}>
         <div className={styles.spinner} />

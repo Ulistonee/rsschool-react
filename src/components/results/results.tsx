@@ -11,6 +11,7 @@ import { getId } from '../../utils/getId.ts';
 import { usePeopleQuery } from '../../services/hooks/usePeopleQuery.ts';
 import { Flyout } from '../flyout/flyout.tsx';
 import { PersonItem } from '../personItem/personItem.tsx';
+import { useQueryClient } from '@tanstack/react-query';
 
 type Props = {
   query: string;
@@ -25,12 +26,13 @@ const Results = ({ query }: Props) => {
   const selectPerson = useSelectPerson();
   const clearSelection = useClearSelection();
 
+  const queryClient = useQueryClient();
+
   const {
     data: result,
     isLoading,
     isFetching,
     error,
-    refetch,
   } = usePeopleQuery(query, pageFromUrl);
 
   const persons = result?.results ?? [];
@@ -102,7 +104,21 @@ const Results = ({ query }: Props) => {
           clearSelection={clearSelection}
         />
       )}
-      <button onClick={() => refetch()} disabled={isFetching}>
+      <button
+        onClick={() => {
+          void queryClient.invalidateQueries({
+            queryKey: ['people', query, pageFromUrl],
+          });
+
+          const id = searchParams.get('person');
+          if (id) {
+            void queryClient.invalidateQueries({
+              queryKey: ['person', id],
+            });
+          }
+        }}
+        disabled={isFetching}
+      >
         {isFetching ? 'Refreshing...' : 'Refresh API call'}
       </button>
     </section>
