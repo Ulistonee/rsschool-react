@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getStoredValueFromLS } from './utils/getStoredValueFromLS.ts';
+import { getStoredValueFromLS } from '../utils/getStoredValueFromLS.ts';
 
 function useLocalStorage<T>(key: string, initialValue: T) {
   const [storedValue, setStoredValue] = useState<T>(

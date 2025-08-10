@@ -48,7 +48,7 @@ describe('PersonDetails', () => {
     expect(screen.getByText(/loading person details/i)).toBeInTheDocument();
   });
 
-  it('displays person data after successful fetch', async () => {
+  it('displays personItem data after successful fetch', async () => {
     (StarWarsService.fetchPersonById as vi.Mock).mockResolvedValue(mockPerson);
 
     renderWithRouter();

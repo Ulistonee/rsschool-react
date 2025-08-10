@@ -1,6 +1,6 @@
 import { useSearchParams } from 'react-router-dom';
 import styles from './person-details.module.css';
-import { usePersonById } from '../../hooks/usePersonById.ts';
+import { usePersonById } from '../../services/hooks/usePersonById';
 
 const PersonDetails = () => {
   const [searchParams, setSearchParams] = useSearchParams();

@@ -1,6 +1,6 @@
-import { useQuery } from '@tanstack/react-query';
-import { StarWarsService } from '../services/api';
-import type { PeopleResponse } from '../services/api';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import { StarWarsService } from '../api';
+import type { PeopleResponse } from '../api';
 
 export const usePeopleQuery = (query: string, page: number) => {
   const fetchPeople = async (): Promise<PeopleResponse> => {
@@ -14,5 +14,6 @@ export const usePeopleQuery = (query: string, page: number) => {
     queryFn: fetchPeople,
     staleTime: 1000 * 60 * 5,
     retry: false,
+    placeholderData: keepPreviousData,
   });
 };

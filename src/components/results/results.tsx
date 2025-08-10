@@ -1,4 +1,3 @@
-import Card from '../card/card.tsx';
 import styles from './results.module.css';
 import { useSearchParams } from 'react-router-dom';
 import Pagination from '../pagination/pagination.tsx';
@@ -9,9 +8,9 @@ import {
   useClearSelection,
 } from '../../store/selectors/searchSelectors.ts';
 import { getId } from '../../utils/getId.ts';
-import classNames from 'classnames';
-import { handleDownload } from '../../utils/handleDownload.ts';
-import { usePeopleQuery } from '../../hooks/usePeopleQuery';
+import { usePeopleQuery } from '../../services/hooks/usePeopleQuery.ts';
+import { Flyout } from '../flyout/flyout.tsx';
+import { PersonItem } from '../personItem/personItem.tsx';
 
 type Props = {
   query: string;
@@ -29,6 +28,7 @@ const Results = ({ query }: Props) => {
   const {
     data: result,
     isLoading,
+    isFetching,
     error,
     refetch,
   } = usePeopleQuery(query, pageFromUrl);
@@ -74,24 +74,14 @@ const Results = ({ query }: Props) => {
             };
 
             return (
-              <li key={id} className={styles.personItem}>
-                <label className={styles.personLabel}>
-                  <input
-                    type="checkbox"
-                    checked={isSelected}
-                    onChange={toggleSelection}
-                  />
-                  <button
-                    className={classNames(styles.resetLink, styles.person)}
-                    onClick={() => openDetails(id)}
-                  >
-                    <Card
-                      name={person.name}
-                      description={`Height: ${person.height}, Birth year: ${person.birth_year}`}
-                    />
-                  </button>
-                </label>
-              </li>
+              <PersonItem
+                key={id}
+                id={id}
+                isSelected={isSelected}
+                toggleSelection={toggleSelection}
+                openDetails={openDetails}
+                person={person}
+              />
             );
           })}
         </ul>
@@ -107,15 +97,14 @@ const Results = ({ query }: Props) => {
         />
       )}
       {Object.keys(selectedPeople).length > 0 && (
-        <div className={styles.flyout}>
-          <p>{Object.keys(selectedPeople).length} person selected</p>
-          <button onClick={clearSelection}>Unselect all</button>
-          <button onClick={() => handleDownload(selectedPeople)}>
-            Download
-          </button>
-        </div>
+        <Flyout
+          selectedPeople={selectedPeople}
+          clearSelection={clearSelection}
+        />
       )}
-      <button onClick={() => refetch()}>Refresh API call</button>
+      <button onClick={() => refetch()} disabled={isFetching}>
+        {isFetching ? 'Refreshing...' : 'Refresh API call'}
+      </button>
     </section>
   );
 };

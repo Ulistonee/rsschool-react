@@ -55,7 +55,7 @@ describe('createSearchSlice', () => {
     expect(state.selectedPeople).toEqual({});
   });
 
-  it('unselects a person', () => {
+  it('unselects a personItem', () => {
     const person = mockPerson('1');
     state.selectPerson(person);
     state.unselectPerson('1');
