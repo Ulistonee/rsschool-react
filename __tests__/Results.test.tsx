@@ -1,5 +1,8 @@
 import { vi, describe, beforeEach, afterEach, it, expect } from 'vitest';
 import '@testing-library/jest-dom';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+const queryClient = new QueryClient();
 
 vi.mock('../src/store/selectors/searchSelectors', () => ({
   useSelectedPeople: () => ({}),
@@ -78,9 +81,11 @@ describe('Results component', () => {
 
   it('renders correct number of items when data is provided', async () => {
     render(
-      <MemoryRouter>
-        <Results query="skywalker" />
-      </MemoryRouter>
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter>
+          <Results query="skywalker" />
+        </MemoryRouter>
+      </QueryClientProvider>
     );
 
     await waitFor(() => {
@@ -95,9 +100,11 @@ describe('Results component', () => {
     ).mockImplementation(() => new Promise(() => {}));
 
     render(
-      <MemoryRouter>
-        <Results query="any" />
-      </MemoryRouter>
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter>
+          <Results query="any" />
+        </MemoryRouter>
+      </QueryClientProvider>
     );
 
     expect(screen.getByText(/loading.../i)).toBeInTheDocument();
@@ -105,9 +112,11 @@ describe('Results component', () => {
 
   it('displays item names and descriptions correctly', async () => {
     render(
-      <MemoryRouter>
-        <Results query="skywalker" />
-      </MemoryRouter>
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter>
+          <Results query="skywalker" />
+        </MemoryRouter>
+      </QueryClientProvider>
     );
 
     for (const person of mockResults) {
@@ -130,11 +139,50 @@ describe('Results component', () => {
     ).mockRejectedValue(new Error('Failed to fetch'));
 
     render(
-      <MemoryRouter>
-        <Results query="error" />
-      </MemoryRouter>
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter>
+          <Results query="error" />
+        </MemoryRouter>
+      </QueryClientProvider>
     );
 
     expect(await screen.findByText(/failed to fetch/i)).toBeInTheDocument();
+  });
+
+  it('uses cached data on second render with same query', async () => {
+    const spy = vi.spyOn(api.StarWarsService, 'fetchPeopleByQuery');
+
+    const testClient = new QueryClient({
+      defaultOptions: {
+        queries: {
+          retry: false,
+          staleTime: Infinity,
+        },
+      },
+    });
+
+    const wrapper = ({ children }: { children: React.ReactNode }) => (
+      <QueryClientProvider client={testClient}>
+        <MemoryRouter>{children}</MemoryRouter>
+      </QueryClientProvider>
+    );
+
+    const { unmount } = render(<Results query="skywalker" />, { wrapper });
+
+    await waitFor(() => {
+      const items = screen.getAllByRole('listitem');
+      expect(items).toHaveLength(mockResults.length);
+    });
+
+    unmount();
+
+    render(<Results query="skywalker" />, { wrapper });
+
+    await waitFor(() => {
+      const items = screen.getAllByRole('listitem');
+      expect(items).toHaveLength(mockResults.length);
+    });
+
+    expect(spy).toHaveBeenCalledTimes(1);
   });
 });

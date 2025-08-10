@@ -35,10 +35,10 @@ describe('StarWarsService', () => {
       json: async () => mockPeopleResponse,
     });
 
-    const result = await StarWarsService.fetchPeopleByQuery('luke', 1);
+    const result = await StarWarsService.fetchPeopleByQuery('luke');
 
     expect(fetch).toHaveBeenCalledWith(
-      'https://swapi.py4e.com/api/people/?search=luke&page=1'
+      'https://swapi.py4e.com/api/people/?search=luke'
     );
     expect(result).toEqual(mockPeopleResponse);
   });
