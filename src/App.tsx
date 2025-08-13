@@ -1,13 +1,14 @@
 import './App.module.css';
-import Search from './components/search/search.tsx';
-import Results from './components/results/results.tsx';
-import { Link, Outlet } from 'react-router-dom';
+import Search from './components/search/search';
+import Results from './components/results/results';
+import Link from 'next/link';
 import styles from './App.module.css';
 import useLocalStorage from './hooks/useLocalStorage.ts';
 import classNames from 'classnames';
-import { useTheme } from './context/theme-context.tsx';
+import { useTheme } from './context/theme-context';
+import React from 'react';
 
-const App = () => {
+const App = ({ children }: { children: React.ReactNode }) => {
   const [searchTerm, setSearchTerm] = useLocalStorage('search', '');
   const { theme, toggleTheme } = useTheme();
 
@@ -20,7 +21,7 @@ const App = () => {
       <header className={styles.header}>
         <nav className={styles.navigation}>
           <Link
-            to="/about"
+            href="/about"
             className={classNames(styles.navLink, styles.resetLink)}
           >
             about
@@ -40,9 +41,7 @@ const App = () => {
         <div className={styles.resultsWrapper}>
           <Results query={searchTerm} />
         </div>
-        <div className={styles.detailsWrapper}>
-          <Outlet />
-        </div>
+        <div className={styles.detailsWrapper}>{children}</div>
       </div>
     </div>
   );

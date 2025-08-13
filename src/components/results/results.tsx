@@ -1,6 +1,5 @@
 import styles from './results.module.css';
-import { useSearchParams } from 'react-router-dom';
-import Pagination from '../pagination/pagination.tsx';
+import Pagination from '../pagination/pagination';
 import {
   useSelectedPeople,
   useUnselectPerson,
@@ -9,16 +8,18 @@ import {
 } from '../../store/selectors/searchSelectors.ts';
 import { getId } from '../../utils/getId.ts';
 import { usePeopleQuery } from '../../services/hooks/usePeopleQuery.ts';
-import { Flyout } from '../flyout/flyout.tsx';
-import { PersonItem } from '../personItem/personItem.tsx';
+import { Flyout } from '../flyout/flyout';
+import { PersonItem } from '../personItem/personItem';
 import { useQueryClient } from '@tanstack/react-query';
+import { useSearchParams, useRouter } from 'next/navigation';
 
 type Props = {
   query: string;
 };
 
 const Results = ({ query }: Props) => {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const searchParams = useSearchParams();
+  const router = useRouter();
   const pageFromUrl = parseInt(searchParams.get('page') || '1', 10);
 
   const selectedPeople = useSelectedPeople();
@@ -40,16 +41,16 @@ const Results = ({ query }: Props) => {
   const hasPrev = Boolean(result?.previous);
 
   const openDetails = (id: string) => {
-    const params = new URLSearchParams(searchParams);
+    const params = new URLSearchParams(searchParams.toString());
     params.set('person', id);
-    setSearchParams(params);
+    router.push(`?${params.toString()}`);
   };
 
   const handlePaginationClick = (nextPage: number) => {
-    const params = new URLSearchParams(searchParams);
+    const params = new URLSearchParams(searchParams.toString());
     params.set('page', String(pageFromUrl + nextPage));
     params.delete('person');
-    setSearchParams(params);
+    router.push(`?${params.toString()}`);
   };
 
   if (isLoading) return <div>Loading...</div>;
