@@ -1,3 +1,5 @@
+'use client';
+
 import styles from './results.module.css';
 import Pagination from '../pagination/pagination';
 import {

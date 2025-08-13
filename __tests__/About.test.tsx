@@ -2,9 +2,9 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { vi, expect, describe, it } from 'vitest';
 import { MemoryRouter, useNavigate } from 'react-router-dom';
-import About from '../src/pages/about/about';
 import '@testing-library/jest-dom';
 import { ThemeProvider } from '../src/context/theme-context';
+import About from '../src/pages/about/about';
 
 vi.mock('react-router-dom', async (importOriginal) => {
   const actual = await importOriginal();
@@ -14,7 +14,7 @@ vi.mock('react-router-dom', async (importOriginal) => {
   };
 });
 
-describe('About component', () => {
+describe('Page component', () => {
   const renderWithProviders = () =>
     render(
       <MemoryRouter>
@@ -26,7 +26,7 @@ describe('About component', () => {
   it('renders all the content', () => {
     renderWithProviders();
 
-    expect(screen.getByText(/About This App/i)).toBeInTheDocument();
+    expect(screen.getByText(/Page This App/i)).toBeInTheDocument();
     expect(
       screen.getByText(/Star Wars character search demo/i)
     ).toBeInTheDocument();

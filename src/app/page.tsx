@@ -1,14 +1,16 @@
-import './App.module.css';
-import Search from './components/search/search';
-import Results from './components/results/results';
-import Link from 'next/link';
-import styles from './App.module.css';
-import useLocalStorage from './hooks/useLocalStorage.ts';
+'use client';
+
+import './globals.css';
+import useLocalStorage from '../hooks/useLocalStorage.ts';
+import { useTheme } from '../context/theme-context.tsx';
 import classNames from 'classnames';
-import { useTheme } from './context/theme-context';
+import styles from './page.module.css';
+import Link from 'next/link';
+import Search from '../components/search/search.tsx';
+import Results from '../components/results/results.tsx';
 import React from 'react';
 
-const App = ({ children }: { children: React.ReactNode }) => {
+export default function HomePage({ children }: { children: React.ReactNode }) {
   const [searchTerm, setSearchTerm] = useLocalStorage('search', '');
   const { theme, toggleTheme } = useTheme();
 
@@ -45,6 +47,4 @@ const App = ({ children }: { children: React.ReactNode }) => {
       </div>
     </div>
   );
-};
-
-export default App;
+}

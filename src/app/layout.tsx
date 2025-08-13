@@ -1,12 +1,7 @@
-import type { Metadata } from 'next';
 import { ThemeProvider } from '../context/theme-context.tsx';
 import React from 'react';
 import Providers from './providers';
-
-export const metadata: Metadata = {
-  title: 'Search',
-  description: 'Search App',
-};
+import './globals.css';
 
 export default function RootLayout({
   children,
