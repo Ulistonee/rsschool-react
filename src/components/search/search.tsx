@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import styles from './search.module.css';
+import { useTranslations } from 'next-intl';
 
 type Props = {
   defaultValue?: string;
@@ -11,6 +12,8 @@ type Props = {
 
 const Search: React.FC<Props> = ({ defaultValue = '', onSearch, theme }) => {
   const [value, setValue] = useState(defaultValue);
+
+  const t = useTranslations('Search');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValue(e.target.value);
@@ -25,10 +28,10 @@ const Search: React.FC<Props> = ({ defaultValue = '', onSearch, theme }) => {
       <input
         value={value}
         onChange={handleChange}
-        placeholder="search..."
+        placeholder={t('placeholder')}
         className={styles.searchInput}
       />
-      <button onClick={handleClick}>search</button>
+      <button onClick={handleClick}>{t('button')}</button>
     </section>
   );
 };

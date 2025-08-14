@@ -1,0 +1,13 @@
+{
+  "Navigation": {
+    "about": "О проекте"
+  },
+  "Theme": {
+    "light": "Светлая",
+    "dark": "Тёмная"
+  },
+  "Search": {
+    "placeholder": "Поиск...",
+    "button": "Найти"
+  }
+}

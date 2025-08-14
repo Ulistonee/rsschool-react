@@ -1,0 +1,13 @@
+{
+  "Navigation": {
+    "about": "About"
+  },
+  "Theme": {
+    "light": "Light",
+    "dark": "Dark"
+  },
+  "Search": {
+    "placeholder": "Search...",
+    "button": "Search"
+  }
+}

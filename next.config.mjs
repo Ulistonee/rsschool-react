@@ -1,7 +1,7 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  output: 'export',
-  distDir: './dist',
-}
+import createNextIntlPlugin from 'next-intl/plugin';
 
-export default nextConfig
+const withNextIntl = createNextIntlPlugin();
+
+const nextConfig = {};
+
+export default withNextIntl(nextConfig);
