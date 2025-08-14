@@ -1,19 +1,24 @@
-import { useSearchParams } from 'react-router-dom';
+'use client';
+
+import { useSearchParams, useRouter } from 'next/navigation';
 import styles from './person-details.module.css';
 import { usePersonById } from '../../services/hooks/usePersonById';
 
 const PersonDetails = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
   const id = searchParams.get('person');
 
-  const { data: person, isFetching, error } = usePersonById(id);
+  const { data: person, isFetching, error } = usePersonById(id ?? '');
 
   const handleClose = () => {
-    const params = new URLSearchParams(searchParams);
+    const params = new URLSearchParams(searchParams.toString());
     params.delete('person');
-    setSearchParams(params);
+    router.push(`?${params.toString()}`);
   };
 
+  if (!id) return null;
   if (isFetching) {
     return (
       <section className={styles.loadingContainer}>
@@ -24,7 +29,6 @@ const PersonDetails = () => {
   }
   if (error) return <div>{error.message}</div>;
   if (!person) return null;
-  if (!id) return null;
 
   return (
     <section>

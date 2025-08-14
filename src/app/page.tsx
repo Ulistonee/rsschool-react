@@ -9,6 +9,7 @@ import Link from 'next/link';
 import Search from '../components/search/search.tsx';
 import Results from '../components/results/results.tsx';
 import React from 'react';
+import PersonDetails from '../components/person-details/person-details.tsx';
 
 export default function HomePage({ children }: { children: React.ReactNode }) {
   const [searchTerm, setSearchTerm] = useLocalStorage('search', '');
@@ -43,7 +44,9 @@ export default function HomePage({ children }: { children: React.ReactNode }) {
         <div className={styles.resultsWrapper}>
           <Results query={searchTerm} />
         </div>
-        <div className={styles.detailsWrapper}>{children}</div>
+        <div className={styles.detailsWrapper}>
+          <PersonDetails />
+        </div>
       </div>
     </div>
   );
