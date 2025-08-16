@@ -14,6 +14,7 @@ import { Flyout } from '../flyout/flyout';
 import { PersonItem } from '../personItem/personItem';
 import { useQueryClient } from '@tanstack/react-query';
 import { useSearchParams, useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 
 type Props = {
   query: string;
@@ -30,6 +31,8 @@ const Results = ({ query }: Props) => {
   const clearSelection = useClearSelection();
 
   const queryClient = useQueryClient();
+
+  const t = useTranslations('Refresh');
 
   const {
     data: result,
@@ -122,7 +125,7 @@ const Results = ({ query }: Props) => {
         }}
         disabled={isFetching}
       >
-        {isFetching ? 'Refreshing...' : 'Refresh API call'}
+        {isFetching ? 'Refreshing...' : t('button')}
       </button>
     </section>
   );

@@ -16,7 +16,8 @@ export default function HomePage() {
   const [searchTerm, setSearchTerm] = useLocalStorage('search', '');
   const { theme, toggleTheme } = useTheme();
 
-  const t = useTranslations();
+  const t = useTranslations('Navigation');
+  const tTheme = useTranslations('Theme');
 
   const handleSearch = (value: string) => {
     setSearchTerm(value.trim());
@@ -30,7 +31,7 @@ export default function HomePage() {
             href="/about"
             className={classNames(styles.navLink, styles.resetLink)}
           >
-            {t('Navigation.about')}
+            {t('about')}
           </Link>
         </nav>
         <div>
@@ -40,7 +41,7 @@ export default function HomePage() {
               [styles.active]: theme === 'light',
             })}
           >
-            {t(`Theme.${theme}`)}
+            {tTheme(theme)}
           </button>
           <LanguageSwitcher />
         </div>

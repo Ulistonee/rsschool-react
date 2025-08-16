@@ -9,5 +9,13 @@
   "Search": {
     "placeholder": "Search...",
     "button": "Search"
+  },
+  "Pagination": {
+    "previous": "Prev",
+    "next": "Next",
+    "page": "Page"
+  },
+  "Refresh": {
+    "button": "Refresh API call"
   }
 }

@@ -9,5 +9,13 @@
   "Search": {
     "placeholder": "Поиск...",
     "button": "Найти"
+  },
+  "Pagination": {
+    "previous": "Назад",
+    "next": "Вперед",
+    "page": "Страница"
+  },
+  "Refresh": {
+    "button": "Обновить запрос на API"
   }
 }
