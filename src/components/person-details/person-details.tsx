@@ -3,6 +3,7 @@
 import { useSearchParams, useRouter } from 'next/navigation';
 import styles from './person-details.module.css';
 import { usePersonById } from '../../services/hooks/usePersonById';
+import { useTranslations } from 'next-intl';
 
 const PersonDetails = () => {
   const searchParams = useSearchParams();
@@ -17,6 +18,8 @@ const PersonDetails = () => {
     params.delete('person');
     router.push(`?${params.toString()}`);
   };
+
+  const t = useTranslations('Details');
 
   if (!id) return null;
   if (isFetching) {
@@ -34,7 +37,7 @@ const PersonDetails = () => {
     <section>
       <div className={styles.detailsContainer}>
         <button onClick={handleClose} className={styles.closeButton}>
-          Close
+          {t('button')}
         </button>
         <h2>{person.name}</h2>
         <p>Height: {person.height}</p>

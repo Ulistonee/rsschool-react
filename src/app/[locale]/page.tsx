@@ -34,7 +34,7 @@ export default function HomePage() {
             {t('about')}
           </Link>
         </nav>
-        <div>
+        <div className={styles.languageSwitcherContainer}>
           <button
             onClick={toggleTheme}
             className={classNames(styles.themeButton, {

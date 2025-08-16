@@ -1,18 +1,23 @@
-import { Link } from 'react-router-dom';
+'use client';
+
+import Link from 'next/link';
 import styles from './not-found.module.css';
 import { useTheme } from '../../context/theme-context.tsx';
 import classNames from 'classnames';
+import { useTranslations } from 'next-intl';
 
 const NotFound = () => {
   const { theme } = useTheme();
 
+  const t = useTranslations('NotFound');
+
   return (
     <div className={classNames(styles[theme], styles.container)}>
-      <h1>404 — Page not found</h1>
+      <h1>{t('title')}</h1>
       <p>
-        Check the address or return to{' '}
-        <Link to="/" className={styles.link}>
-          Home
+        {t('description')}{' '}
+        <Link href="/" className={classNames(styles.navLink, styles.resetLink)}>
+          {t('home')}
         </Link>
         .
       </p>

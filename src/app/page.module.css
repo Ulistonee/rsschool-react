@@ -62,3 +62,9 @@
 .dark button{
   background-color: #6e6969;
 }
+
+.languageSwitcherContainer {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}

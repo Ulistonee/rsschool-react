@@ -17,5 +17,13 @@
   },
   "Refresh": {
     "button": "Refresh API call"
+  },
+  "Details": {
+    "button": "Close"
+  },
+  "NotFound": {
+    "title": "404 — Page not found",
+    "description": "Check the address or return to",
+    "home": "home"
   }
 }
