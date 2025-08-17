@@ -125,7 +125,7 @@ const Results = ({ query }: Props) => {
         }}
         disabled={isFetching}
       >
-        {isFetching ? 'Refreshing...' : t('button')}
+        {isFetching ? t('state') : t('button')}
       </button>
     </section>
   );

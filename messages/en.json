@@ -16,6 +16,7 @@
     "page": "Page"
   },
   "Refresh": {
+    "state": "Refreshing...",
     "button": "Refresh API call"
   },
   "Details": {
