@@ -1,22 +1,13 @@
-'use client';
-
 import styles from './about.module.css';
-import { useRouter } from 'next/navigation';
-import { useTheme } from '../../../context/theme-context';
-import classNames from 'classnames';
 import { useTranslations } from 'next-intl';
+import ThemeLayout from '../../../components/theme-layout.tsx';
+import { CloseButton } from '../../../components/close-button/close-button.tsx';
 
 const AboutPage = () => {
-  const router = useRouter();
-  const { theme } = useTheme();
-
   const t = useTranslations('About');
 
-  const handleClose = () => {
-    router.push('/');
-  };
   return (
-    <div className={classNames(styles.container, styles[theme])}>
+    <ThemeLayout additionalStyle={styles.container}>
       <section className={styles.aboutSection}>
         <h2>{t('title')}</h2>
         <p>{t('description')} </p>
@@ -34,11 +25,9 @@ const AboutPage = () => {
         <p>
           <a href="https://rs.school/courses/reactjs">{t('course')}</a>
         </p>
+        <CloseButton />
       </section>
-      <button onClick={handleClose} className={styles.closeButton}>
-        &larr; {t('button')}
-      </button>
-    </div>
+    </ThemeLayout>
   );
 };
 

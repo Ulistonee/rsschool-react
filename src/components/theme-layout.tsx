@@ -5,10 +5,18 @@ import styles from '../app/page.module.css';
 import type { ReactNode } from 'react';
 import classNames from 'classnames';
 
-export default function ThemeLayout({ children }: { children: ReactNode }) {
+type Props = {
+  additionalStyle?: string;
+  children: ReactNode;
+};
+
+export default function ThemeLayout({
+  additionalStyle = styles.app,
+  children,
+}: Props) {
   const { theme } = useTheme();
 
   return (
-    <div className={classNames(styles.app, styles[theme])}>{children}</div>
+    <div className={classNames(additionalStyle, styles[theme])}>{children}</div>
   );
 }

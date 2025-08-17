@@ -1,14 +1,12 @@
-import classNames from 'classnames';
 import styles from '../page.module.css';
-import { Link } from '../../navigation';
 import Search from '../../components/search/search';
 import PersonDetails from '../../components/person-details/person-details';
-import { useTranslations } from 'next-intl';
 import LanguageSwitcher from '../../components/language-switcher/language-switcher.tsx';
 import ResultsServer from '../../components/results/ResultsServer.tsx';
 import ToggleTheme from '../../components/toggle-theme.tsx';
 import ThemeLayout from '../../components/theme-layout.tsx';
 import { getParamsFromUrl } from '../../utils/getParamsFromUrl.ts';
+import CustomLink from '../../components/custom-link/custom-link.tsx';
 
 type SearchParams = { [key: string]: string | string[] | undefined };
 
@@ -17,8 +15,6 @@ export default function HomePage({
 }: {
   searchParams?: SearchParams;
 }) {
-  const t = useTranslations('Navigation');
-
   const searchQuery = getParamsFromUrl('search', searchParams);
   const pageQuery = Number(getParamsFromUrl('page', searchParams) || 1);
 
@@ -27,12 +23,7 @@ export default function HomePage({
       <ThemeLayout>
         <header className={styles.header}>
           <nav className={styles.navigation}>
-            <Link
-              href="/about"
-              className={classNames(styles.navLink, styles.resetLink)}
-            >
-              {t('about')}
-            </Link>
+            <CustomLink />
           </nav>
           <div className={styles.languageSwitcherContainer}>
             <ToggleTheme />
