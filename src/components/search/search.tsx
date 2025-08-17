@@ -3,16 +3,18 @@
 import React, { useState } from 'react';
 import styles from './search.module.css';
 import { useTranslations } from 'next-intl';
+import { useTheme } from '../../context/theme-context.tsx';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 type Props = {
   defaultValue?: string;
-  onSearch: (value: string) => void;
-  theme: 'light' | 'dark';
 };
 
-const Search: React.FC<Props> = ({ defaultValue = '', onSearch, theme }) => {
+const Search: React.FC<Props> = ({ defaultValue = '' }) => {
   const [value, setValue] = useState(defaultValue);
-
+  const { theme } = useTheme();
+  const searchParams = useSearchParams();
+  const router = useRouter();
   const t = useTranslations('Search');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -20,7 +22,11 @@ const Search: React.FC<Props> = ({ defaultValue = '', onSearch, theme }) => {
   };
 
   const handleClick = () => {
-    onSearch(value);
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('search', value);
+    params.delete('person');
+    params.delete('page');
+    router.push(`?${params.toString()}`);
   };
 
   return (

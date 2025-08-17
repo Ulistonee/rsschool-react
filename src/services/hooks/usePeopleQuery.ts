@@ -2,10 +2,14 @@ import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { StarWarsService } from '../api';
 import type { PeopleResponse } from '../api';
 
-export const usePeopleQuery = (query: string, page: number) => {
+export const usePeopleQuery = (
+  query: string,
+  page: number,
+  initialData?: PeopleResponse
+) => {
   const fetchPeople = async (): Promise<PeopleResponse> => {
     return query
-      ? await StarWarsService.fetchPeopleByQuery(query)
+      ? await StarWarsService.fetchPeopleByQuery(query, page)
       : await StarWarsService.defaultFetchPeople(page);
   };
 
@@ -15,5 +19,6 @@ export const usePeopleQuery = (query: string, page: number) => {
     staleTime: 1000 * 60 * 5,
     retry: false,
     placeholderData: keepPreviousData,
+    initialData,
   });
 };

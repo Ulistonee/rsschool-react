@@ -1,60 +1,54 @@
-'use client';
-
-// import '../globals.css';
-import useLocalStorage from '../../hooks/useLocalStorage';
-import { useTheme } from '../../context/theme-context.tsx';
 import classNames from 'classnames';
 import styles from '../page.module.css';
 import { Link } from '../../navigation';
 import Search from '../../components/search/search';
-import Results from '../../components/results/results';
 import PersonDetails from '../../components/person-details/person-details';
 import { useTranslations } from 'next-intl';
 import LanguageSwitcher from '../../components/language-switcher/language-switcher.tsx';
+import ResultsServer from '../../components/results/ResultsServer.tsx';
+import ToggleTheme from '../../components/toggle-theme.tsx';
+import ThemeLayout from '../../components/theme-layout.tsx';
+import { getParamsFromUrl } from '../../utils/getParamsFromUrl.ts';
 
-export default function HomePage() {
-  const [searchTerm, setSearchTerm] = useLocalStorage('search', '');
-  const { theme, toggleTheme } = useTheme();
+type SearchParams = { [key: string]: string | string[] | undefined };
 
+export default function HomePage({
+  searchParams,
+}: {
+  searchParams?: SearchParams;
+}) {
   const t = useTranslations('Navigation');
-  const tTheme = useTranslations('Theme');
 
-  const handleSearch = (value: string) => {
-    setSearchTerm(value.trim());
-  };
+  const searchQuery = getParamsFromUrl('search', searchParams);
+  const pageQuery = Number(getParamsFromUrl('page', searchParams) || 1);
 
   return (
-    <div className={classNames(styles.app, styles[theme])}>
-      <header className={styles.header}>
-        <nav className={styles.navigation}>
-          <Link
-            href="/about"
-            className={classNames(styles.navLink, styles.resetLink)}
-          >
-            {t('about')}
-          </Link>
-        </nav>
-        <div className={styles.languageSwitcherContainer}>
-          <button
-            onClick={toggleTheme}
-            className={classNames(styles.themeButton, {
-              [styles.active]: theme === 'light',
-            })}
-          >
-            {tTheme(theme)}
-          </button>
-          <LanguageSwitcher />
+    <div className={styles.app}>
+      <ThemeLayout>
+        <header className={styles.header}>
+          <nav className={styles.navigation}>
+            <Link
+              href="/about"
+              className={classNames(styles.navLink, styles.resetLink)}
+            >
+              {t('about')}
+            </Link>
+          </nav>
+          <div className={styles.languageSwitcherContainer}>
+            <ToggleTheme />
+            <LanguageSwitcher />
+          </div>
+        </header>
+        <Search />
+        <div className={styles.mainLayout}>
+          <div className={styles.resultsWrapper}>
+            <ResultsServer query={searchQuery} page={pageQuery} />
+          </div>
+          <div className={styles.detailsWrapper}>
+            <PersonDetails />
+          </div>
         </div>
-      </header>
-      <Search defaultValue={searchTerm} onSearch={handleSearch} theme={theme} />
-      <div className={styles.mainLayout}>
-        <div className={styles.resultsWrapper}>
-          <Results query={searchTerm} />
-        </div>
-        <div className={styles.detailsWrapper}>
-          <PersonDetails />
-        </div>
-      </div>
+      </ThemeLayout>
     </div>
   );
 }

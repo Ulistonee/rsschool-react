@@ -15,15 +15,19 @@ import { PersonItem } from '../personItem/personItem';
 import { useQueryClient } from '@tanstack/react-query';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
+import { type PeopleResponse } from '../../services/api.ts';
 
 type Props = {
   query: string;
+  page: number;
+  initialData: PeopleResponse;
 };
 
-const Results = ({ query }: Props) => {
+const Results = (props: Props) => {
+  const { query, page, initialData } = props;
   const searchParams = useSearchParams();
   const router = useRouter();
-  const pageFromUrl = parseInt(searchParams.get('page') || '1', 10);
+  const pageFromUrl = page;
 
   const selectedPeople = useSelectedPeople();
   const unselectPerson = useUnselectPerson();
@@ -39,7 +43,7 @@ const Results = ({ query }: Props) => {
     isLoading,
     isFetching,
     error,
-  } = usePeopleQuery(query, pageFromUrl);
+  } = usePeopleQuery(query, pageFromUrl, initialData);
 
   const persons = result?.results ?? [];
   const hasNext = Boolean(result?.next);
@@ -51,9 +55,11 @@ const Results = ({ query }: Props) => {
     router.push(`?${params.toString()}`);
   };
 
-  const handlePaginationClick = (nextPage: number) => {
+  const handlePaginationClick = (delta: number) => {
     const params = new URLSearchParams(searchParams.toString());
-    params.set('page', String(pageFromUrl + nextPage));
+    const currentPage = Number(params.get('page') || pageFromUrl || 1);
+    const newPage = currentPage + delta;
+    params.set('page', String(newPage));
     params.delete('person');
     router.push(`?${params.toString()}`);
   };

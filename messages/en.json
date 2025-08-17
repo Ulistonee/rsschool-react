@@ -41,5 +41,10 @@
     "technologies": "React, TypeScript, React Router, CSS Modules",
     "course": "RS School website",
     "button": "Back"
+  },
+  "Flyout": {
+    "personSelected": "person selected",
+    "unselect": "Unselect all",
+    "download": "Download"
   }
 }
