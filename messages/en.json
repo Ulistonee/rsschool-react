@@ -19,11 +19,26 @@
     "button": "Refresh API call"
   },
   "Details": {
-    "button": "Close"
+    "button": "Close",
+    "titleHeight": "Height",
+    "titleBirthYear": "Birth Year"
   },
   "NotFound": {
     "title": "404 — Page not found",
     "description": "Check the address or return to",
     "home": "home"
+  },
+  "About": {
+    "title": "About This App",
+    "description": "This application was developed as a Star Wars character search demo using the SWAPI API in frames of React Course by RSSchool.",
+    "titleAuthor": "Author",
+    "titleName": "Name:",
+    "name": "Aizhan",
+    "titleLocation": "Location:",
+    "country": "Kazakhstan",
+    "titleTechnologies": "Technologies:",
+    "technologies": "React, TypeScript, React Router, CSS Modules",
+    "course": "RS School website",
+    "button": "Back"
   }
 }

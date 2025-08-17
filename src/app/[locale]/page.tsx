@@ -2,10 +2,10 @@
 
 // import '../globals.css';
 import useLocalStorage from '../../hooks/useLocalStorage';
-import { useTheme } from '../../context/theme-context';
+import { useTheme } from '../../context/theme-context.tsx';
 import classNames from 'classnames';
 import styles from '../page.module.css';
-import Link from 'next/link';
+import { Link } from '../../navigation';
 import Search from '../../components/search/search';
 import Results from '../../components/results/results';
 import PersonDetails from '../../components/person-details/person-details';

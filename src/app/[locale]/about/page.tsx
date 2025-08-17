@@ -2,12 +2,15 @@
 
 import styles from './about.module.css';
 import { useRouter } from 'next/navigation';
-import { useTheme } from '../../context/theme-context';
+import { useTheme } from '../../../context/theme-context';
 import classNames from 'classnames';
+import { useTranslations } from 'next-intl';
 
 const AboutPage = () => {
   const router = useRouter();
   const { theme } = useTheme();
+
+  const t = useTranslations('About');
 
   const handleClose = () => {
     router.push('/');
@@ -15,29 +18,25 @@ const AboutPage = () => {
   return (
     <div className={classNames(styles.container, styles[theme])}>
       <section className={styles.aboutSection}>
-        <h2>About This App</h2>
-        <p>
-          This application was developed as a Star Wars character search demo
-          using the SWAPI API in frames of React Course by RSSchool.
-        </p>
+        <h2>{t('title')}</h2>
+        <p>{t('description')} </p>
 
-        <h3>Author</h3>
+        <h3>{t('titleAuthor')}</h3>
         <p>
-          <strong>Name:</strong> Aizhan
+          <strong>{t('titleName')}</strong> {t('name')}
         </p>
         <p>
-          <strong>Location:</strong> Kazakhstan
+          <strong>{t('titleLocation')}</strong> {t('country')}
         </p>
         <p>
-          <strong>Technologies:</strong> React, TypeScript, React Router, CSS
-          Modules
+          <strong>{t('titleTechnologies')}</strong> {t('technologies')}
         </p>
         <p>
-          <a href="https://rs.school/courses/reactjs">RSSchool website</a>
+          <a href="https://rs.school/courses/reactjs">{t('course')}</a>
         </p>
       </section>
       <button onClick={handleClose} className={styles.closeButton}>
-        &larr; Back
+        &larr; {t('button')}
       </button>
     </div>
   );

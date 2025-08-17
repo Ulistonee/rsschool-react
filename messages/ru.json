@@ -19,11 +19,26 @@
     "button": "Обновить запрос на API"
   },
   "Details": {
-    "button": "Закрыть"
+    "button": "Закрыть",
+    "titleHeight": "Рост",
+    "titleBirthYear": "Год рождения"
   },
   "NotFound": {
     "title": "404 — Страница не найдена",
     "description": "Проверьте адрес или вернитесь на",
     "home": "Главная"
+  },
+  "About": {
+    "title": "О приложении",
+    "description": "Это приложение было разработано как демоверсия поиска персонажей «Звездных войн» с использованием API SWAPI в рамках курса React от RSSchool.",
+    "titleAuthor": "Автор",
+    "titleName": "Имя:",
+    "name": "Айжан",
+    "titleLocation": "Местоположение:",
+    "country": "Казахстан",
+    "titleTechnologies": "Технологии:",
+    "technologies": "React, TypeScript, React Router, CSS Modules",
+    "course": "сайт RS School",
+    "button": "Назад"
   }
 }
