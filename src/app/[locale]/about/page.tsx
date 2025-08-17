@@ -1,7 +1,9 @@
+'use client';
+
 import styles from './about.module.css';
-import { useTranslations } from 'next-intl';
 import ThemeLayout from '../../../components/theme-layout.tsx';
 import { CloseButton } from '../../../components/close-button/close-button.tsx';
+import { useTranslations } from 'next-intl';
 
 const AboutPage = () => {
   const t = useTranslations('About');
