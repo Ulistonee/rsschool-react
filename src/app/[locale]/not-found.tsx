@@ -1,6 +1,6 @@
 'use client';
 
-import Link from 'next/link';
+import { Link } from '../../navigation';
 import styles from './not-found.module.css';
 import { useTheme } from '../../context/theme-context.tsx';
 import classNames from 'classnames';
