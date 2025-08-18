@@ -1,4 +1,5 @@
 import styles from './pagination.module.css';
+import { useTranslations } from 'next-intl';
 
 type Props = {
   pageNumber: number;
@@ -15,14 +16,18 @@ const Pagination = ({
   onPrevPage,
   onNextPage,
 }: Props) => {
+  const t = useTranslations('Pagination');
+
   return (
     <div className={styles.paginationContainer}>
       <button onClick={onPrevPage} disabled={!hasPrev}>
-        ◀ Prev
+        ◀ {t('previous')}
       </button>
-      <span>Page {pageNumber}</span>
+      <span>
+        {t('page')} {pageNumber}
+      </span>
       <button onClick={onNextPage} disabled={!hasNext}>
-        Next ▶
+        {t('next')} ▶
       </button>
     </div>
   );

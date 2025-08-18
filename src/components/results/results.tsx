@@ -1,6 +1,7 @@
+'use client';
+
 import styles from './results.module.css';
-import { useSearchParams } from 'react-router-dom';
-import Pagination from '../pagination/pagination.tsx';
+import Pagination from '../pagination/pagination';
 import {
   useSelectedPeople,
   useUnselectPerson,
@@ -9,17 +10,24 @@ import {
 } from '../../store/selectors/searchSelectors.ts';
 import { getId } from '../../utils/getId.ts';
 import { usePeopleQuery } from '../../services/hooks/usePeopleQuery.ts';
-import { Flyout } from '../flyout/flyout.tsx';
-import { PersonItem } from '../personItem/personItem.tsx';
+import { Flyout } from '../flyout/flyout';
+import { PersonItem } from '../personItem/personItem';
 import { useQueryClient } from '@tanstack/react-query';
+import { useSearchParams, useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
+import { type PeopleResponse } from '../../services/api.ts';
 
 type Props = {
   query: string;
+  page: number;
+  initialData: PeopleResponse;
 };
 
-const Results = ({ query }: Props) => {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const pageFromUrl = parseInt(searchParams.get('page') || '1', 10);
+const Results = (props: Props) => {
+  const { query, page, initialData } = props;
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pageFromUrl = page;
 
   const selectedPeople = useSelectedPeople();
   const unselectPerson = useUnselectPerson();
@@ -28,28 +36,32 @@ const Results = ({ query }: Props) => {
 
   const queryClient = useQueryClient();
 
+  const t = useTranslations('Refresh');
+
   const {
     data: result,
     isLoading,
     isFetching,
     error,
-  } = usePeopleQuery(query, pageFromUrl);
+  } = usePeopleQuery(query, pageFromUrl, initialData);
 
   const persons = result?.results ?? [];
   const hasNext = Boolean(result?.next);
   const hasPrev = Boolean(result?.previous);
 
   const openDetails = (id: string) => {
-    const params = new URLSearchParams(searchParams);
+    const params = new URLSearchParams(searchParams.toString());
     params.set('person', id);
-    setSearchParams(params);
+    router.push(`?${params.toString()}`);
   };
 
-  const handlePaginationClick = (nextPage: number) => {
-    const params = new URLSearchParams(searchParams);
-    params.set('page', String(pageFromUrl + nextPage));
+  const handlePaginationClick = (delta: number) => {
+    const params = new URLSearchParams(searchParams.toString());
+    const currentPage = Number(params.get('page') || pageFromUrl || 1);
+    const newPage = currentPage + delta;
+    params.set('page', String(newPage));
     params.delete('person');
-    setSearchParams(params);
+    router.push(`?${params.toString()}`);
   };
 
   if (isLoading) return <div>Loading...</div>;
@@ -119,7 +131,7 @@ const Results = ({ query }: Props) => {
         }}
         disabled={isFetching}
       >
-        {isFetching ? 'Refreshing...' : 'Refresh API call'}
+        {isFetching ? t('state') : t('button')}
       </button>
     </section>
   );

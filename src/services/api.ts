@@ -17,8 +17,11 @@ export const StarWarsService = {
     return await response.json();
   },
 
-  async fetchPeopleByQuery(query: string): Promise<PeopleResponse> {
-    const url = `${BASE_URL}/people/?search=${query}`;
+  async fetchPeopleByQuery(
+    query: string,
+    page: number
+  ): Promise<PeopleResponse> {
+    const url = `${BASE_URL}/people/?search=${query}&page=${page}`;
 
     const response = await fetch(url);
     if (!response.ok) throw new Error(`Error: ${response.status}`);

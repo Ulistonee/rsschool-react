@@ -1,0 +1,50 @@
+{
+  "Navigation": {
+    "about": "О проекте"
+  },
+  "Theme": {
+    "light": "Светлая",
+    "dark": "Тёмная"
+  },
+  "Search": {
+    "placeholder": "Поиск...",
+    "button": "Найти"
+  },
+  "Pagination": {
+    "previous": "Назад",
+    "next": "Вперед",
+    "page": "Страница"
+  },
+  "Refresh": {
+    "state": "Обновляю...",
+    "button": "Обновить запрос на API"
+  },
+  "Details": {
+    "button": "Закрыть",
+    "titleHeight": "Рост",
+    "titleBirthYear": "Год рождения"
+  },
+  "NotFound": {
+    "title": "404 — Страница не найдена",
+    "description": "Проверьте адрес или вернитесь на",
+    "home": "Главная"
+  },
+  "About": {
+    "title": "О приложении",
+    "description": "Это приложение было разработано как демоверсия поиска персонажей «Звездных войн» с использованием API SWAPI в рамках курса React от RSSchool.",
+    "titleAuthor": "Автор",
+    "titleName": "Имя:",
+    "name": "Айжан",
+    "titleLocation": "Местоположение:",
+    "country": "Казахстан",
+    "titleTechnologies": "Технологии:",
+    "technologies": "React, TypeScript, React Router, CSS Modules",
+    "course": "сайт RS School",
+    "button": "Назад"
+  },
+  "Flyout": {
+    "personSelected": "человек выбрано",
+    "unselect": "Отменить выбор всех",
+    "download": "Загрузить"
+  }
+}

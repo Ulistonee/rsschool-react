@@ -38,3 +38,6 @@ Thumbs.db
 /cypress/screenshots
 /test-results
 coverage
+.next
+next-env.d.ts
+dist
