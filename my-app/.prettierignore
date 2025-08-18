@@ -1,0 +1,27 @@
+# Ignore artifacts:
+build
+coverage\# Игнорируем node_modules
+node_modules
+
+coverage
+
+package-lock.json
+pnpm-lock.yaml
+*.log
+.vscode
+.idea
+
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.svg
+*.ico
+*.mp4
+*.mp3
+
+*.md
+*.rst
+
+*.min.css
+
