@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import { Modal } from '../../components/modal/modal';
 import { UncontrolledForm } from '../../components/uncontrolled-form/uncontrolled-form';
 import { HookForm } from '../../components/hook-form/hook-form';
@@ -12,16 +12,18 @@ export const MainPage = () => {
     setModalType(type);
   };
 
+  const closeModal = () => {
+    setModalType(null);
+  };
+
   return (
     <main className={styles.container}>
       <section className={styles.buttonContainer}>
         <button onClick={() => openModal('uncontrolled')}>{messages.buttons.unconrolled}</button>
         <button onClick={() => openModal('hook')}>{messages.buttons.hookForm}</button>
-        <Modal isOpen={modalType === 'uncontrolled'}>
-          <UncontrolledForm/>
-        </Modal>
-        <Modal isOpen={modalType === 'hook'}>
-          <HookForm/>
+        <Modal isOpen={modalType !== null} onClose={closeModal}>
+          {modalType === 'uncontrolled' && <UncontrolledForm />}
+          {modalType === 'hook' && <HookForm />}
         </Modal>
       </section>
     </main>
