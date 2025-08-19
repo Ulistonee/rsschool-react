@@ -1,6 +1,9 @@
 import { useForm } from 'react-hook-form';
 import { messages } from '../../messages/messages.ts';
 import styles from './hook-form.module.css';
+import { useDispatch } from 'react-redux';
+import type { AppDispatch } from '../../store/store.ts';
+import { addHook } from '../../store/formsSlice.ts';
 
 type FormValues = {
   name: string;
@@ -8,10 +11,12 @@ type FormValues = {
 };
 
 export const HookForm = () => {
-  const { register, handleSubmit } = useForm<FormValues>();
+  const { register, handleSubmit, reset } = useForm<FormValues>();
+  const dispatch = useDispatch<AppDispatch>();
 
   const onSubmit = (data: FormValues) => {
-    console.log('React Hook Form:', data);
+    dispatch(addHook(data));
+    reset();
   };
 
   return (

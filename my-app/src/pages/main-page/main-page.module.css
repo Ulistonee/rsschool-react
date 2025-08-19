@@ -7,3 +7,19 @@
     display: flex;
     gap: 1rem;
 }
+
+.tiles {
+    margin-top: 2rem;
+}
+
+.tilesGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 1rem;
+}
+
+.tile {
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}

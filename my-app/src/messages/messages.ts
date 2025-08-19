@@ -7,9 +7,11 @@ export const messages = {
     title: 'Uncontrolled Form',
     inputName: {
       placeholder: 'Name',
+      name: 'name',
     },
     inputEmail: {
       placeholder: 'Email',
+      name: 'email',
     },
     button: 'Submit',
   },

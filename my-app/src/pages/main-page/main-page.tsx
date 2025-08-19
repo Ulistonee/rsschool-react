@@ -4,9 +4,14 @@ import { UncontrolledForm } from '../../components/uncontrolled-form/uncontrolle
 import { HookForm } from '../../components/hook-form/hook-form';
 import { messages } from '../../messages/messages.ts';
 import styles from './main-page.module.css';
+import { useSelector } from 'react-redux';
+import type { RootState } from '../../store/store.ts';
 
 export const MainPage = () => {
   const [modalType, setModalType] = useState<'uncontrolled' | 'hook' | null>(null);
+
+  const uncontrolledData = useSelector((state: RootState) => state.forms.uncontrolled);
+  const hookData = useSelector((state: RootState) => state.forms.hook);
 
   const openModal = (type: 'uncontrolled' | 'hook') => {
     setModalType(type);
@@ -25,6 +30,27 @@ export const MainPage = () => {
           {modalType === 'uncontrolled' && <UncontrolledForm />}
           {modalType === 'hook' && <HookForm />}
         </Modal>
+      </section>
+      <section className={styles.tiles}>
+        <h2>Uncontrolled Form Data</h2>
+        <div className={styles.tilesGrid}>
+          {uncontrolledData.map((item, i) => (
+            <div key={i} className={styles.tile}>
+              <p><b>{item.name}</b></p>
+              <p>{item.email}</p>
+            </div>
+          ))}
+        </div>
+
+        <h2>Hook Form Data</h2>
+        <div className={styles.tilesGrid}>
+          {hookData.map((item, i) => (
+            <div key={i} className={styles.tile}>
+              <p><b>{item.name}</b></p>
+              <p>{item.email}</p>
+            </div>
+          ))}
+        </div>
       </section>
     </main>
   );
