@@ -27,8 +27,8 @@ export const MainPage = () => {
           <button onClick={() => openModal('uncontrolled')}>{messages.buttons.unconrolled}</button>
           <button onClick={() => openModal('hook')}>{messages.buttons.hookForm}</button>
           <Modal isOpen={modalType !== null} onClose={closeModal}>
-            {modalType === 'uncontrolled' && <UncontrolledForm />}
-            {modalType === 'hook' && <HookForm />}
+            {modalType === 'uncontrolled' && <UncontrolledForm  onSuccess={closeModal} />}
+            {modalType === 'hook' && <HookForm  onSuccess={closeModal} />}
           </Modal>
         </section>
         <section className={styles.tiles}>

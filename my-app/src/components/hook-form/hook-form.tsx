@@ -10,13 +10,18 @@ type FormValues = {
   email: string;
 };
 
-export const HookForm = () => {
+type Props = {
+  onSuccess: () => void;
+}
+
+export const HookForm = ({ onSuccess }: Props) => {
   const { register, handleSubmit, reset } = useForm<FormValues>();
   const dispatch = useDispatch<AppDispatch>();
 
   const onSubmit = (data: FormValues) => {
     dispatch(addHook(data));
     reset();
+    onSuccess();
   };
 
   return (

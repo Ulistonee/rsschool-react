@@ -5,7 +5,11 @@ import type { FormEvent } from 'react';
 import { useDispatch } from 'react-redux';
 import type { AppDispatch } from '../../store/store.ts';
 
-export const UncontrolledForm = () => {
+type Props = {
+  onSuccess: () => void;
+};
+
+export const UncontrolledForm = ({ onSuccess }: Props) => {
   const dispatch = useDispatch<AppDispatch>();
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
@@ -23,6 +27,7 @@ export const UncontrolledForm = () => {
     );
 
     e.currentTarget.reset();
+    onSuccess();
   };
 
   return (
