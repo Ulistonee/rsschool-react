@@ -22,36 +22,36 @@ export const MainPage = () => {
   };
 
   return (
-    <main className={styles.container}>
-      <section className={styles.buttonContainer}>
-        <button onClick={() => openModal('uncontrolled')}>{messages.buttons.unconrolled}</button>
-        <button onClick={() => openModal('hook')}>{messages.buttons.hookForm}</button>
-        <Modal isOpen={modalType !== null} onClose={closeModal}>
-          {modalType === 'uncontrolled' && <UncontrolledForm />}
-          {modalType === 'hook' && <HookForm />}
-        </Modal>
-      </section>
-      <section className={styles.tiles}>
-        <h2>Uncontrolled Form Data</h2>
-        <div className={styles.tilesGrid}>
-          {uncontrolledData.map((item, i) => (
-            <div key={i} className={styles.tile}>
-              <p><b>{item.name}</b></p>
-              <p>{item.email}</p>
-            </div>
-          ))}
-        </div>
+    <main>
+        <section className={styles.buttonContainer}>
+          <button onClick={() => openModal('uncontrolled')}>{messages.buttons.unconrolled}</button>
+          <button onClick={() => openModal('hook')}>{messages.buttons.hookForm}</button>
+          <Modal isOpen={modalType !== null} onClose={closeModal}>
+            {modalType === 'uncontrolled' && <UncontrolledForm />}
+            {modalType === 'hook' && <HookForm />}
+          </Modal>
+        </section>
+        <section className={styles.tiles}>
+          <h3 className={styles.tilesHeading}>Uncontrolled Form Data</h3>
+          <div className={styles.tilesGrid}>
+            {uncontrolledData.map((item, i) => (
+              <div key={i} className={styles.tile}>
+                <p><b>{item.name}</b></p>
+                <p>{item.email}</p>
+              </div>
+            ))}
+          </div>
 
-        <h2>Hook Form Data</h2>
-        <div className={styles.tilesGrid}>
-          {hookData.map((item, i) => (
-            <div key={i} className={styles.tile}>
-              <p><b>{item.name}</b></p>
-              <p>{item.email}</p>
-            </div>
-          ))}
-        </div>
-      </section>
+          <h3 className={styles.tilesHeading}>Hook Form Data</h3>
+          <div className={styles.tilesGrid}>
+            {hookData.map((item, i) => (
+              <div key={i} className={styles.tile}>
+                <p><b>{item.name}</b></p>
+                <p>{item.email}</p>
+              </div>
+            ))}
+          </div>
+        </section>
     </main>
   );
 };
