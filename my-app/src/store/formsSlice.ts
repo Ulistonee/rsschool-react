@@ -2,17 +2,23 @@ import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
 type FormData = {
   name: string;
+  age: string;
   email: string;
+  gender: string;
+  country: string;
+  picture: string;
 };
 
 type FormsState = {
   uncontrolled: FormData[];
   hook: FormData[];
+  countries: string[];
 };
 
 const initialState: FormsState = {
   uncontrolled: [],
   hook: [],
+  countries: ['USA', 'Germany', 'Kazakhstan', 'Japan'],
 };
 
 const formsSlice = createSlice({
