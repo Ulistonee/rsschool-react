@@ -6,6 +6,21 @@ import { useDispatch, useSelector } from 'react-redux';
 import type { AppDispatch, RootState } from '../../store/store.ts';
 import { fileToBase64 } from '../../utils/fileToBase64.ts';
 import { buildSchema } from '../../utils/buildSchema.ts';
+import { testPasswordWeakness } from '../../utils/testPasswordWeakness.ts';
+import { type FieldConfig, getFormValues } from '../../utils/getFormValues.ts';
+import { CustomInput } from '../custom-input/custom-input.tsx';
+
+const fields: FieldConfig[] = [
+  { name: 'name', type: 'string', inputType: 'text' },
+  { name: 'age', type: 'string', inputType: 'number'},
+  { name: 'email', type: 'string', inputType: 'email' },
+  { name: 'password', type: 'string', inputType: 'password' },
+  { name: 'confirmPassword', type: 'string', inputType: 'password' },
+  { name: 'gender', type: 'string', inputType: 'radio' },
+  { name: 'acceptTerms', type: 'boolean', inputType: 'checkbox' },
+  { name: 'country', type: 'string', inputType: 'select' },
+  { name: 'picture', type: 'file', inputType: 'file' },
+];
 
 type Props = {
   onSuccess: () => void;
@@ -16,20 +31,14 @@ export const UncontrolledForm = ({ onSuccess }: Props) => {
   const countries = useSelector((state: RootState) => state.forms.countries);
 
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [pwdStrength, setPwdStrength] = useState<string>('');
+  const [passwordStrength, setPasswordStrength] = useState<string>('');
 
   const schema = useMemo(() => buildSchema(countries), [countries]);
 
-  const handlePasswordInput = (value: string) => {
-    const rules = [
-      /[0-9]/.test(value),
-      /[A-Z]/.test(value),
-      /[a-z]/.test(value),
-      /[^A-Za-z0-9]/.test(value),
-      value.length >= 6,
-    ];
+  const handlePasswordInput = (password: string) => {
+    const rules = testPasswordWeakness(password);
     const score = rules.filter(Boolean).length;
-    setPwdStrength(
+    setPasswordStrength(
       score >= 5 ? 'Strength: Strong'
         : score >= 3 ? 'Strength: Medium'
           : 'Strength: Weak'
@@ -38,50 +47,13 @@ export const UncontrolledForm = ({ onSuccess }: Props) => {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     setErrors({});
+
     const formData = new FormData(e.currentTarget);
+    const formValues = getFormValues(formData, fields)
 
-    const nameValue = formData.get('name');
-    const name = typeof nameValue === 'string' ? nameValue : '';
-
-    const ageValue = formData.get('age');
-    const age = typeof ageValue === 'string' ? ageValue : '0';
-
-    const emailValue = formData.get('email');
-    const email = typeof emailValue === 'string' ? emailValue : '';
-
-    const passwordValue = formData.get('password');
-    const password = typeof passwordValue === 'string' ? passwordValue : '';
-
-    const confirmPasswordValue = formData.get('confirmPassword');
-    const confirmPassword =
-      typeof confirmPasswordValue === 'string' ? confirmPasswordValue : '';
-
-    const genderValue = formData.get('gender');
-    const gender = typeof genderValue === 'string' ? genderValue : '';
-
-    const acceptTermsValue = formData.get('acceptTerms');
-    const acceptTerms = acceptTermsValue !== null;
-
-    const countryValue = formData.get('country');
-    const country = typeof countryValue === 'string' ? countryValue : '';
-
-    const pictureValue = formData.get('picture');
-    const picture = pictureValue instanceof File ? pictureValue : null;
-
-    const dataToObject = {
-      name,
-      age,
-      email,
-      password,
-      confirmPassword,
-      gender,
-      acceptTerms,
-      country,
-      picture: picture,
-    }
-
-    const result = schema.safeParse(dataToObject);
+    const result = schema.safeParse(formValues);
     if (!result.success) {
       const fieldErrors: Record<string, string> = {};
       for (const issue of result.error.issues) {
@@ -104,12 +76,12 @@ export const UncontrolledForm = ({ onSuccess }: Props) => {
         email: result.data.email,
         gender: result.data.gender,
         country: result.data.country,
-        picture: pictureBase64,
+        picture: pictureBase64 !== null ? pictureBase64 : '',
       })
     );
 
     e.currentTarget.reset();
-    setPwdStrength('');
+    setPasswordStrength('');
     onSuccess();
   };
 
@@ -117,72 +89,79 @@ export const UncontrolledForm = ({ onSuccess }: Props) => {
     <form className={styles.container} onSubmit={handleSubmit} noValidate>
       <h2>{messages.uncontrolledForm.title}</h2>
 
-      <div className={styles.inputContainer}>
-        <label htmlFor="name">Name</label>
-        <input id="name" name="name" type="text" className={styles.input} required />
-      </div>
-      {errors.name && <small className={styles.error}>{errors.name}</small>}
+      {fields.map((field) => {
+        switch (field.inputType) {
+          case 'radio':
+            return (
+              <div key={field.name} className={styles.inputContainer}>
+                <label>Gender</label>
+                <div>
+                  <label>
+                    <input type="radio" name="gender" value="male" /> Male
+                  </label>
+                  <label>
+                    <input type="radio" name="gender" value="female" /> Female
+                  </label>
+                </div>
+                {errors.gender && <small className={styles.error}>{errors.gender}</small>}
+              </div>
+            );
 
-      <div className={styles.inputContainer}>
-        <label htmlFor="age">Age</label>
-        <input id="age" name="age" type="number" className={styles.input} required />
-      </div>
-      {errors.age && <small className={styles.error}>{errors.age}</small>}
+          case 'checkbox':
+            return (
+              <label key={field.name} className={styles.checkboxRow}>
+                <input type="checkbox" name={field.name} /> Accept Terms and Conditions
+                {errors.acceptTerms && <small className={styles.error}>{errors.acceptTerms}</small>}
+              </label>
+            );
 
-      <div className={styles.inputContainer}>
-        <label htmlFor="email">Email</label>
-        <input id="email" name="email" type="email" className={styles.input} required />
-      </div>
-      {errors.email && <small className={styles.error}>{errors.email}</small>}
+          case 'select':
+            return (
+              <div key={field.name} className={styles.inputContainer}>
+                <label htmlFor="country">Country</label>
+                <input id="country" name="country" list="countries" className={styles.input} required />
+                <datalist id="countries">
+                  {countries.map((c, i) => (
+                    <option key={i} value={c} />
+                  ))}
+                </datalist>
+                {errors.country && <small className={styles.error}>{errors.country}</small>}
+              </div>
+            );
 
-      <div className={styles.inputContainer}>
-        <label htmlFor="password">Password</label>
-        <input
-          id="password"
-          name="password"
-          type="password"
-          className={styles.input}
-          required
-          onInput={(e) => handlePasswordInput((e.target as HTMLInputElement).value)}
-        />
-      </div>
-      <small className={styles.hint}>{pwdStrength}</small>
-      {errors.password && <small className={styles.error}>{errors.password}</small>}
+          case 'file':
+            return (
+              <div key={field.name} className={styles.inputContainer}>
+                <label htmlFor="picture">Upload Picture</label>
+                <input id="picture" name="picture" type="file" accept="image/png,image/jpeg" />
+                {errors.picture && <small className={styles.error}>{errors.picture}</small>}
+              </div>
+            );
 
-      <div className={styles.inputContainer}>
-        <label htmlFor="confirmPassword">Confirm Password</label>
-        <input id="confirmPassword" name="confirmPassword" type="password" className={styles.input} required />
-      </div>
-      {errors.confirmPassword && <small className={styles.error}>{errors.confirmPassword}</small>}
+          default:
+            return (
+              <CustomInput
+                key={field.name}
+                id={field.name}
+                name={field.name}
+                label={field.name.charAt(0).toUpperCase() + field.name.slice(1)}
+                type={field.inputType}
+                error={errors[field.name]}
+                required
+                className={styles.input}
+                onInput={
+                  field.name === 'password'
+                    ? (e) => handlePasswordInput((e.target as HTMLInputElement).value)
+                    : undefined
+                }
+              />
+            );
+        }
+      })}
 
-      <div className={styles.inputContainer}>
-        <label>Gender</label>
-        <div>
-          <label><input type="radio" name="gender" value="male" /> Male</label>
-          <label><input type="radio" name="gender" value="female" /> Female</label>
-        </div>
-      </div>
-      {errors.gender && <small className={styles.error}>{errors.gender}</small>}
-
-      <div className={styles.inputContainer}>
-        <label htmlFor="country">Country</label>
-        <input id="country" name="country" list="countries" className={styles.input} required />
-        <datalist id="countries">
-          {countries.map((c, i) => (<option key={i} value={c} />))}
-        </datalist>
-      </div>
-      {errors.country && <small className={styles.error}>{errors.country}</small>}
-
-      <div className={styles.inputContainer}>
-        <label htmlFor="picture">Upload Picture</label>
-        <input id="picture" name="picture" type="file" accept="image/png,image/jpeg" />
-      </div>
-      {errors.picture && <small className={styles.error}>{errors.picture}</small>}
-
-      <label className={styles.checkboxRow}>
-        <input type="checkbox" name="acceptTerms" /> Accept Terms and Conditions
-      </label>
-      {errors.acceptTerms && <small className={styles.error}>{errors.acceptTerms}</small>}
+      {passwordStrength && (
+        <small className={styles.hint}>{passwordStrength}</small>
+      )}
 
       <button type="submit">{messages.uncontrolledForm.button}</button>
     </form>
