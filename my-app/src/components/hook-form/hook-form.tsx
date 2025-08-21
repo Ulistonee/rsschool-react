@@ -4,6 +4,7 @@ import styles from './hook-form.module.css';
 import { useDispatch, useSelector } from 'react-redux';
 import type { AppDispatch, RootState } from '../../store/store.ts';
 import { addHook } from '../../store/formsSlice.ts';
+import { fileToBase64 } from '../../utils/fileToBase64.ts';
 
 type FormValues = {
   name: string;
@@ -32,36 +33,18 @@ export const HookForm = ({ onSuccess }: Props) => {
   const countries = useSelector((state: RootState) => state.forms.countries);
 
   const onSubmit = async (data: FormValues) => {
-    let base64: string | null = null;
-    if (data.picture && data.picture.length > 0) {
       const file = data.picture[0];
-      const allowedTypes = ['image/png', 'image/jpeg'];
-      if (!allowedTypes.includes(file.type)) {
-        alert('Only PNG and JPEG are allowed');
-        return;
-      }
-      if (file.size > 2 * 1024 * 1024) {
-        alert('File too large (max 2MB)');
-        return;
-      }
-
-      base64 = await new Promise<string>((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result as string);
-        reader.onerror = () => reject(null);
-        reader.readAsDataURL(file);
-      });
+      let pictureBase64 = await fileToBase64(file);
 
       dispatch(
         addHook({
           ...data,
           age: String(data.age),
-          picture: base64,
+          picture: pictureBase64,
         })
       );
       reset();
       onSuccess();
-    }
   };
 
   return (
@@ -74,8 +57,6 @@ export const HookForm = ({ onSuccess }: Props) => {
           id="name"
           {...register('name', {
             required: 'Name is required',
-            validate: (value) =>
-              /^[A-Z]/.test(value) || 'First letter must be uppercase',
           })}
           className={styles.input}
         />
@@ -89,7 +70,6 @@ export const HookForm = ({ onSuccess }: Props) => {
           type="number"
           {...register('age', {
             required: 'Age is required',
-            min: { value: 0, message: 'Age cannot be negative' },
           })}
           className={styles.input}
         />
@@ -103,10 +83,6 @@ export const HookForm = ({ onSuccess }: Props) => {
           type="email"
           {...register('email', {
             required: 'Email is required',
-            pattern: {
-              value: /^\S+@\S+$/i,
-              message: 'Invalid email format',
-            },
           })}
           className={styles.input}
         />

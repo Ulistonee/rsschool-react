@@ -4,6 +4,7 @@ import { addUncontrolled } from '../../store/formsSlice.ts';
 import type { FormEvent } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import type { AppDispatch, RootState } from '../../store/store.ts';
+import { fileToBase64 } from '../../utils/fileToBase64.ts';
 
 type Props = {
   onSuccess: () => void;
@@ -37,7 +38,7 @@ export const UncontrolledForm = ({ onSuccess }: Props) => {
     const gender = typeof genderValue === 'string' ? genderValue : '';
 
     const acceptTermsValue = formData.get('acceptTerms');
-    const acceptTerms = acceptTermsValue !== null; // true, если чекбокс был выставлен
+    const acceptTerms = acceptTermsValue !== null;
 
     const countryValue = formData.get('country');
     const country = typeof countryValue === 'string' ? countryValue : '';
@@ -60,14 +61,6 @@ export const UncontrolledForm = ({ onSuccess }: Props) => {
     e.currentTarget.reset();
     onSuccess();
   };
-
-  const fileToBase64 = (file: File): Promise<string> =>
-    new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(reader.result as string);
-      reader.onerror = reject;
-      reader.readAsDataURL(file);
-    });
 
   return (
     <form className={styles.container} onSubmit={handleSubmit}>
