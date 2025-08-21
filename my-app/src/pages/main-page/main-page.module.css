@@ -15,20 +15,3 @@
     display: flex;
     gap: 1rem;
 }
-
-.tilesHeading {
-    padding: 1rem;
-    width: 200px;
-}
-
-.tilesGrid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 1rem;
-    border: 1px solid white;
-    border-radius: 8px;
-}
-
-.tile {
-    padding: 1rem;
-}

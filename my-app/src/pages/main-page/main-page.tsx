@@ -6,14 +6,20 @@ import { messages } from '../../messages/messages.ts';
 import styles from './main-page.module.css';
 import { useSelector } from 'react-redux';
 import type { RootState } from '../../store/store.ts';
+import { Tile } from '../../components/tile/tile.tsx';
+
+enum ModalType {
+  Uncontrolled = 'uncontrolled',
+  Hook = 'hook',
+}
 
 export const MainPage = () => {
-  const [modalType, setModalType] = useState<'uncontrolled' | 'hook' | null>(null);
+  const [modalType, setModalType] = useState<ModalType | null>(null);
 
   const uncontrolledData = useSelector((state: RootState) => state.forms.uncontrolled);
   const hookData = useSelector((state: RootState) => state.forms.hook);
 
-  const openModal = (type: 'uncontrolled' | 'hook') => {
+  const openModal = (type: ModalType) => {
     setModalType(type);
   };
 
@@ -24,33 +30,16 @@ export const MainPage = () => {
   return (
     <main>
         <section className={styles.buttonContainer}>
-          <button onClick={() => openModal('uncontrolled')}>{messages.buttons.unconrolled}</button>
-          <button onClick={() => openModal('hook')}>{messages.buttons.hookForm}</button>
+          <button onClick={() => openModal(ModalType.Uncontrolled)}>{messages.buttons.unconrolled}</button>
+          <button onClick={() => openModal(ModalType.Hook)}>{messages.buttons.hookForm}</button>
           <Modal isOpen={modalType !== null} onClose={closeModal}>
-            {modalType === 'uncontrolled' && <UncontrolledForm  onSuccess={closeModal} />}
-            {modalType === 'hook' && <HookForm  onSuccess={closeModal} />}
+            {modalType === ModalType.Uncontrolled && <UncontrolledForm  onSuccess={closeModal} />}
+            {modalType === ModalType.Hook && <HookForm  onSuccess={closeModal} />}
           </Modal>
         </section>
         <section className={styles.tiles}>
-          <h3 className={styles.tilesHeading}>Uncontrolled Form Data</h3>
-          <div className={styles.tilesGrid}>
-            {uncontrolledData.map((item, i) => (
-              <div key={i} className={styles.tile}>
-                <p><b>{item.name}</b></p>
-                <p>{item.email}</p>
-              </div>
-            ))}
-          </div>
-
-          <h3 className={styles.tilesHeading}>Hook Form Data</h3>
-          <div className={styles.tilesGrid}>
-            {hookData.map((item, i) => (
-              <div key={i} className={styles.tile}>
-                <p><b>{item.name}</b></p>
-                <p>{item.email}</p>
-              </div>
-            ))}
-          </div>
+          <Tile data={uncontrolledData}/>
+          <Tile data={hookData}/>
         </section>
     </main>
   );

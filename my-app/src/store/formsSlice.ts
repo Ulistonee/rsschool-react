@@ -1,6 +1,6 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
-type FormData = {
+export type FormData = {
   name: string;
   age: string;
   email: string;
