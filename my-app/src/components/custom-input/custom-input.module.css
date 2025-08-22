@@ -16,3 +16,16 @@
     border-radius: 0.5rem;
     border: 1px solid #ccc;
 }
+
+.error {
+    grid-column: 2;
+    color: #972121;
+    font-size: 0.85rem;
+}
+
+.hint {
+    grid-column: 2;
+    color: #555;
+    font-size: 0.8rem;
+    margin-top: 4px;
+}

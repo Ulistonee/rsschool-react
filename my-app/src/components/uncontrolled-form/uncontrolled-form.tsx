@@ -11,14 +11,14 @@ import { type FieldConfig, getFormValues } from '../../utils/getFormValues.ts';
 import { CustomInput } from '../custom-input/custom-input.tsx';
 
 const fields: FieldConfig[] = [
-  { name: 'Name', type: 'string', inputType: 'text'},
-  { name: 'Age', type: 'string', inputType: 'number'},
-  { name: 'Email', type: 'string', inputType: 'email' },
-  { name: 'Password', type: 'string', inputType: 'password' },
-  { name: 'Confirm password', type: 'string', inputType: 'password' },
-  { name: 'Gender', type: 'string', inputType: 'radio' },
-  { name: 'Country', type: 'string', inputType: 'select' },
-  { name: 'Picture', type: 'file', inputType: 'file' },
+  { name: 'name', type: 'string', inputType: 'text'},
+  { name: 'age', type: 'string', inputType: 'number'},
+  { name: 'email', type: 'string', inputType: 'email' },
+  { name: 'password', type: 'string', inputType: 'password' },
+  { name: 'confirm password', type: 'string', inputType: 'password' },
+  { name: 'gender', type: 'string', inputType: 'radio' },
+  { name: 'country', type: 'string', inputType: 'select' },
+  { name: 'picture', type: 'file', inputType: 'file' },
   { name: 'acceptTerms', type: 'boolean', inputType: 'checkbox' },
 ];
 
@@ -90,25 +90,76 @@ export const UncontrolledForm = ({ onSuccess }: Props) => {
       <h2>{messages.uncontrolledForm.title}</h2>
 
       {fields.map((field) => {
-        if (field.name === 'country') {
-          return (
-            <CustomInput
-              id={field.name}
-              label={field.name}
-              error={errors[field.name]}
-              type={field.inputType}
-              countries={countries}
-            />
-          )
+        switch (field.inputType) {
+          case 'radio':
+            return (
+              <div key={field.name} className={styles.inputContainer}>
+                <label>Gender</label>
+                <div>
+                  <label>
+                    <input type="radio" name="gender" value="male"/> Male
+                  </label>
+                  <label>
+                    <input type="radio" name="gender" value="female"/> Female
+                  </label>
+                </div>
+                {errors.gender && <small className={styles.error}>{errors.gender}</small>}
+              </div>
+            );
+
+          case 'checkbox':
+            return (
+              <>
+                <label key={field.name} className={styles.checkboxRow}>
+                  <input type="checkbox" name={field.name} /> Accept Terms and Conditions
+                </label>
+                {errors.acceptTerms && <small className={styles.error}>{errors.acceptTerms}</small>}
+              </>
+
+            );
+
+          case 'select':
+            return (
+              <div key={field.name} className={styles.inputContainer}>
+                <label htmlFor="country">Country</label>
+                <input id="country" name="country" list="countries" className={styles.customInput} required />
+                <datalist id="countries">
+                  {countries.map((c, i) => (
+                    <option key={i} value={c} />
+                  ))}
+                </datalist>
+                {errors.country && <small className={styles.error}>{errors.country}</small>}
+              </div>
+            );
+
+          case 'file':
+            return (
+              <div key={field.name} className={styles.inputContainer}>
+                <label htmlFor="picture">Upload Picture</label>
+                <input id="picture" name="picture" type="file" accept="image/png,image/jpeg" />
+                {errors.picture && <small className={styles.error}>{errors.picture}</small>}
+              </div>
+            );
+
+          default:
+            return (
+              <CustomInput
+                key={field.name}
+                id={field.name}
+                name={field.name}
+                label={field.name.charAt(0).toUpperCase() + field.name.slice(1)}
+                type={field.inputType}
+                error={errors[field.name]}
+                required
+                hint={field.name === 'password' ? passwordStrength : undefined}
+                onInput={
+                  field.name === 'password'
+                    ? (e) => handlePasswordInput((e.target as HTMLInputElement).value)
+                    : undefined
+                }
+              />
+            );
         }
-        return (
-          <CustomInput
-            id={field.name}
-            label={field.name}
-            error={errors[field.name]}
-            type={field.inputType}
-          />
-        )
       })}
 
       <button type="submit">{messages.uncontrolledForm.button}</button>
