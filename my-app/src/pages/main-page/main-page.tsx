@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Modal } from '../../components/modal/modal';
 import { UncontrolledForm } from '../../components/uncontrolled-form/uncontrolled-form';
 import { HookForm } from '../../components/hook-form/hook-form';
@@ -16,6 +16,8 @@ enum ModalType {
 export const MainPage = () => {
   const [modalType, setModalType] = useState<ModalType | null>(null);
 
+  const [highlightIndex, setHighlightIndex] = useState<number | null>(null);
+
   const uncontrolledData = useSelector((state: RootState) => state.forms.uncontrolled);
   const hookData = useSelector((state: RootState) => state.forms.hook);
 
@@ -26,6 +28,22 @@ export const MainPage = () => {
   const closeModal = () => {
     setModalType(null);
   };
+
+  useEffect(() => {
+    if (uncontrolledData.length > 0) {
+      setHighlightIndex(uncontrolledData.length - 1);
+      const timer = setTimeout(() => setHighlightIndex(null), 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [uncontrolledData]);
+
+  useEffect(() => {
+    if (hookData.length > 0) {
+      setHighlightIndex(hookData.length - 1);
+      const timer = setTimeout(() => setHighlightIndex(null), 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [hookData]);
 
   return (
     <main>
@@ -38,8 +56,8 @@ export const MainPage = () => {
           </Modal>
         </section>
         <section className={styles.tiles}>
-          <Tile data={uncontrolledData}/>
-          <Tile data={hookData}/>
+          <Tile data={uncontrolledData} highlightIndex={highlightIndex}/>
+          <Tile data={hookData} highlightIndex={highlightIndex}/>
         </section>
     </main>
   );
