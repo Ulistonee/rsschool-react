@@ -7,19 +7,17 @@ type Props = {
 
 export const Tile = ({ data }: Props) => {
   return (
-    <>
+    <div className={styles.container}>
       <h4 className={styles.tilesHeading}>Uncontrolled Form Data</h4>
-      <div className={styles.tilesGrid}>
         {data.map((item, i) => (
           <div key={i} className={styles.tile}>
-            <p>{item.name}</p>
-            <p>{item.age}</p>
-            <p>{item.email}</p>
-            <p>{item.gender}</p>
-            <p>{item.country}</p>
+            <p>Name: </p><p>{item.name}</p>
+            <p>Age: </p><p>{item.age}</p>
+            <p>Email: </p><p>{item.email}</p>
+            <p>Gender: </p><p>{item.gender}</p>
+            <p>Country: </p><p>{item.country}</p>
           </div>
         ))}
-      </div>
-    </>
+    </div>
   );
 };
