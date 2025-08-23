@@ -117,9 +117,9 @@ export const HookForm = ({ onSuccess }: Props) => {
             <input type="radio" value="female" {...register('gender')} /> Female
           </label>
         </div>
-        {errors.gender && (
-          <span className={styles.error}>{errors.gender.message}</span>
-        )}
+        <span className={styles.error}>
+          {errors.gender?.message || '\u00A0'}
+        </span>
       </div>
 
       <div className={styles.inputContainer}>
@@ -136,9 +136,9 @@ export const HookForm = ({ onSuccess }: Props) => {
             <option key={i} value={c} />
           ))}
         </datalist>
-        {errors.country && (
-          <span className={styles.error}>{errors.country.message}</span>
-        )}
+        <span className={styles.error}>
+          {errors.country?.message || '\u00A0'}
+        </span>
       </div>
 
       <div className={styles.inputContainer}>
@@ -149,18 +149,18 @@ export const HookForm = ({ onSuccess }: Props) => {
           accept="image/png,image/jpeg"
           {...register('picture')}
         />
-        {errors.picture && (
-          <span className={styles.error}>{errors.picture.message}</span>
-        )}
+        <span className={styles.error}>
+          {errors.picture?.message || '\u00A0'}
+        </span>
       </div>
 
       <label className={styles.checkboxRow}>
         <input type="checkbox" {...register('acceptTerms')} /> Accept Terms and
         Conditions
       </label>
-      {errors.acceptTerms && (
-        <span className={styles.error}>{errors.acceptTerms.message}</span>
-      )}
+      <span className={styles.error}>
+        {errors.acceptTerms?.message || '\u00A0'}
+      </span>
 
       <button type="submit" disabled={!isValid}>
         {messages.hookForm.button}
