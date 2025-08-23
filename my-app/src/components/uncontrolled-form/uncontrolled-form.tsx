@@ -94,7 +94,9 @@ export const UncontrolledForm = ({ onSuccess }: Props) => {
                     <input type="radio" name="gender" value="female"/> Female
                   </label>
                 </div>
-                {errors.gender && <small className={styles.error}>{errors.gender}</small>}
+                <small className={styles.error}>
+                  {errors.gender || '\u00A0'}
+                </small>
               </div>
             );
 
@@ -104,7 +106,9 @@ export const UncontrolledForm = ({ onSuccess }: Props) => {
                 <label key={field.name} className={styles.checkboxRow}>
                   <input type="checkbox" name={field.name} /> Accept Terms and Conditions
                 </label>
-                {errors.acceptTerms && <small className={styles.error}>{errors.acceptTerms}</small>}
+                <small className={styles.error}>
+                  {errors.acceptTerms || '\u00A0'}
+                </small>
               </>
 
             );
@@ -126,9 +130,9 @@ export const UncontrolledForm = ({ onSuccess }: Props) => {
                     <option key={i} value={c} />
                   ))}
                 </datalist>
-                {errors.country && (
-                  <small className={styles.error}>{errors.country}</small>
-                )}
+                <small className={styles.error}>
+                  {errors.country || '\u00A0'}
+                </small>
               </div>
             );
 
@@ -137,7 +141,9 @@ export const UncontrolledForm = ({ onSuccess }: Props) => {
               <div key={field.name} className={styles.inputContainer}>
                 <label htmlFor="picture">Upload Picture</label>
                 <input id="picture" name="picture" type="file" accept="image/png,image/jpeg" />
-                {errors.picture && <small className={styles.error}>{errors.picture}</small>}
+                <small className={styles.error}>
+                  {errors.picture || '\u00A0'}
+                </small>
               </div>
             );
 

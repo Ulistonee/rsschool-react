@@ -23,7 +23,9 @@ export const CustomInput = ({ id, label, error, hint, type, ...rest }: Props) =>
         {...rest}
         required={rest.required}
       />
-      {error && <span className={styles.error}>{error}</span>}
+      <small className={styles.error}>
+        {error || '\u00A0'}
+      </small>
       {hint && <small className={styles.hint}>{hint}</small>}
     </div>
   );
