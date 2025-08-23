@@ -20,7 +20,7 @@ export const buildSchema = (countries: string[]) =>
       .regex(/[A-Z]/, 'Must contain at least one uppercase letter')
       .regex(/[a-z]/, 'Must contain at least one lowercase letter')
       .regex(/[^A-Za-z0-9]/, 'Must contain at least one special character'),
-    confirmPassword: z.string(),
+    confirm: z.string(),
     gender: z.enum(['male', 'female'], { errorMap: () => ({ message: 'Gender is required' }) }),
     acceptTerms: z.literal(true, { errorMap: () => ({ message: 'You must accept T&C' }) }),
     country: z
@@ -33,7 +33,7 @@ export const buildSchema = (countries: string[]) =>
       .refine((f) => !f || allowedTypes.includes(f.type), 'Only PNG or JPEG')
       .refine((f) => !f || f.size <= MAX_SIZE, 'Max file size 2MB'),
   })
-    .refine((data) => data.password === data.confirmPassword, {
-      path: ['confirmPassword'],
+    .refine((data) => data.password === data.confirm, {
+      path: ['confirm'],
       message: 'Passwords do not match',
     });

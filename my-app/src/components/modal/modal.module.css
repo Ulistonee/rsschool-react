@@ -22,3 +22,9 @@
     align-items: center;
     z-index: 1000;
 }
+
+@media (prefers-color-scheme: light) {
+    .container {
+        background-color: white;
+    }
+}

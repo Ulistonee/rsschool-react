@@ -39,11 +39,13 @@ export const UncontrolledForm = ({ onSuccess }: Props) => {
 
     setErrors({});
 
-    const formData = new FormData(e.currentTarget);
+    const formEl = e.currentTarget;
+    const formData = new FormData(formEl);
     const formValues = getFormValues(formData, fields)
 
     const result = schema.safeParse(formValues);
     if (!result.success) {
+      console.log('!result.success');
       const fieldErrors: Record<string, string> = {};
       for (const issue of result.error.issues) {
         const key = issue.path[0] as string;
@@ -69,7 +71,7 @@ export const UncontrolledForm = ({ onSuccess }: Props) => {
       })
     );
 
-    e.currentTarget.reset();
+    formEl.reset();
     setPasswordStrength('');
     onSuccess();
   };

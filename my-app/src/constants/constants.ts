@@ -7,7 +7,7 @@ export const fields: FieldConfig[] = [
   { name: 'age', type: 'string', inputType: 'number'},
   { name: 'email', type: 'string', inputType: 'email' },
   { name: 'password', type: 'string', inputType: 'password' },
-  { name: 'confirm password', type: 'string', inputType: 'password' },
+  { name: 'confirm', type: 'string', inputType: 'password' },
   { name: 'gender', type: 'string', inputType: 'radio' },
   { name: 'country', type: 'string', inputType: 'select' },
   { name: 'picture', type: 'file', inputType: 'file' },
