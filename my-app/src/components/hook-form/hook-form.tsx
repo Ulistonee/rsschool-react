@@ -127,6 +127,7 @@ export const HookForm = ({ onSuccess }: Props) => {
         <input
           id="country"
           list="countries"
+          autoComplete="country-name"
           {...register('country')}
           className={styles.customInput}
         />

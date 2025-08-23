@@ -1,4 +1,8 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
+import countries from "i18n-iso-countries";
+import enLocale from "i18n-iso-countries/langs/en.json";
+
+countries.registerLocale(enLocale);
 
 export type FormData = {
   name: string;
@@ -18,7 +22,7 @@ type FormsState = {
 const initialState: FormsState = {
   uncontrolled: [],
   hook: [],
-  countries: ['USA', 'Germany', 'Kazakhstan', 'Japan'],
+  countries: Object.values(countries.getNames("en", { select: "official" })),
 };
 
 const formsSlice = createSlice({

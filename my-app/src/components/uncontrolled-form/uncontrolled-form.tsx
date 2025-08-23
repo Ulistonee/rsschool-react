@@ -113,13 +113,22 @@ export const UncontrolledForm = ({ onSuccess }: Props) => {
             return (
               <div key={field.name} className={styles.inputContainer}>
                 <label htmlFor="country">Country</label>
-                <input id="country" name="country" list="countries" className={styles.customInput} required />
+                <input
+                  id="country"
+                  name="country"
+                  list="countries"
+                  className={styles.customInput}
+                  autoComplete="country-name"
+                  required
+                />
                 <datalist id="countries">
                   {countries.map((c, i) => (
                     <option key={i} value={c} />
                   ))}
                 </datalist>
-                {errors.country && <small className={styles.error}>{errors.country}</small>}
+                {errors.country && (
+                  <small className={styles.error}>{errors.country}</small>
+                )}
               </div>
             );
 
