@@ -102,14 +102,14 @@ export const UncontrolledForm = ({ onSuccess }: Props) => {
 
           case 'checkbox':
             return (
-              <>
-                <label key={field.name} className={styles.checkboxRow}>
+              <div key={field.name}>
+                <label className={styles.checkboxRow}>
                   <input type="checkbox" name={field.name} /> Accept Terms and Conditions
                 </label>
                 <small className={styles.error}>
                   {errors.acceptTerms || '\u00A0'}
                 </small>
-              </>
+              </div>
 
             );
 
