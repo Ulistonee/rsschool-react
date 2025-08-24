@@ -12,6 +12,29 @@ export const CustomInput = ({ id, label, error, hint, type, ...rest }: Props) =>
   const normalizedError =
     error?.includes('expected number') ? 'Invalid input' : error;
 
+  if (type === 'password') {
+    return (
+      <div className={styles.inputContainer}>
+        {label && (
+          <label htmlFor={id}>
+            {label}
+          </label>
+        )}
+        <input
+          id={id}
+          type={type}
+          className={styles.customInput}
+          {...rest}
+          required={rest.required}
+        />
+        <small className={styles.error}>
+          {normalizedError || '\u00A0'}
+        </small>
+        <small className={styles.hint}>{hint}</small>
+      </div>
+    );
+  }
+
   return (
     <div className={styles.inputContainer}>
       {label && (
@@ -29,7 +52,6 @@ export const CustomInput = ({ id, label, error, hint, type, ...rest }: Props) =>
       <small className={styles.error}>
         {normalizedError || '\u00A0'}
       </small>
-      {hint && <small className={styles.hint}>{hint}</small>}
     </div>
   );
 };

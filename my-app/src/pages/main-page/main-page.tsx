@@ -48,7 +48,7 @@ export const MainPage = () => {
   return (
     <main>
         <section className={styles.buttonContainer}>
-          <button onClick={() => openModal(ModalType.Uncontrolled)}>{messages.buttons.unconrolled}</button>
+          <button onClick={() => openModal(ModalType.Uncontrolled)}>{messages.buttons.uncontrolled}</button>
           <button onClick={() => openModal(ModalType.Hook)}>{messages.buttons.hookForm}</button>
           <Modal isOpen={modalType !== null} onClose={closeModal}>
             {modalType === ModalType.Uncontrolled && <UncontrolledForm  onSuccess={closeModal} />}

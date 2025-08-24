@@ -1,6 +1,6 @@
 export const messages = {
   buttons: {
-    unconrolled: 'Uncontrolled',
+    uncontrolled: 'Uncontrolled',
     hookForm: 'Hook Form',
   },
   inputTypes: {
