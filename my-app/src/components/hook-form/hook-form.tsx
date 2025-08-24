@@ -7,29 +7,29 @@ import { addHook } from '../../store/formsSlice.ts';
 import { fileToBase64 } from '../../utils/fileToBase64.ts';
 import { zodResolver } from '@hookform/resolvers/zod';
 import z from 'zod';
-import { schema } from '../../utils/schemaForHookForm.ts';
 import { CustomInput } from '../custom-input/custom-input.tsx';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { testPasswordWeakness } from '../../utils/testPasswordWeakness.ts';
-
-type FormValues = z.infer<typeof schema>;
+import { buildSchema } from '../../utils/buildSchema.ts';
 
 type Props = {
   onSuccess: () => void;
 };
 
 export const HookForm = ({ onSuccess }: Props) => {
+  const countries = useSelector((state: RootState) => state.forms.countries);
+
+  const schema = useMemo(() => buildSchema(countries), [countries]);
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors, isValid },
-  } = useForm<FormValues>({
+  } = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     mode: 'onChange',
   });
 
-  const countries = useSelector((state: RootState) => state.forms.countries);
   const dispatch = useDispatch<AppDispatch>();
 
   const [passwordStrength, setPasswordStrength] = useState<string>('');
@@ -44,7 +44,7 @@ export const HookForm = ({ onSuccess }: Props) => {
     );
   };
 
-  const onSubmit = async (data: FormValues) => {
+  const onSubmit = async (data: z.infer<typeof schema>) => {
     const file = data.picture[0];
     let pictureBase64 = await fileToBase64(file);
 

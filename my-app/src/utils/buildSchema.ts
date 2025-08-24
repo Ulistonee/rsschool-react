@@ -1,12 +1,17 @@
 import { z } from 'zod';
 import { allowedTypes, MAX_SIZE } from '../constants/constants.ts';
 
-export const buildSchema = (countries: string[]) =>
-  z.object({
-    name: z
-      .string()
+export const buildSchema = (countries: string[]) => {
+  const NAME_WORD = /^[\p{Lu}][\p{L}\p{M}'-]*$/u;
+
+  return z.object({
+    name: z.string()
+      .trim()
       .min(1, 'Name is required')
-      .regex(/^[A-Z].*/, 'First letter must be uppercase'),
+      .refine(
+        (val) => val.split(/\s+/).every((w) => NAME_WORD.test(w)),
+        'Each word must start with an uppercase letter'
+      ),
     age: z.preprocess(
       (v) => (typeof v === 'string' ? Number(v) : v),
       z.number({ invalid_type_error: 'Age must be a number' })
@@ -37,3 +42,5 @@ export const buildSchema = (countries: string[]) =>
       path: ['confirm'],
       message: 'Passwords do not match',
     });
+}
+
