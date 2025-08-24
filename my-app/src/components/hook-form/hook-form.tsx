@@ -1,4 +1,4 @@
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { messages } from '../../messages/messages.ts';
 import styles from './hook-form.module.css';
 import { useDispatch, useSelector } from 'react-redux';
@@ -8,7 +8,7 @@ import { fileToBase64 } from '../../utils/fileToBase64.ts';
 import { zodResolver } from '@hookform/resolvers/zod';
 import z from 'zod';
 import { CustomInput } from '../custom-input/custom-input.tsx';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { testPasswordWeakness } from '../../utils/testPasswordWeakness.ts';
 import { buildSchema } from '../../utils/buildSchema.ts';
 
@@ -24,11 +24,19 @@ export const HookForm = ({ onSuccess }: Props) => {
     register,
     handleSubmit,
     reset,
+    control,
+    trigger,
     formState: { errors, isValid },
   } = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     mode: 'onChange',
   });
+
+  const password = useWatch({ control, name: 'password' });
+
+  useEffect(() => {
+    void trigger('confirm');
+  }, [password, trigger]);
 
   const dispatch = useDispatch<AppDispatch>();
 
@@ -45,7 +53,7 @@ export const HookForm = ({ onSuccess }: Props) => {
   };
 
   const onSubmit = async (data: z.infer<typeof schema>) => {
-    const file = data.picture[0];
+    const file = data.picture;
     let pictureBase64 = await fileToBase64(file);
 
     dispatch(
@@ -100,16 +108,16 @@ export const HookForm = ({ onSuccess }: Props) => {
       />
 
       <CustomInput
-        id="confirmPassword"
-        label="Confirm Password"
+        id="confirm"
+        label="сonfirm"
         type="password"
-        {...register('confirmPassword')}
-        error={errors.confirmPassword?.message}
+        {...register('confirm')}
+        error={errors.confirm?.message}
       />
 
       <div className={styles.inputContainer}>
         <label>Gender</label>
-        <div>
+        <div className={styles.genderContainer}>
           <label>
             <input type="radio" value="male" {...register('gender')} /> Male
           </label>

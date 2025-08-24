@@ -86,7 +86,7 @@
               return (
                 <div key={field.name} className={styles.inputContainer}>
                   <label>Gender</label>
-                  <div>
+                  <div className={styles.genderContainer}>
                     <label>
                       <input type="radio" name="gender" value="male"/> Male
                     </label>

@@ -42,3 +42,12 @@
 .checkboxRow input[type="checkbox"] {
     margin: 0;
 }
+
+.genderContainer {
+    display: flex;
+    gap: 1rem;
+}
+
+.genderContainer input:hover {
+    cursor: pointer;
+}
