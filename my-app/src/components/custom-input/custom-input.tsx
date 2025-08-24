@@ -9,6 +9,9 @@ type Props = {
 } & InputHTMLAttributes<HTMLInputElement>;
 
 export const CustomInput = ({ id, label, error, hint, type, ...rest }: Props) => {
+  const normalizedError =
+    error?.includes('expected number') ? 'Invalid input' : error;
+
   return (
     <div className={styles.inputContainer}>
       {label && (
@@ -24,7 +27,7 @@ export const CustomInput = ({ id, label, error, hint, type, ...rest }: Props) =>
         required={rest.required}
       />
       <small className={styles.error}>
-        {error || '\u00A0'}
+        {normalizedError || '\u00A0'}
       </small>
       {hint && <small className={styles.hint}>{hint}</small>}
     </div>

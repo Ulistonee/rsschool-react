@@ -13,9 +13,24 @@ export const buildSchema = (countries: string[]) => {
         'Each word must start with an uppercase letter'
       ),
     age: z.preprocess(
-      (v) => (typeof v === 'string' ? Number(v) : v),
-      z.number({ invalid_type_error: 'Age must be a number' })
-        .min(0, 'Age cannot be negative')
+      (v) => {
+        if (typeof v === "string") {
+          const trimmed = v.trim();
+          if (trimmed === "") return undefined;
+          const n = Number(trimmed);
+          return Number.isNaN(n) ? undefined : n;
+        }
+
+        if (typeof v === "number") {
+          return Number.isNaN(v) ? undefined : v;
+        }
+
+        return undefined;
+      },
+      z.number({
+        required_error: "Age is required",
+        invalid_type_error: "Age must be a number"
+      }).min(0, "Age cannot be negative")
     ),
     email: z.string().email('Invalid email'),
     password: z

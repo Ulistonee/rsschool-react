@@ -75,7 +75,7 @@ export const HookForm = ({ onSuccess }: Props) => {
         id="age"
         label="Age"
         type="number"
-        {...register('age', { valueAsNumber: true })}
+        {...register("age", { valueAsNumber: true })}
         error={errors.age?.message}
       />
 
