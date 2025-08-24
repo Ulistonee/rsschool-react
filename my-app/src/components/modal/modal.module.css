@@ -5,9 +5,11 @@
     background-color: grey;
     display: flex;
     justify-content: center;
-    align-items: start;
+    align-items: flex-start;
     gap: 2rem;
     padding: 0.5rem 0.5rem 0.5rem 0.5rem;
+    max-height: 90vh;
+    overflow-y: auto;
 }
 
 .overlay {
