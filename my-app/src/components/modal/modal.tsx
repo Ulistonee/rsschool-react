@@ -38,7 +38,7 @@ export const Modal = ({ isOpen, children, onClose }: ModalProps) => {
   };
 
   return ReactDOM.createPortal (
-    <div className={styles.overlay} onClick={handleOverlayClick}>
+    <div data-testid="overlay"  className={styles.overlay} onClick={handleOverlayClick}>
       <div className={styles.container} ref={modalRef}>
         {children}
         <button onClick={onClose}>

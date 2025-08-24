@@ -49,7 +49,7 @@ export const CustomInput = ({ id, label, error, hint, type, ...rest }: Props) =>
         {...rest}
         required={rest.required}
       />
-      <small className={styles.error}>
+      <small  role="alert" className={styles.error}>
         {normalizedError || '\u00A0'}
       </small>
     </div>
