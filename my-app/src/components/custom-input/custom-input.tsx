@@ -1,0 +1,57 @@
+import { type InputHTMLAttributes } from 'react';
+import styles from './custom-input.module.css';
+
+type Props = {
+  id?: string;
+  label?: string;
+  error?: string;
+  hint?: string;
+} & InputHTMLAttributes<HTMLInputElement>;
+
+export const CustomInput = ({ id, label, error, hint, type, ...rest }: Props) => {
+  const normalizedError =
+    error?.includes('expected number') ? 'Invalid input' : error;
+
+  if (type === 'password') {
+    return (
+      <div className={styles.inputContainer}>
+        {label && (
+          <label htmlFor={id}>
+            {label}
+          </label>
+        )}
+        <input
+          id={id}
+          type={type}
+          className={styles.customInput}
+          {...rest}
+          required={rest.required}
+        />
+        <small className={styles.error}>
+          {normalizedError || '\u00A0'}
+        </small>
+        <small className={styles.hint}>{hint}</small>
+      </div>
+    );
+  }
+
+  return (
+    <div className={styles.inputContainer}>
+      {label && (
+        <label htmlFor={id}>
+          {label}
+        </label>
+      )}
+      <input
+        id={id}
+        type={type}
+        className={styles.customInput}
+        {...rest}
+        required={rest.required}
+      />
+      <small  role="alert" className={styles.error}>
+        {normalizedError || '\u00A0'}
+      </small>
+    </div>
+  );
+};

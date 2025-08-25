@@ -1,0 +1,19 @@
+.container {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.buttonContainer {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    padding: 1rem;
+}
+
+.tiles {
+    margin-top: 2rem;
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
