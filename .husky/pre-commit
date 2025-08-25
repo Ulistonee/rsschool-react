@@ -1,0 +1,2 @@
+# .husky/pre-commit
+echo "🔥 pre-commit hook сработал!"
