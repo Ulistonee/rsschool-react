@@ -1,2 +1,2 @@
 # .husky/pre-commit
-echo "🔥 pre-commit hook сработал!"
+npx lint-staged
