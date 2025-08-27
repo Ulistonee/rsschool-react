@@ -1,0 +1,26 @@
+.heading {
+    padding-bottom: 50px;
+}
+.table {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.cell {
+    padding: 10px 15px;
+    border-bottom: 1px solid #eee;
+    border-right: 1px solid #eee;
+}
+
+.cell:last-child {
+    border-right: none;
+}
+
+.header {
+    font-weight: bold;
+    border-bottom: 2px solid #ccc;
+    font-size: 18px;
+}

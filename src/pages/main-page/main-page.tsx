@@ -1,30 +1,49 @@
-import { useCO2Data, type YearData } from '../../hooks/useCO2Data.ts';
+import { useCO2Data } from '../../hooks/useCO2Data.ts';
+import { messages } from '../../messages/messages.ts';
+import styles from './main-page.module.css';
 
 export const MainPage = () => {
   const data = useCO2Data();
+  const defaultColumns = [
+    'country',
+    'population',
+    'ISO',
+    'year',
+    'co2',
+    'co2_per_capita',
+  ];
 
   const countries = Object.entries(data).map(([country, countryData]) => {
-    const latest: YearData | undefined =
-      countryData.data[countryData.data.length - 1];
+    const latest = countryData.data[countryData.data.length - 1];
 
     return {
-      name: country,
-      population: latest?.population,
-      iso_code: countryData.iso_code,
+      country,
+      population: latest?.population ?? 'N/A',
+      ISO: countryData.iso_code ?? 'N/A',
+      year: latest?.year ?? 'N/A',
+      co2: latest?.cement_co2 ?? 'N/A',
+      co2_per_capita: latest?.cement_co2_per_capita ?? 'N/A',
     };
   });
 
   return (
     <div>
-      <div>
-        <h2>Countries</h2>
-        <ul>
-          {countries.map((c) => (
-            <li key={c.name}>
-              {c.name} – {c.population} – {c.iso_code}
-            </li>
-          ))}
-        </ul>
+      <h2 className={styles.heading}>{messages.textContent.mainPageTitle}</h2>
+
+      <div className={styles.table}>
+        {defaultColumns.map((col) => (
+          <div key={col} className={`${styles.cell} ${styles.header}`}>
+            {col}
+          </div>
+        ))}
+
+        {countries.map((country, index) =>
+          defaultColumns.map((col) => (
+            <div key={`${index}-${col}`} className={styles.cell}>
+              {country[col as keyof typeof country]}
+            </div>
+          ))
+        )}
       </div>
     </div>
   );

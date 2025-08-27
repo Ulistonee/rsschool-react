@@ -1,3 +1,5 @@
+import { messages } from '../../messages/messages.ts';
+
 export const Spinner = () => {
-  return <div>Loading...</div>;
+  return <div>{messages.textContent.loading}</div>;
 };
