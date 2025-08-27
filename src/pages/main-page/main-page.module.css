@@ -1,6 +1,13 @@
 .heading {
     padding-bottom: 50px;
 }
+
+.container {
+    display: flex;
+    align-items: start;
+    gap: 1rem;
+}
+
 .table {
     display: grid;
     grid-template-columns: repeat(6, 1fr);
