@@ -18,10 +18,15 @@ export const MainPage = () => {
   const [selectedYear, setSelectedYear] = useState(allYears[0]);
   const [isOpen, setIsOpen] = useState(false);
   const [extraColumns, setExtraColumns] = useState<string[]>([]);
+  const [searchTerm, setSearchTerm] = useState('');
 
   const countries = filterByYear(data, selectedYear);
   const additionalFields = getAdditionalFields(countries);
   const allColumns = [...defaultColumns, ...extraColumns];
+
+  const filteredCountries = countries.filter((country) =>
+    country.country.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   const handleSave = (cols: string[]) => {
     setExtraColumns(cols);
@@ -57,6 +62,15 @@ export const MainPage = () => {
         </label>
       </div>
 
+      <div className={styles.searchBar}>
+        <input
+          type="text"
+          placeholder="Search country..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+      </div>
+
       <div className={styles.wrapper}>
         <div className={styles.container}>
           <div
@@ -69,7 +83,7 @@ export const MainPage = () => {
               </div>
             ))}
 
-            {countries.map((country, index) =>
+            {filteredCountries.map((country, index) =>
               allColumns.map((col) => {
                 const rawValue = country[col as keyof typeof country];
                 const value = formatValue(col, rawValue);
@@ -77,7 +91,9 @@ export const MainPage = () => {
                 return (
                   <div
                     key={`${index}-${col}-${selectedYear}`}
-                    className={`${styles.cell} ${value === 'N/A' ? styles.na : ''} ${styles.highlight}`}
+                    className={`${styles.cell} ${
+                      value === 'N/A' ? styles.na : ''
+                    }`}
                   >
                     {value}
                   </div>
