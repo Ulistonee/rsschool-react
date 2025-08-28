@@ -85,6 +85,19 @@
      border-radius: 4px;
  }
 
+ .sortControls {
+     display: flex;
+     gap: 20px;
+     align-items: center;
+     justify-content: center;
+     padding: 20px;
+ }
+ .sortControls select,
+ .sortControls button {
+     padding: 6px 10px;
+     border: 1px solid #ccc;
+     border-radius: 4px;
+ }
 
  @keyframes highlightFade {
      from {

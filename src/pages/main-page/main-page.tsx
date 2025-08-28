@@ -19,6 +19,8 @@ export const MainPage = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [extraColumns, setExtraColumns] = useState<string[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [sortKey, setSortKey] = useState<'name' | 'population'>('name');
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
 
   const countries = filterByYear(data, selectedYear);
   const additionalFields = getAdditionalFields(countries);
@@ -27,6 +29,20 @@ export const MainPage = () => {
   const filteredCountries = countries.filter((country) =>
     country.country.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  const sortedCountries = [...filteredCountries].sort((a, b) => {
+    if (sortKey === 'name') {
+      return sortOrder === 'asc'
+        ? a.country.localeCompare(b.country)
+        : b.country.localeCompare(a.country);
+    }
+    if (sortKey === 'population') {
+      const popA = a.population ?? 0;
+      const popB = b.population ?? 0;
+      return sortOrder === 'asc' ? popA - popB : popB - popA;
+    }
+    return 0;
+  });
 
   const handleSave = (cols: string[]) => {
     setExtraColumns(cols);
@@ -71,6 +87,27 @@ export const MainPage = () => {
         />
       </div>
 
+      <div className={styles.sortControls}>
+        <label>
+          Sort by:{' '}
+          <select
+            value={sortKey}
+            onChange={(e) =>
+              setSortKey(e.target.value as 'name' | 'population')
+            }
+          >
+            <option value="name">Country Name</option>
+            <option value="population">Population</option>
+          </select>
+        </label>
+
+        <button
+          onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
+        >
+          {sortOrder === 'asc' ? '↑ Asc' : '↓ Desc'}
+        </button>
+      </div>
+
       <div className={styles.wrapper}>
         <div className={styles.container}>
           <div
@@ -83,7 +120,7 @@ export const MainPage = () => {
               </div>
             ))}
 
-            {filteredCountries.map((country, index) =>
+            {sortedCountries.map((country, index) =>
               allColumns.map((col) => {
                 const rawValue = country[col as keyof typeof country];
                 const value = formatValue(col, rawValue);
