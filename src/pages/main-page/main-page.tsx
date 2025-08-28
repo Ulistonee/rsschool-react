@@ -6,42 +6,19 @@ import { useState } from 'react';
 import { AdditionalColumns } from '../../components/additional-columns/additional-columns.tsx';
 import * as React from 'react';
 import { formatValue } from '../../utils/formatValue.ts';
+import { defaultColumns } from '../../constants/constants.ts';
+import { filterByLatestYear } from '../../utils/filterByLatestYear.ts';
+import { getAdditionalFields } from '../../utils/getAdditionalFields.ts';
 
 export const MainPage = () => {
   const data = useCO2Data();
-  const defaultColumns = [
-    'country',
-    'population',
-    'ISO',
-    'year',
-    'co2',
-    'co2_per_capita',
-  ];
 
-  const countries = Object.entries(data).map(([country, countryData]) => {
-    const latest = countryData.data[countryData.data.length - 1];
-
-    return {
-      ...latest,
-      country,
-      population: latest?.population,
-      ISO: countryData.iso_code,
-      last_year: latest?.year,
-      co2: latest?.cement_co2,
-      co2_per_capita: latest?.cement_co2_per_capita,
-    };
-  });
+  const countries = filterByLatestYear(data);
 
   const [isOpen, setIsOpen] = useState(false);
   const [extraColumns, setExtraColumns] = useState<string[]>([]);
 
-  const allKeys = Array.from(
-    new Set(countries.flatMap((country) => Object.keys(country)))
-  );
-
-  const availableFields = allKeys.filter(
-    (key) => !defaultColumns.includes(key)
-  );
+  const additionalFields = getAdditionalFields(countries);
 
   const handleSave = (cols: string[]) => {
     setExtraColumns(cols);
@@ -95,7 +72,7 @@ export const MainPage = () => {
       </div>
       <Modal isOpen={isOpen} onClose={closeModal}>
         <AdditionalColumns
-          availableFields={availableFields}
+          availableFields={additionalFields}
           selected={extraColumns}
           onChange={setExtraColumns}
           onSave={() => handleSave(extraColumns)}
