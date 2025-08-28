@@ -65,19 +65,6 @@ export const MainPage = () => {
     <>
       <h2 className={styles.heading}>{messages.textContent.mainPageTitle}</h2>
 
-      <div className={styles.yearSelector}>
-        <label>
-          Year:{' '}
-          <select value={selectedYear} onChange={handleYearChange}>
-            {allYears.map((year) => (
-              <option key={year} value={year}>
-                {year}
-              </option>
-            ))}
-          </select>
-        </label>
-      </div>
-
       <div className={styles.searchBar}>
         <input
           type="text"
@@ -87,38 +74,88 @@ export const MainPage = () => {
         />
       </div>
 
-      <div className={styles.sortControls}>
-        <label>
-          Sort by:{' '}
-          <select
-            value={sortKey}
-            onChange={(e) =>
-              setSortKey(e.target.value as 'name' | 'population')
-            }
-          >
-            <option value="name">Country Name</option>
-            <option value="population">Population</option>
-          </select>
-        </label>
-
-        <button
-          onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
-        >
-          {sortOrder === 'asc' ? '↑ Asc' : '↓ Desc'}
-        </button>
-      </div>
-
       <div className={styles.wrapper}>
         <div className={styles.container}>
           <div
             className={styles.table}
             style={{ '--cols': allColumns.length } as React.CSSProperties}
           >
-            {allColumns.map((col) => (
-              <div key={col} className={`${styles.cell} ${styles.header}`}>
-                {col}
-              </div>
-            ))}
+            {allColumns.map((col) => {
+              if (col === 'year') {
+                return (
+                  <div
+                    key={col}
+                    className={`${styles.cell} ${styles.header} ${styles.yearSelect}`}
+                  >
+                    <select
+                      value={selectedYear}
+                      onChange={handleYearChange}
+                      className={styles.yearSelect}
+                    >
+                      {allYears.map((year) => (
+                        <option key={year} value={year}>
+                          {year}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                );
+              }
+
+              if (col === 'country') {
+                return (
+                  <div
+                    key={col}
+                    className={`${styles.cell} ${styles.header} ${styles.sortable}`}
+                    onClick={() => {
+                      setSortKey('name');
+                      setSortOrder(
+                        sortKey === 'name' && sortOrder === 'asc'
+                          ? 'desc'
+                          : 'asc'
+                      );
+                    }}
+                  >
+                    Country{' '}
+                    {sortKey === 'name'
+                      ? sortOrder === 'asc'
+                        ? '↑'
+                        : '↓'
+                      : ''}
+                  </div>
+                );
+              }
+
+              if (col === 'population') {
+                return (
+                  <div
+                    key={col}
+                    className={`${styles.cell} ${styles.header} ${styles.sortable}`}
+                    onClick={() => {
+                      setSortKey('population');
+                      setSortOrder(
+                        sortKey === 'population' && sortOrder === 'asc'
+                          ? 'desc'
+                          : 'asc'
+                      );
+                    }}
+                  >
+                    Population{' '}
+                    {sortKey === 'population'
+                      ? sortOrder === 'asc'
+                        ? '↑'
+                        : '↓'
+                      : ''}
+                  </div>
+                );
+              }
+
+              return (
+                <div key={col} className={`${styles.cell} ${styles.header}`}>
+                  {col}
+                </div>
+              );
+            })}
 
             {sortedCountries.map((country, index) =>
               allColumns.map((col) => {

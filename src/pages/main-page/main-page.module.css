@@ -50,24 +50,26 @@
     font-size: 18px;
 }
 
+.yearSelect {
+    cursor: pointer;
+    user-select: none;
+    padding: 5px 5px;
+    border-radius: 4px;
+}
+
+ .sortable {
+     cursor: pointer;
+     user-select: none;
+     transition: background 0.2s;
+ }
+
+ .sortable:hover {
+     background-color: #565353;
+ }
+
  .na {
      color: gray;
      font-style: italic;
- }
-
- .yearSelector {
-     width: 100px;
-     padding: 6px 10px;
-     margin: 0 auto;
- }
-
- .yearSelector select {
-     padding: 5px;
-     font-size: 16px;
-     border: none;
-     border-radius: 4px;
-     cursor: pointer;
-     margin: 10px;
  }
 
  .highlight {
@@ -81,20 +83,6 @@
  .searchBar input {
      width: 200px;
      padding: 10px 10px;
-     border: 1px solid #ccc;
-     border-radius: 4px;
- }
-
- .sortControls {
-     display: flex;
-     gap: 20px;
-     align-items: center;
-     justify-content: center;
-     padding: 20px;
- }
- .sortControls select,
- .sortControls button {
-     padding: 6px 10px;
      border: 1px solid #ccc;
      border-radius: 4px;
  }
