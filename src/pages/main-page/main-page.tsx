@@ -4,6 +4,8 @@ import styles from './main-page.module.css';
 import { Modal } from '../../components/modal/modal.tsx';
 import { useState } from 'react';
 import { AdditionalColumns } from '../../components/additional-columns/additional-columns.tsx';
+import * as React from 'react';
+import { formatValue } from '../../utils/formatValue.ts';
 
 export const MainPage = () => {
   const data = useCO2Data();
@@ -20,20 +22,24 @@ export const MainPage = () => {
     const latest = countryData.data[countryData.data.length - 1];
 
     return {
-      country,
-      population: latest?.population ?? 'N/A',
-      ISO: countryData.iso_code ?? 'N/A',
-      year: latest?.year ?? 'N/A',
-      co2: latest?.cement_co2 ?? 'N/A',
-      co2_per_capita: latest?.cement_co2_per_capita ?? 'N/A',
       ...latest,
+      country,
+      population: latest?.population,
+      ISO: countryData.iso_code,
+      last_year: latest?.year,
+      co2: latest?.cement_co2,
+      co2_per_capita: latest?.cement_co2_per_capita,
     };
   });
 
   const [isOpen, setIsOpen] = useState(false);
   const [extraColumns, setExtraColumns] = useState<string[]>([]);
 
-  const availableFields = Object.keys(countries[0] || {}).filter(
+  const allKeys = Array.from(
+    new Set(countries.flatMap((country) => Object.keys(country)))
+  );
+
+  const availableFields = allKeys.filter(
     (key) => !defaultColumns.includes(key)
   );
 
@@ -56,21 +62,34 @@ export const MainPage = () => {
     <>
       <h2 className={styles.heading}>{messages.textContent.mainPageTitle}</h2>
 
-      <div className={styles.container}>
-        <div className={styles.table}>
-          {allColumns.map((col) => (
-            <div key={col} className={`${styles.cell} ${styles.header}`}>
-              {col}
-            </div>
-          ))}
-
-          {countries.map((country, index) =>
-            defaultColumns.map((col) => (
-              <div key={`${index}-${col}`} className={styles.cell}>
-                {country[col as keyof typeof country]}
+      <div className={styles.wrapper}>
+        <div className={styles.container}>
+          <div
+            className={styles.table}
+            style={{ '--cols': allColumns.length } as React.CSSProperties}
+          >
+            {allColumns.map((col) => (
+              <div key={col} className={`${styles.cell} ${styles.header}`}>
+                {col}
               </div>
-            ))
-          )}
+            ))}
+
+            {countries.map((country, index) =>
+              allColumns.map((col) => {
+                const rawValue = country[col as keyof typeof country];
+                const value = formatValue(col, rawValue);
+
+                return (
+                  <div
+                    key={`${index}-${col}`}
+                    className={`${styles.cell} ${value === 'N/A' ? styles.na : ''}`}
+                  >
+                    {value}
+                  </div>
+                );
+              })
+            )}
+          </div>
         </div>
         <button onClick={openModal}>+</button>
       </div>

@@ -1,20 +1,38 @@
+ :root {
+     --cols: 6;
+  }
+
 .heading {
     padding-bottom: 50px;
 }
 
-.container {
-    display: flex;
-    align-items: start;
-    gap: 1rem;
-}
+ .wrapper {
+     display: flex;
+     align-items: flex-start;
+     gap: 1rem;
+ }
 
-.table {
-    display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    overflow: hidden;
-}
+ .container {
+     overflow-x: auto;
+     max-width: 100%;
+     display: flex;
+ }
+
+ .table {
+     display: grid;
+     grid-template-columns: repeat(var(--cols), minmax(150px, auto));
+     border: 1px solid #ccc;
+     border-radius: 6px;
+     flex-shrink: 0;
+ }
+
+ .addButton {
+     flex-shrink: 0;
+     width: 40px;
+     height: 40px;
+     border-radius: 50%;
+     font-size: 24px;
+ }
 
 .cell {
     padding: 10px 15px;
@@ -31,3 +49,8 @@
     border-bottom: 2px solid #ccc;
     font-size: 18px;
 }
+
+ .na {
+     color: gray;
+     font-style: italic;
+ }
