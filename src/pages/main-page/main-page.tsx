@@ -10,14 +10,16 @@ import { defaultColumns } from '../../constants/constants.ts';
 import { filterByYear } from '../../utils/filterByYear.ts';
 import { getAdditionalFields } from '../../utils/getAdditionalFields.ts';
 import { getAvailableYears } from '../../utils/getAvailableYears.ts';
+import { sortCountries } from '../../utils/sortCountries.ts';
+import { SearchBar } from '../../components/search-bar/search-bar.tsx';
 
 export const MainPage = () => {
   const data = useCO2Data();
   const allYears = useMemo(() => getAvailableYears(data), [data]);
 
-  const [selectedYear, setSelectedYear] = useState(allYears[0]);
   const [isOpen, setIsOpen] = useState(false);
   const [extraColumns, setExtraColumns] = useState<string[]>([]);
+  const [selectedYear, setSelectedYear] = useState(allYears[0]);
   const [searchTerm, setSearchTerm] = useState('');
   const [sortKey, setSortKey] = useState<'name' | 'population'>('name');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
@@ -30,19 +32,7 @@ export const MainPage = () => {
     country.country.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const sortedCountries = [...filteredCountries].sort((a, b) => {
-    if (sortKey === 'name') {
-      return sortOrder === 'asc'
-        ? a.country.localeCompare(b.country)
-        : b.country.localeCompare(a.country);
-    }
-    if (sortKey === 'population') {
-      const popA = a.population ?? 0;
-      const popB = b.population ?? 0;
-      return sortOrder === 'asc' ? popA - popB : popB - popA;
-    }
-    return 0;
-  });
+  const sortedCountries = sortCountries(filteredCountries, sortKey, sortOrder);
 
   const handleSave = (cols: string[]) => {
     setExtraColumns(cols);
@@ -65,14 +55,7 @@ export const MainPage = () => {
     <>
       <h2 className={styles.heading}>{messages.textContent.mainPageTitle}</h2>
 
-      <div className={styles.searchBar}>
-        <input
-          type="text"
-          placeholder="Search country..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-      </div>
+      <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
 
       <div className={styles.wrapper}>
         <div className={styles.container}>

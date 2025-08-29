@@ -1,9 +1,18 @@
 import type { CountryData } from '../hooks/useCO2Data.ts';
 
+export type CountryRow = {
+  country: string;
+  ISO: string;
+  year?: number;
+  population?: number;
+  co2?: number;
+  co2_per_capita?: number;
+};
+
 export const filterByYear = (
   data: Record<string, CountryData>,
   year: number
-) => {
+): CountryRow[] => {
   return Object.entries(data).map(([country, countryData]) => {
     const yearData = countryData.data.find((d) => d.year === year);
 
