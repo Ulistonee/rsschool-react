@@ -25,8 +25,14 @@ export const MainPage = () => {
   const [sortKey, setSortKey] = useState<'name' | 'population'>('name');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
 
-  const countries = filterByYear(data, selectedYear);
-  const additionalFields = getAdditionalFields(countries);
+  const countries = useMemo(
+    () => filterByYear(data, selectedYear),
+    [data, selectedYear]
+  );
+  const additionalFields = useMemo(
+    () => getAdditionalFields(countries),
+    [countries]
+  );
   const allColumns = useMemo(
     () => [...defaultColumns, ...extraColumns],
     [extraColumns]
