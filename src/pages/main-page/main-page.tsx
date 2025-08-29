@@ -16,7 +16,7 @@ import { CountryInfo } from '../../components/country-info/country-info.tsx';
 
 export const MainPage = () => {
   const data = useCO2Data();
-  const allYears = getAvailableYears(data);
+  const allYears = useMemo(() => getAvailableYears(data), [data]);
 
   const [isOpen, setIsOpen] = useState(false);
   const [extraColumns, setExtraColumns] = useState<string[]>([]);
