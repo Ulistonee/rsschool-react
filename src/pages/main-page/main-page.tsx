@@ -2,7 +2,7 @@ import { useCO2Data } from '../../hooks/useCO2Data.ts';
 import { messages } from '../../messages/messages.ts';
 import styles from './main-page.module.css';
 import { Modal } from '../../components/modal/modal.tsx';
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { AdditionalColumns } from '../../components/additional-columns/additional-columns.tsx';
 import * as React from 'react';
 import { defaultColumns } from '../../constants/constants.ts';
@@ -27,36 +27,49 @@ export const MainPage = () => {
 
   const countries = filterByYear(data, selectedYear);
   const additionalFields = getAdditionalFields(countries);
-  const allColumns = [...defaultColumns, ...extraColumns];
-
-  const filteredCountries = countries.filter((country) =>
-    country.country.toLowerCase().includes(searchTerm.toLowerCase())
+  const allColumns = useMemo(
+    () => [...defaultColumns, ...extraColumns],
+    [extraColumns]
   );
 
-  const sortedCountries = sortCountries(filteredCountries, sortKey, sortOrder);
+  const filteredCountries = useMemo(
+    () =>
+      countries.filter((country) =>
+        country.country.toLowerCase().includes(searchTerm.toLowerCase())
+      ),
+    [countries, searchTerm]
+  );
 
-  const handleSave = (cols: string[]) => {
+  const sortedCountries = useMemo(
+    () => sortCountries(filteredCountries, sortKey, sortOrder),
+    [filteredCountries, sortKey, sortOrder]
+  );
+
+  const handleSave = useCallback((cols: string[]) => {
     setExtraColumns(cols);
-    closeModal();
-  };
-
-  const openModal = () => {
-    setIsOpen(true);
-  };
-
-  const closeModal = () => {
     setIsOpen(false);
-  };
-
-  const handleYearChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedYear(Number(e.target.value));
-  };
+  }, []);
+  const openModal = useCallback(() => {
+    setIsOpen(true);
+  }, []);
+  const closeModal = useCallback(() => {
+    setIsOpen(false);
+  }, []);
+  const handleYearChange = useCallback(
+    (e: React.ChangeEvent<HTMLSelectElement>) => {
+      setSelectedYear(Number(e.target.value));
+    },
+    []
+  );
+  const handleSearch = useCallback((term: string) => {
+    setSearchTerm(term);
+  }, []);
 
   return (
     <>
       <h2 className={styles.heading}>{messages.textContent.mainPageTitle}</h2>
 
-      <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+      <SearchBar searchTerm={searchTerm} handleSearch={handleSearch} />
 
       <div className={styles.wrapper}>
         <div className={styles.container}>
@@ -83,6 +96,7 @@ export const MainPage = () => {
         </div>
         <button onClick={openModal}>+</button>
       </div>
+
       <Modal isOpen={isOpen} onClose={closeModal}>
         <AdditionalColumns
           availableFields={additionalFields}

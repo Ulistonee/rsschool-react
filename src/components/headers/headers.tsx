@@ -1,4 +1,5 @@
 import styles from '../../pages/main-page/main-page.module.css';
+import * as React from 'react';
 
 type Props = {
   allColumns: string[];
@@ -11,7 +12,7 @@ type Props = {
   sortOrder: 'asc' | 'desc';
 };
 
-export const Headers = ({
+const HeadersComponent = ({
   allColumns,
   selectedYear,
   handleYearChange,
@@ -96,3 +97,7 @@ export const Headers = ({
     </>
   );
 };
+
+HeadersComponent.displayName = 'Headers';
+
+export const Headers = React.memo(HeadersComponent);

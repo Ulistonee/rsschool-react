@@ -1,6 +1,7 @@
 import { formatValue } from '../../utils/formatValue.ts';
 import styles from '../../pages/main-page/main-page.module.css';
 import type { CountryRow } from '../../utils/filterByYear.ts';
+import * as React from 'react';
 
 type Props = {
   sortedCountries: CountryRow[];
@@ -8,21 +9,21 @@ type Props = {
   selectedYear: number;
 };
 
-export const CountryInfo = ({
+const CountryInfoComponent = ({
   sortedCountries,
   allColumns,
   selectedYear,
 }: Props) => {
   return (
     <>
-      {sortedCountries.map((country, index) =>
+      {sortedCountries.map((country) =>
         allColumns.map((col) => {
           const rawValue = country[col as keyof typeof country];
           const value = formatValue(col, rawValue);
 
           return (
             <div
-              key={`${index}-${col}-${selectedYear}`}
+              key={`${country.ISO}-${col}-${selectedYear}`}
               className={`${styles.cell} ${value === 'N/A' ? styles.na : ''}`}
             >
               {value}
@@ -33,3 +34,7 @@ export const CountryInfo = ({
     </>
   );
 };
+
+CountryInfoComponent.displayName = 'CountryInfo';
+
+export const CountryInfo = React.memo(CountryInfoComponent);
