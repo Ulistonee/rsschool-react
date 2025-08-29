@@ -5,7 +5,6 @@ import { Modal } from '../../components/modal/modal.tsx';
 import { useMemo, useState } from 'react';
 import { AdditionalColumns } from '../../components/additional-columns/additional-columns.tsx';
 import * as React from 'react';
-import { formatValue } from '../../utils/formatValue.ts';
 import { defaultColumns } from '../../constants/constants.ts';
 import { filterByYear } from '../../utils/filterByYear.ts';
 import { getAdditionalFields } from '../../utils/getAdditionalFields.ts';
@@ -13,6 +12,7 @@ import { getAvailableYears } from '../../utils/getAvailableYears.ts';
 import { sortCountries } from '../../utils/sortCountries.ts';
 import { SearchBar } from '../../components/search-bar/search-bar.tsx';
 import { Headers } from '../../components/headers/headers.tsx';
+import { CountryInfo } from '../../components/country-info/country-info.tsx';
 
 export const MainPage = () => {
   const data = useCO2Data();
@@ -74,24 +74,11 @@ export const MainPage = () => {
               sortKey={sortKey}
               sortOrder={sortOrder}
             />
-
-            {sortedCountries.map((country, index) =>
-              allColumns.map((col) => {
-                const rawValue = country[col as keyof typeof country];
-                const value = formatValue(col, rawValue);
-
-                return (
-                  <div
-                    key={`${index}-${col}-${selectedYear}`}
-                    className={`${styles.cell} ${
-                      value === 'N/A' ? styles.na : ''
-                    }`}
-                  >
-                    {value}
-                  </div>
-                );
-              })
-            )}
+            <CountryInfo
+              sortedCountries={sortedCountries}
+              allColumns={allColumns}
+              selectedYear={selectedYear}
+            />
           </div>
         </div>
         <button onClick={openModal}>+</button>
