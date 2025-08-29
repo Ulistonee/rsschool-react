@@ -16,7 +16,7 @@ import { CountryInfo } from '../../components/country-info/country-info.tsx';
 
 export const MainPage = () => {
   const data = useCO2Data();
-  const allYears = useMemo(() => getAvailableYears(data), [data]);
+  const allYears = getAvailableYears(data);
 
   const [isOpen, setIsOpen] = useState(false);
   const [extraColumns, setExtraColumns] = useState<string[]>([]);
@@ -29,14 +29,8 @@ export const MainPage = () => {
     () => filterByYear(data, selectedYear),
     [data, selectedYear]
   );
-  const additionalFields = useMemo(
-    () => getAdditionalFields(countries),
-    [countries]
-  );
-  const allColumns = useMemo(
-    () => [...defaultColumns, ...extraColumns],
-    [extraColumns]
-  );
+  const additionalFields = getAdditionalFields(countries);
+  const allColumns = [...defaultColumns, ...extraColumns];
 
   const filteredCountries = useMemo(
     () =>

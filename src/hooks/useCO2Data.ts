@@ -13,7 +13,9 @@ export type YearData = {
 };
 
 const resource = createResource(
-  fetch('/owid-co2-data.json').then((res) => res.json())
+  fetch('/owid-co2-data.json').then((res) => {
+    return res.json();
+  })
 );
 
 export function useCO2Data() {
