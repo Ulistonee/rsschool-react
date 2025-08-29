@@ -12,6 +12,7 @@ import { getAdditionalFields } from '../../utils/getAdditionalFields.ts';
 import { getAvailableYears } from '../../utils/getAvailableYears.ts';
 import { sortCountries } from '../../utils/sortCountries.ts';
 import { SearchBar } from '../../components/search-bar/search-bar.tsx';
+import { Headers } from '../../components/headers/headers.tsx';
 
 export const MainPage = () => {
   const data = useCO2Data();
@@ -63,82 +64,16 @@ export const MainPage = () => {
             className={styles.table}
             style={{ '--cols': allColumns.length } as React.CSSProperties}
           >
-            {allColumns.map((col) => {
-              if (col === 'year') {
-                return (
-                  <div
-                    key={col}
-                    className={`${styles.cell} ${styles.header} ${styles.yearSelect}`}
-                  >
-                    <select
-                      value={selectedYear}
-                      onChange={handleYearChange}
-                      className={styles.yearSelect}
-                    >
-                      {allYears.map((year) => (
-                        <option key={year} value={year}>
-                          {year}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                );
-              }
-
-              if (col === 'country') {
-                return (
-                  <div
-                    key={col}
-                    className={`${styles.cell} ${styles.header} ${styles.sortable}`}
-                    onClick={() => {
-                      setSortKey('name');
-                      setSortOrder(
-                        sortKey === 'name' && sortOrder === 'asc'
-                          ? 'desc'
-                          : 'asc'
-                      );
-                    }}
-                  >
-                    Country{' '}
-                    {sortKey === 'name'
-                      ? sortOrder === 'asc'
-                        ? '↑'
-                        : '↓'
-                      : ''}
-                  </div>
-                );
-              }
-
-              if (col === 'population') {
-                return (
-                  <div
-                    key={col}
-                    className={`${styles.cell} ${styles.header} ${styles.sortable}`}
-                    onClick={() => {
-                      setSortKey('population');
-                      setSortOrder(
-                        sortKey === 'population' && sortOrder === 'asc'
-                          ? 'desc'
-                          : 'asc'
-                      );
-                    }}
-                  >
-                    Population{' '}
-                    {sortKey === 'population'
-                      ? sortOrder === 'asc'
-                        ? '↑'
-                        : '↓'
-                      : ''}
-                  </div>
-                );
-              }
-
-              return (
-                <div key={col} className={`${styles.cell} ${styles.header}`}>
-                  {col}
-                </div>
-              );
-            })}
+            <Headers
+              allColumns={allColumns}
+              selectedYear={selectedYear}
+              handleYearChange={handleYearChange}
+              allYears={allYears}
+              setSortKey={setSortKey}
+              setSortOrder={setSortOrder}
+              sortKey={sortKey}
+              sortOrder={sortOrder}
+            />
 
             {sortedCountries.map((country, index) =>
               allColumns.map((col) => {
