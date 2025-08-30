@@ -12,6 +12,10 @@
     font-weight: bold;
     border-bottom: 2px solid #ccc;
     font-size: 18px;
+    position: sticky;
+    top: 0;
+    background: #fff;
+    z-index: 10;
 }
 
 .yearSelect {
