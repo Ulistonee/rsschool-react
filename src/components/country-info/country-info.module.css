@@ -1,0 +1,14 @@
+.cell {
+    padding: 10px 15px;
+    border-bottom: 1px solid #eee;
+    border-right: 1px solid #eee;
+}
+
+.cell:last-child {
+    border-right: none;
+}
+
+.na {
+    color: gray;
+    font-style: italic;
+}

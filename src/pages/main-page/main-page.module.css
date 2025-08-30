@@ -34,21 +34,21 @@
      font-size: 24px;
  }
 
-.cell {
-    padding: 10px 15px;
-    border-bottom: 1px solid #eee;
-    border-right: 1px solid #eee;
-}
-
-.cell:last-child {
-    border-right: none;
-}
-
 .header {
     font-weight: bold;
     border-bottom: 2px solid #ccc;
     font-size: 18px;
 }
+
+ .cell {
+     padding: 10px 15px;
+     border-bottom: 1px solid #eee;
+     border-right: 1px solid #eee;
+ }
+
+ .cell:last-child {
+     border-right: none;
+ }
 
 .yearSelect {
     cursor: pointer;
@@ -65,11 +65,6 @@
 
  .sortable:hover {
      background-color: #565353;
- }
-
- .na {
-     color: gray;
-     font-style: italic;
  }
 
  .highlight {

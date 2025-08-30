@@ -1,5 +1,5 @@
 import { formatValue } from '../../utils/formatValue.ts';
-import styles from '../../pages/main-page/main-page.module.css';
+import styles from './country-info.module.css';
 import type { CountryRow } from '../../utils/filterByYear.ts';
 import * as React from 'react';
 
