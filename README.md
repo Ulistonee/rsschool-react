@@ -1,69 +1,77 @@
-# React + TypeScript + Vite
+# CO₂ Emissions
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Приложение для отображения и анализа данных по выбросам CO₂ по странам с возможностью поиска, сортировки, выбора года и добавления дополнительных колонок.
 
-Currently, two official plugins are available:
+## 🚀 Initial Profiling (до оптимизаций)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Для анализа производительности был использован **React Dev Tools Profiler**.  
+Измерения проводились во время следующих действий:
 
-## Expanding the ESLint configuration
+- сортировка колонки;
+- поиск страны;
+- выбор другого года;
+- добавление/удаление колонок.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### 🔎 Результаты профилинга
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- **Commit Duration:** ~85–120ms
+- **Render Duration:** до 80ms на отдельные компоненты
+- **Interactions:** каждый поиск или смена года вызывали массовый ререндер всех компонентов
+- **Flame Graph:** много "красных" зон у `CountryInfo`
+- **Ranked Chart:** в топе по времени рендера были:
+    - `CountryInfo` (рендерились все ячейки при каждом действии)
+    - `Headers`
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+📸 Скриншоты из Profiler (до оптимизаций):  
+![Profiler FlameGraph Before](docs/screenshots/flamegraph-before.png)  
+![Profiler Ranked Before](docs/screenshots/ranked-before.png)
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+---
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## ⚡ Optimization with React.memo & useMemo
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Для уменьшения ненужных перерисовок были применены оптимизации:
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+- `React.memo` для компонент:
+    - `CountryInfo`
+    - `Headers`
+- `useMemo` для мемоизации вычисляемых данных:
+    - список лет;
+    - список стран по выбранному году;
+    - фильтрация и сортировка;
+- `useCallback` для функций-обработчиков.
+
+### 🔎 Результаты повторного профилинга
+
+- **Commit Duration:** сократилось до ~25–40ms
+- **Render Duration:** `CountryInfo` рендерится только при смене года, поиск больше не вызывает полную перерисовку
+- **Interactions:** число компонентов, реагирующих на действия, уменьшилось
+- **Flame Graph:** значительно меньше красных зон
+- **Ranked Chart:** теперь в топе только мелкие компоненты, `CountryInfo` спустился вниз списка
+
+📸 Скриншоты из Profiler (после оптимизаций):  
+![Profiler FlameGraph After](docs/screenshots/flamegraph-after.png)  
+![Profiler Ranked After](docs/screenshots/ranked-after.png)
+
+---
+
+## 📊 Сравнение до и после оптимизаций
+
+| Параметр            | До оптимизации | После оптимизации |
+|---------------------|----------------|-------------------|
+| Commit Duration     | 85–120ms       | 25–40ms           |
+| Render Duration     | ~80ms          | ~20ms             |
+| Кол-во ререндеров   | Высокое        | Умеренное         |
+| Flame Graph         | Красные пики   | Гладкая кривая    |
+| Ranked Chart        | CountryInfo на 1 месте | CountryInfo вне топа |
+
+---
+
+## ✅ Вывод
+
+Применение `React.memo`, `useMemo` и `useCallback` позволило:
+
+- Сократить общее время коммитов и рендера.
+- Уменьшить количество ненужных перерисовок.
+- Сделать работу приложения более отзывчивой.  
+
