@@ -1,4 +1,4 @@
-import styles from '../../pages/main-page/main-page.module.css';
+import styles from './headers.module.css';
 import * as React from 'react';
 
 type Props = {
