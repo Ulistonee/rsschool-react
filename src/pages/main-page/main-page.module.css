@@ -33,27 +33,3 @@
      border-radius: 50%;
      font-size: 24px;
  }
-
- .highlight {
-     animation: highlightFade 1s ease;
- }
-
- .searchBar {
-     margin: 1rem 0;
- }
-
- .searchBar input {
-     width: 200px;
-     padding: 10px 10px;
-     border: 1px solid #ccc;
-     border-radius: 4px;
- }
-
- @keyframes highlightFade {
-     from {
-         background-color: yellow;
-     }
-     to {
-         background-color: transparent;
-     }
- }

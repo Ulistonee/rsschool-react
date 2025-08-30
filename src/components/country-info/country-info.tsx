@@ -7,12 +7,14 @@ type Props = {
   sortedCountries: CountryRow[];
   allColumns: string[];
   selectedYear: number;
+  prevCountries: CountryRow[];
 };
 
 const CountryInfoComponent = ({
   sortedCountries,
   allColumns,
   selectedYear,
+  prevCountries,
 }: Props) => {
   return (
     <>
@@ -21,10 +23,19 @@ const CountryInfoComponent = ({
           const rawValue = country[col as keyof typeof country];
           const value = formatValue(col, rawValue);
 
+          const prevCountry = prevCountries.find((c) => c.ISO === country.ISO);
+          const prevValue = prevCountry
+            ? formatValue(col, prevCountry[col as keyof typeof prevCountry])
+            : null;
+
+          const isUpdated = prevValue !== null && prevValue !== value;
+
           return (
             <div
               key={`${country.ISO}-${col}-${selectedYear}`}
-              className={`${styles.cell} ${value === 'N/A' ? styles.na : ''}`}
+              className={`${styles.cell} ${value === 'N/A' ? styles.na : ''} ${
+                isUpdated ? styles.highlight : ''
+              }`}
             >
               {value}
             </div>

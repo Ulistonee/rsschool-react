@@ -1,4 +1,4 @@
-import styles from '../../pages/main-page/main-page.module.css';
+import styles from './search-bar.module.css';
 import * as React from 'react';
 
 type Props = {

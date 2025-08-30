@@ -6,7 +6,7 @@ import { useCallback, useMemo, useState } from 'react';
 import { AdditionalColumns } from '../../components/additional-columns/additional-columns.tsx';
 import * as React from 'react';
 import { defaultColumns } from '../../constants/constants.ts';
-import { filterByYear } from '../../utils/filterByYear.ts';
+import { type CountryRow, filterByYear } from '../../utils/filterByYear.ts';
 import { getAdditionalFields } from '../../utils/getAdditionalFields.ts';
 import { getAvailableYears } from '../../utils/getAvailableYears.ts';
 import { sortCountries } from '../../utils/sortCountries.ts';
@@ -31,6 +31,12 @@ export const MainPage = () => {
   );
   const additionalFields = getAdditionalFields(countries);
   const allColumns = [...defaultColumns, ...extraColumns];
+
+  const prevCountriesRef = React.useRef<CountryRow[]>([]);
+
+  React.useEffect(() => {
+    prevCountriesRef.current = countries;
+  }, [countries]);
 
   const filteredCountries = useMemo(
     () =>
@@ -91,6 +97,7 @@ export const MainPage = () => {
               sortedCountries={sortedCountries}
               allColumns={allColumns}
               selectedYear={selectedYear}
+              prevCountries={prevCountriesRef.current}
             />
           </div>
         </div>

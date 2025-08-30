@@ -30,3 +30,9 @@
 .sortable:hover {
     background-color: #565353;
 }
+
+@media (prefers-color-scheme: light) {
+    .sortable:hover {
+        background-color: #d3d3d3;
+    }
+}

@@ -2,6 +2,7 @@
     padding: 10px 15px;
     border-bottom: 1px solid #eee;
     border-right: 1px solid #eee;
+    transition: background-color 0.6s ease;
 }
 
 .cell:last-child {
@@ -11,4 +12,18 @@
 .na {
     color: gray;
     font-style: italic;
+}
+
+.highlight {
+    background-color: #ffeaa7;
+    animation: fadeOut 2s forwards;
+}
+
+@keyframes fadeOut {
+    from {
+        background-color: #ffeaa7;
+    }
+    to {
+        background-color: transparent;
+    }
 }
