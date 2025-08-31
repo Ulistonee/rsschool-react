@@ -14,7 +14,6 @@
     font-size: 18px;
     position: sticky;
     top: 0;
-    background: #fff;
     z-index: 10;
 }
 
@@ -38,5 +37,9 @@
 @media (prefers-color-scheme: light) {
     .sortable:hover {
         background-color: #d3d3d3;
+    }
+
+    .header {
+        background: #fff;
     }
 }
