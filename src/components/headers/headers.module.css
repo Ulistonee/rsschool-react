@@ -1,0 +1,45 @@
+.cell {
+    padding: 10px 15px;
+    border-bottom: 1px solid #eee;
+    border-right: 1px solid #eee;
+}
+
+.cell:last-child {
+    border-right: none;
+}
+
+.header {
+    font-weight: bold;
+    border-bottom: 2px solid #ccc;
+    font-size: 18px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.yearSelect {
+    cursor: pointer;
+    user-select: none;
+    padding: 5px 5px;
+    border-radius: 4px;
+}
+
+.sortable {
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.2s;
+}
+
+.sortable:hover {
+    background-color: #565353;
+}
+
+@media (prefers-color-scheme: light) {
+    .sortable:hover {
+        background-color: #d3d3d3;
+    }
+
+    .header {
+        background: #fff;
+    }
+}
