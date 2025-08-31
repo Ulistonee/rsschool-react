@@ -25,6 +25,8 @@ export const MainPage = () => {
   const [sortKey, setSortKey] = useState<'name' | 'population'>('name');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
 
+  console.time('countries');
+
   const countries = useMemo(
     () => filterByYear(data, selectedYear),
     [data, selectedYear]
@@ -70,6 +72,8 @@ export const MainPage = () => {
   const handleSearch = useCallback((term: string) => {
     setSearchTerm(term);
   }, []);
+
+  console.timeEnd('countries');
 
   return (
     <>
